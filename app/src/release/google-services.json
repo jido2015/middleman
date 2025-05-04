@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "168974225366",
+    "project_id": "middleman-3cc65",
+    "storage_bucket": "middleman-3cc65.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168974225366:android:5d391077de1d531ce39e77",
+        "android_client_info": {
+          "package_name": "com.project.middleman"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOzD9dnga2WC99cQ3ogldpnD1-V6Nyc8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
