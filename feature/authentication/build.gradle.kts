@@ -1,9 +1,7 @@
 plugins {
-    alias(libs.plugins.google.firebase.crashlytics)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.dagger.hilt)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.compose.compiler)
 }
@@ -28,12 +26,21 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
 }
 
 dependencies {
@@ -83,4 +90,6 @@ dependencies {
 
     // Desugar JDK
     coreLibraryDesugaring(libs.core.library8)
+    implementation(project(":core:source"))
+
 }
