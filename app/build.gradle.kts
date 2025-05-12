@@ -106,6 +106,7 @@ dependencies {
     implementation(project(":core:injection"))
     implementation(project(":core:source"))
     implementation(project(":feature:authentication"))
+    implementation(project(":navigation"))
 
 
 }

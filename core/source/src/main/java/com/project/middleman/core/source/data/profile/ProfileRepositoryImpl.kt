@@ -3,12 +3,11 @@ package com.project.middleman.core.source.data.profile
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.project.middleman.core.common.Constants.USERS
 import com.project.middleman.core.source.data.RequestState
-import com.project.middleman.core.source.domain.model.UserDTO
-import com.project.middleman.core.source.domain.repository.GetUserProfileResponse
-import com.project.middleman.core.source.domain.repository.ProfileRepository
-import com.project.middleman.core.source.domain.repository.SignOutResponse
+import com.project.middleman.core.source.data.model.UserDTO
+import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
+import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
+import com.project.middleman.core.source.domain.authentication.repository.SignOutResponse
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +33,7 @@ class ProfileRepositoryImpl @Inject constructor(
         return try {
             val user = auth.currentUser?.let { firebaseUser ->
                 val id = firebaseUser.uid
-                val snapshot = db.collection(USERS).document(id).get().await()
+                val snapshot = db.collection("users").document(id).get().await()
                 if (snapshot.exists()) {
                     Log.d("getUserProfile", "${snapshot.data}")
                     snapshot.toObject(UserDTO::class.java)

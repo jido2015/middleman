@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
 import com.project.middleman.core.source.data.RequestState
-import com.project.middleman.core.source.domain.repository.AuthCredentialResponse
-import com.project.middleman.core.source.domain.repository.AuthRepository
-import com.project.middleman.core.source.domain.repository.SignInWithGoogleResponse
+import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
+import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
+import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

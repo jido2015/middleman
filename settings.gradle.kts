@@ -23,8 +23,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "middleman"
 include(":app")
-include(":feature:authentication")
 include(":core")
 include(":core:injection")
-include(":core:common")
 include(":core:source")
+include(":navigation")
+include(":feature:openchallenges")
+include(":feature:authentication")
+include(":feature:createchallenge")

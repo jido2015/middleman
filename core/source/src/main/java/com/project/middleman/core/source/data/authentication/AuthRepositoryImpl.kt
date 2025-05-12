@@ -10,12 +10,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.project.middleman.core.common.Constants.USERS
 import com.project.middleman.core.source.data.RequestState
-import com.project.middleman.core.source.domain.model.User
-import com.project.middleman.core.source.domain.repository.AuthCredentialResponse
-import com.project.middleman.core.source.domain.repository.AuthRepository
-import com.project.middleman.core.source.domain.repository.SignInWithGoogleResponse
+import com.project.middleman.core.source.data.model.User
+import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
+import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
+import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
 
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -64,11 +63,12 @@ class AuthRepositoryImpl @Inject constructor(
 
             val authResult = auth.signInWithCredential(googleCredential).await()
             Log.d("signInWithGoogleUser", "${authResult.user}")
-            val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
-            if (isNewUser) {
-                Log.d("isNewUser", "Add User To Firestore")
-                addUserToFirestore()
-            }
+            val isNewUser = authResult.additionalUserInfo?.isNewUser == true
+//            if (isNewUser) {
+//                Log.d("isNewUser", "Add User To Firestore")
+//                addUserToFirestore()
+//            }
+            addUserToFirestore()
             RequestState.Success(true)
         } catch (e: Exception) {
             Log.d("signInWithGoogleError", "${e.message}")
@@ -80,13 +80,14 @@ class AuthRepositoryImpl @Inject constructor(
     private suspend fun addUserToFirestore() {
         auth.currentUser?.apply {
             val user = toUser()
-            db.collection(USERS).document(uid).set(user).await()
+            db.collection("users").document(uid).set(user).await()
             Log.d("userAdded", "User Added to Firestore")
         }
     }
 
     private fun FirebaseUser.toUser(): User {
         return User(
+            uid = uid,
             displayName = displayName,
             email = email,
             photoUrl = photoUrl.toString(),
