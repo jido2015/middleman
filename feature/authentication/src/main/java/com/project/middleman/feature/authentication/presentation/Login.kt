@@ -22,7 +22,8 @@ fun AuthenticationScreen(
     onSignIn: () -> Unit
 ){
     AuthenticationContent(
-        loadingState = viewModel.loadingState, onButtonClicked = {
+        loadingState = viewModel.loadingState,
+        onButtonClicked = {
             viewModel.setLoading(true)
             viewModel.credentialManagerSignIn()
         })

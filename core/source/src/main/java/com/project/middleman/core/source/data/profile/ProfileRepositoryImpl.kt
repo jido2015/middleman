@@ -3,7 +3,7 @@ package com.project.middleman.core.source.data.profile
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
 import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository

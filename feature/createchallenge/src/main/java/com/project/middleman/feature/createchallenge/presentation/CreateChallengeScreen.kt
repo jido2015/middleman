@@ -27,9 +27,9 @@ import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.messagebar.rememberMessageBarState
 
 @Composable
-fun CreateChallengeScreen(
+fun CreateChallengeUi(
     messageBarState: MessageBarState = rememberMessageBarState(),
-    onSubmit: (title: String, description: String, amount: Double) -> Unit,
+    onSaveChallenge: (title: String, description: String, amount: Double) -> Unit,
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -81,7 +81,7 @@ fun CreateChallengeScreen(
             onClick = {
                 val stake = amount.toDoubleOrNull()
                 if (title.isNotBlank() && description.isNotBlank() && stake != null) {
-                    onSubmit(title, description, stake)
+                    onSaveChallenge(title, description, stake)
                 } else {
                     showError = true
                 }
@@ -107,8 +107,8 @@ fun CreateChallengeScreen(
 @Composable
 fun CreateChallengeScreenPreview() {
     MaterialTheme {
-        CreateChallengeScreen(
-            onSubmit = { title, description, amount ->
+        CreateChallengeUi(
+            onSaveChallenge = { title, description, amount ->
                 // For preview, we just print to log (won't actually be called here)
                 println("Submitted: $title, $description, $amount")
             }

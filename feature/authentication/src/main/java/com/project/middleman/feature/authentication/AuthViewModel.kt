@@ -7,19 +7,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.DispatchProvider
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repo: AuthRepository
+    private val repo: AuthRepository,
+    private val dispatchProvider: DispatchProvider
 ): ViewModel() {
 
     var loadingState = mutableStateOf(false)
@@ -37,7 +38,7 @@ class AuthViewModel @Inject constructor(
     fun credentialManagerSignIn() =
         viewModelScope.launch {
 
-            withContext(Dispatchers.IO) {
+            withContext(dispatchProvider.io) {
                 credentialManagerSignInResponse = RequestState.Loading
                 credentialManagerSignInResponse = repo.credentialManagerWithGoogle()
             }

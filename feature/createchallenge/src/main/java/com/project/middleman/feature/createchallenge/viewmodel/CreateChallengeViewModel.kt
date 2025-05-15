@@ -5,13 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
 import com.project.middleman.core.source.domain.challenge.usecase.CreateChallengeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.model.ParticipantProgress
 import com.project.middleman.core.source.data.model.User
 import com.project.middleman.core.source.domain.authentication.usecase.ProfileUseCase
@@ -26,7 +27,7 @@ import kotlin.String
 class CreateChallengeViewModel @Inject constructor(
     private val repo: CreateChallengeUseCase,
     private val auth: FirebaseAuth,
-    private val currentUser: User,
+    private val dispatchProvider: DispatchProvider,
     private val userProfile: ProfileUseCase
 ) : ViewModel() {
 
@@ -46,8 +47,8 @@ class CreateChallengeViewModel @Inject constructor(
 
         val creator = ParticipantProgress(
             status = "Creator",
-            name = currentUser.displayName.toString(),
-            joinedAt = System.currentTimeMillis().toString(),
+            name = auth.currentUser?.displayName.toString(),
+            joinedAt = System.currentTimeMillis(),
             amount = stake,
             won = false,
             winAmount = 0.0
@@ -58,20 +59,27 @@ class CreateChallengeViewModel @Inject constructor(
             title = title,
             participant = mapOf(user.uid to creator),
             description = description,
-            status = "open"
+            status = "open",
+            createdAt = System.currentTimeMillis(),
+            startDate = System.currentTimeMillis(),
+            endDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000,
+            payoutAmount = stake * 2
         )
 
         viewModelScope.launch {
-            createChallengeResponse = RequestState.Loading
 
-            try {
-                withContext(Dispatchers.IO) {
-                    createChallengeResponse =    repo.invoke(challenge)
+            withContext(dispatchProvider.io){
+                createChallengeResponse = RequestState.Loading
+                try {
+                    withContext(Dispatchers.IO) {
+                        createChallengeResponse = repo.invoke(challenge)
+                    }
+                } catch (e: Exception) {
+                    // Catch any unexpected exceptions and update the UI state
+                    createChallengeResponse = RequestState.Error(e)
                 }
-            } catch (e: Exception) {
-                // Catch any unexpected exceptions and update the UI state
-                createChallengeResponse = RequestState.Error(e)
             }
+
         }
     }
 }

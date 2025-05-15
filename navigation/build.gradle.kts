@@ -91,6 +91,8 @@ dependencies {
 
     implementation(project(":feature:authentication"))
     implementation(project(":feature:createchallenge"))
+    implementation(project(":feature:openchallenges"))
+    implementation(project(":core:source"))
 
     // Desugar JDK
     coreLibraryDesugaring(libs.core.library8)

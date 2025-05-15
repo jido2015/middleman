@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data
+package com.project.middleman.core.source.data.sealedclass
 
 sealed class RequestState<out T> {
     data object Loading: RequestState<Nothing>()

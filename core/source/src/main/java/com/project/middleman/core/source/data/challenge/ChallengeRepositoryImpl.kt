@@ -1,7 +1,7 @@
 package com.project.middleman.core.source.data.challenge
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.domain.challenge.repository.ChallengeRepository
 import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
@@ -18,17 +18,15 @@ class ChallengeRepositoryImpl  @Inject constructor(
         return try {
 
             if (challenge.title.isBlank() || challenge.description.isBlank()){
-                throw Exception("Empty fields")
+                RequestState.Error(Exception("Empty fields"))
             }else{
                 db.collection("challenges")
                     .add(challenge)
                     .await()
                 RequestState.Success(challenge)
             }
-
         } catch (e: Exception) {
             RequestState.Error(e)
-
         }
     }
 

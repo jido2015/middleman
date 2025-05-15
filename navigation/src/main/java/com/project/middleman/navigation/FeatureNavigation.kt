@@ -4,10 +4,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
-import com.project.middleman.feature.createchallenge.presentation.ChallengeScreen
+import com.project.middleman.feature.createchallenge.presentation.CreateChallengeScreen
+import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.MessageBarState
-
 
 fun NavGraphBuilder.featureNavigation(
     appStateViewModel: AppStateViewModel,
@@ -27,7 +27,20 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.CreateChallengeScreen.name) {
-
-            ChallengeScreen()
+        CreateChallengeScreen(
+            onSaveChallenge = {
+                navController.navigate(NavigationRoute.ChallengeListScreen.name)
+            }
+        )
     }
+
+    composable(route = NavigationRoute.ChallengeListScreen.name) {
+        ChallengeListScreen(
+            messageBarState = messageBarState,
+            onChallengeClick = { challenge ->
+              //  navController.navigate("challengeDetail/${challenge.id}")
+            }
+        )
+    }
+
 }

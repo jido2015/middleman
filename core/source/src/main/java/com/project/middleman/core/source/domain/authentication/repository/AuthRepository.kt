@@ -1,7 +1,7 @@
 package com.project.middleman.core.source.domain.authentication.repository
 
 import com.google.firebase.auth.AuthCredential
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 
 typealias AuthCredentialResponse = RequestState<AuthCredential>
 typealias SignInWithGoogleResponse = RequestState<Boolean>

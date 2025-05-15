@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.auth.AuthCredential
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.authentication.AuthViewModel
 import com.stevdzasan.messagebar.MessageBarState
 import java.lang.Exception

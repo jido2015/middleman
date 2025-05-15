@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.project.middleman.core.source.data.RequestState
+import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.stevdzasan.messagebar.MessageBarState
 

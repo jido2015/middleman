@@ -1,20 +1,22 @@
 package com.project.middleman.core.injection
 
 import android.content.Context
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.authentication.AuthRepositoryImpl
 import com.project.middleman.core.source.data.challenge.ChallengeRepositoryImpl
-import com.project.middleman.core.source.data.model.User
+import com.project.middleman.core.source.data.challenge.FetchChallengesRepositoryImpl
 import com.project.middleman.core.source.data.profile.ProfileRepositoryImpl
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
 import com.project.middleman.core.source.domain.challenge.repository.ChallengeRepository
+import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,22 +35,15 @@ class AppModule {
     fun provideFirebaseFirestore() = Firebase.firestore
 
 
-    @Provides
-    fun providesCurrentUser(): User {
-        val currentUser = Firebase.auth.currentUser
-        return if (currentUser != null) {
-            User(
-                uid = currentUser.uid,
-                displayName = currentUser.displayName.orEmpty(),
-                email = currentUser.email.orEmpty(),
-                photoUrl = currentUser.photoUrl.toString(),
-                createdAt = FieldValue.serverTimestamp()
-            )
-        } else {
-            User() // Returns an empty/default user
-        }
-    }
 
+    @Provides
+    fun providesCurrentUser(
+        firestore: FirebaseFirestore,
+        auth: FirebaseAuth
+    ): Task<DocumentSnapshot>? {
+        val uid = auth.currentUser?.uid ?: return null
+        return firestore.collection("users").document(uid).get()
+    }
 
     @Provides
     fun provideAuthRepository(
@@ -75,6 +70,13 @@ class AppModule {
         auth: FirebaseAuth,
         db: FirebaseFirestore
     ): ChallengeRepository = ChallengeRepositoryImpl(
+        db = db)
+
+    @Provides
+    fun provideFetchChallengesRepository(
+        auth: FirebaseAuth,
+        db: FirebaseFirestore
+    ): FetchChallengesRepository = FetchChallengesRepositoryImpl(
         db = db)
 
     @Provides
