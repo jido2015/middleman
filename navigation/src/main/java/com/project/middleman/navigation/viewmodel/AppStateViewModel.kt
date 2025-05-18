@@ -1,5 +1,6 @@
 package com.project.middleman.navigation.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,7 @@ class AppStateViewModel @Inject constructor() : ViewModel() {
     // Needs to setup room database
     var isFirstTime: Boolean = true
 
-    fun setTopBarVisibility(visible: Boolean) {
-        _showTopBar.value = visible
+    fun setTopBarVisibility(visible: MutableState<Boolean>) {
+        _showTopBar.value = visible.value
     }
 }

@@ -11,13 +11,14 @@ fun ToolbarSetup(
     currentComposable: String?,
     appStateViewModel: AppStateViewModel,
     toolBarTitle: MutableState<String>,
-    toolBarSubTitle: MutableState<String>
+    toolBarSubTitle: MutableState<String>,
+    toolBarVisibility: MutableState<Boolean>
 ) {
 
     LaunchedEffect(currentComposable) {
         when (currentComposable) {
             NavigationRoute.AuthenticationScreen.name -> {
-                appStateViewModel.setTopBarVisibility(true)
+                appStateViewModel.setTopBarVisibility(toolBarVisibility)
                 toolBarTitle.value = "Welcome Back,"
                 toolBarSubTitle.value = "Please log in to your account"
             }

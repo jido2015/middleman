@@ -18,15 +18,17 @@ fun NavGraphBuilder.featureNavigation(
     composable(route = NavigationRoute.AuthenticationScreen.name) {
         // Ensure visibility is set before the screen is shown
 
-            AuthenticationScreen(
-                onSignIn = {
-                    navController.navigate(NavigationRoute.CreateChallengeScreen.name)
-                },
-                messageBarState = messageBarState
-            )
+        //toolBarVisibility.value = false
+        AuthenticationScreen(
+            onSignIn = {
+                navController.navigate(NavigationRoute.ChallengeListScreen.name)
+            },
+            messageBarState = messageBarState
+        )
     }
 
     composable(route = NavigationRoute.CreateChallengeScreen.name) {
+
         CreateChallengeScreen(
             onSaveChallenge = {
                 navController.navigate(NavigationRoute.ChallengeListScreen.name)
@@ -35,10 +37,12 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.ChallengeListScreen.name) {
+
+        // toolBarVisibility.value = true
         ChallengeListScreen(
             messageBarState = messageBarState,
             onChallengeClick = { challenge ->
-              //  navController.navigate("challengeDetail/${challenge.id}")
+                //  navController.navigate("challengeDetail/${challenge.id}")
             }
         )
     }

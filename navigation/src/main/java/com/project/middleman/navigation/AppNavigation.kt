@@ -1,11 +1,13 @@
 package com.project.middleman.navigation
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -18,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -36,7 +37,7 @@ private fun getStartDestination(isFirstTime: Boolean): NavigationRoute {
     return if (isFirstTime) {
         NavigationRoute.AuthenticationScreen
     } else {
-        NavigationRoute.CreateChallengeScreen
+        NavigationRoute.ChallengeListScreen
     }
 }
 
@@ -47,8 +48,17 @@ fun AppNavigation(modifier: Modifier = Modifier,
                   messageBarState: MessageBarState = rememberMessageBarState(),
                   appStateViewModel: AppStateViewModel = hiltViewModel()) {
     val showTopBar by appStateViewModel.showTopBar.collectAsState()
+    val isFirstTime by remember { mutableStateOf(appStateViewModel.isFirstTime) }
+
+    val toolBarVisibility = remember { mutableStateOf(true) }
     val navController = rememberNavController()
-    val currentComposable = navController.currentBackStackEntryAsState().value?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentComposable = navBackStackEntry?.destination
+    val currentRoute = currentComposable?.route
+
+    val canPop = navController.previousBackStackEntry != null
+
+    val showBackButton = canPop && currentRoute != NavigationRoute.ChallengeListScreen.name
 
     val toolBarTitle = remember { mutableStateOf("") }
     val toolBarSubTitle = remember { mutableStateOf("") }
@@ -60,37 +70,55 @@ fun AppNavigation(modifier: Modifier = Modifier,
     }
 
     // Set the top bar title and subtitle based on the current composable
-    ToolbarSetup(currentComposable, appStateViewModel, toolBarTitle, toolBarSubTitle)
+    ToolbarSetup(currentComposable.toString(), appStateViewModel, toolBarTitle, toolBarSubTitle,
+        toolBarVisibility = toolBarVisibility)
 
 
-
-    ContentWithMessageBar(messageBarState = messageBarState) {
 
     Scaffold(
         topBar = {
                 if (showTopBar) {
-                    TopAppBar(
-                        title = { Text(text = "SafeMeet") },
-                        navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+
+                        TopAppBar(
+                            title = { Text(text = "SafeMeet") },
+                            navigationIcon = {
+                                if (showBackButton){
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                    }
+                                }else null
                             }
-                        }
-                    )
-                }
+                        )
+                    }
+
         },
+        floatingActionButton = {
+            if (currentRoute == NavigationRoute.ChallengeListScreen.name){
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(NavigationRoute.CreateChallengeScreen.name)
+                    }
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add Challenge")
+                }
+            }
+
+        } ,
     ) { innerPadding ->
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
+        ContentWithMessageBar(messageBarState = messageBarState, modifier = Modifier.padding(innerPadding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
                 NavHost(navController = navController, startDestination = startDestinationName) {
-                    featureNavigation(appStateViewModel, navController = navController, messageBarState = messageBarState)
+                    featureNavigation(
+                        appStateViewModel,
+                        navController = navController,
+                        messageBarState = messageBarState
+                    )
                 }
+            }
         }
-
-    }
     }
 }
