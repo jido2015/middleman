@@ -16,7 +16,7 @@ google-services = "4.4.2"
 devtools-ksp = "2.1.0-1.0.29"
 core-library8 = "2.1.5"
 firebase-bom = "33.13.0"
-room-ksp = "2.7.1"
+room = "2.7.1"
 compiler = "1.5.15"
 splash-screen = "1.0.1"
 messageBarCompose = "1.0.5"
@@ -36,6 +36,7 @@ firebaseAuth = "23.2.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 firebaseCommonKtx = "21.0.0"
+datastore ="1.1.6"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -90,7 +91,9 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuth" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 
-room-ksp = { group = "androidx.room", name = "room-compiler", version.ref = "room-ksp" }
+pref-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+
 androidx-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "compiler" }
 
 #Coil Image loader

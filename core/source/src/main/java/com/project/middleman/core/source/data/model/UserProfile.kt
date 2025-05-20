@@ -6,7 +6,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 
-data class User(
+data class UserProfile(
     var uid: String?,
     var displayName: String?,
     var email: String?,

@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data.profile
+package com.project.middleman.core.source.data.repository.profile
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth

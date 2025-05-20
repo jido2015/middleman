@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
@@ -14,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.model.ParticipantProgress
-import com.project.middleman.core.source.data.model.User
 import com.project.middleman.core.source.domain.authentication.usecase.ProfileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -76,7 +76,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
     implementation(libs.google.identity.library)
-    ksp(libs.room.ksp)
     implementation(libs.compose.navigation)
     implementation(libs.google.credential.manager)
     implementation(libs.kotlin.coroutine)

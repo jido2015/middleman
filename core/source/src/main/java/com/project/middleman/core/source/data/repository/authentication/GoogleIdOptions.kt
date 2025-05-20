@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data.authentication
+package com.project.middleman.core.source.data.repository.authentication
 
 import java.security.MessageDigest
 import java.util.UUID

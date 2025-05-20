@@ -9,10 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.project.middleman.core.source.data.DispatchProvider
-import com.project.middleman.core.source.data.authentication.AuthRepositoryImpl
-import com.project.middleman.core.source.data.challenge.ChallengeRepositoryImpl
-import com.project.middleman.core.source.data.challenge.FetchChallengesRepositoryImpl
-import com.project.middleman.core.source.data.profile.ProfileRepositoryImpl
+import com.project.middleman.core.source.data.repository.authentication.AuthRepositoryImpl
+import com.project.middleman.core.source.data.repository.challenge.ChallengeRepositoryImpl
+import com.project.middleman.core.source.data.repository.challenge.FetchChallengesRepositoryImpl
+import com.project.middleman.core.source.data.repository.profile.ProfileRepositoryImpl
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
 import com.project.middleman.core.source.domain.challenge.repository.ChallengeRepository

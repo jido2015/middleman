@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data.authentication
+package com.project.middleman.core.source.data.repository.authentication
 
 import android.util.Log
 import androidx.credentials.CustomCredential

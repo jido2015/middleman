@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data.authentication
+package com.project.middleman.core.source.data.repository.authentication
 
 import android.content.Context
 import androidx.credentials.GetCredentialRequest
@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.data.model.User
+import com.project.middleman.core.source.data.model.UserProfile
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
@@ -85,11 +85,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun FirebaseUser.toUser(): User {
-        return User(
+    private fun FirebaseUser.toUser(): UserProfile {
+        return UserProfile(
             uid = uid,
-            displayName = displayName,
-            email = email,
+            displayName = displayName.toString(),
+            email = email.toString(),
             photoUrl = photoUrl.toString(),
             createdAt = FieldValue.serverTimestamp(),
         )

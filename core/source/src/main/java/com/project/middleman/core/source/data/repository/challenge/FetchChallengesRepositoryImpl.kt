@@ -1,4 +1,4 @@
-package com.project.middleman.core.source.data.challenge
+package com.project.middleman.core.source.data.repository.challenge
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
