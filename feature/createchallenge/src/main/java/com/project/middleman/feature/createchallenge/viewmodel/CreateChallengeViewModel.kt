@@ -11,12 +11,8 @@ import com.project.middleman.core.source.domain.challenge.usecase.CreateChalleng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.model.ParticipantProgress
-import com.project.middleman.core.source.domain.authentication.usecase.ProfileUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.String
@@ -24,15 +20,12 @@ import kotlin.String
 @HiltViewModel
 class CreateChallengeViewModel @Inject constructor(
     private val repo: CreateChallengeUseCase,
-    private val auth: FirebaseAuth,
-    private val dispatchProvider: DispatchProvider,
-    private val userProfile: ProfileUseCase
+    private val auth: FirebaseAuth
 ) : ViewModel() {
 
     // Represents the state of the create challenge operation
     var createChallengeResponse by mutableStateOf<CreateChallengeResponse>(RequestState.Success(null))
         private set
-
     /**
      * Creates a new challenge with the current user as creator.
      */
@@ -48,6 +41,7 @@ class CreateChallengeViewModel @Inject constructor(
             name = auth.currentUser?.displayName.toString(),
             joinedAt = System.currentTimeMillis(),
             amount = stake,
+            userId = user.uid,
             won = false,
             winAmount = 0.0
         )
@@ -66,16 +60,12 @@ class CreateChallengeViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            withContext(dispatchProvider.io){
-                createChallengeResponse = RequestState.Loading
-                try {
-                    withContext(Dispatchers.IO) {
-                        createChallengeResponse = repo.invoke(challenge)
-                    }
-                } catch (e: Exception) {
-                    // Catch any unexpected exceptions and update the UI state
-                    createChallengeResponse = RequestState.Error(e)
-                }
+            createChallengeResponse = RequestState.Loading
+            createChallengeResponse = try {
+                repo.invoke(challenge)
+            } catch (e: Exception) {
+                // Catch any unexpected exceptions and update the UI state
+                RequestState.Error(e)
             }
 
         }

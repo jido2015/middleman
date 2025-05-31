@@ -1,5 +1,6 @@
 package com.project.middleman.navigation
 
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -21,7 +22,12 @@ fun NavGraphBuilder.featureNavigation(
         //toolBarVisibility.value = false
         AuthenticationScreen(
             onSignIn = {
-                navController.navigate(NavigationRoute.ChallengeListScreen.name)
+                navController.navigate(NavigationRoute.ChallengeListScreen.name){
+                    launchSingleTop = true
+                    popUpTo(NavigationRoute.ChallengeListScreen.name) {
+                        inclusive = true
+                    }
+                }
             },
             messageBarState = messageBarState
         )
@@ -37,14 +43,12 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.ChallengeListScreen.name) {
-
         // toolBarVisibility.value = true
         ChallengeListScreen(
             messageBarState = messageBarState,
-            onChallengeClick = { challenge ->
+            onCardChallengeClick = { challenge ->
                 //  navController.navigate("challengeDetail/${challenge.id}")
             }
         )
     }
-
 }

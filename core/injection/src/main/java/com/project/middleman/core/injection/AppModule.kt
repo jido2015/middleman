@@ -35,7 +35,6 @@ class AppModule {
     fun provideFirebaseFirestore() = Firebase.firestore
 
 
-
     @Provides
     fun providesCurrentUser(
         firestore: FirebaseFirestore,
@@ -70,7 +69,7 @@ class AppModule {
         auth: FirebaseAuth,
         db: FirebaseFirestore
     ): ChallengeRepository = ChallengeRepositoryImpl(
-        db = db)
+        db = db, firebaseAuth = auth)
 
     @Provides
     fun provideFetchChallengesRepository(
