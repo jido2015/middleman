@@ -29,7 +29,7 @@ class CreateChallengeViewModel @Inject constructor(
     /**
      * Creates a new challenge with the current user as creator.
      */
-    fun createChallenge(title: String, description: String, stake: Double) {
+    fun createChallenge(title: String, description: String, selectedTimeInMillis: Long, stake: Double) {
         val user = auth.currentUser
         if (user == null) {
             createChallengeResponse = RequestState.Error(IllegalStateException("User is not authenticated."))
@@ -53,8 +53,7 @@ class CreateChallengeViewModel @Inject constructor(
             description = description,
             status = "open",
             createdAt = System.currentTimeMillis(),
-            startDate = System.currentTimeMillis(),
-            endDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000,
+            startDate = selectedTimeInMillis,
             payoutAmount = stake * 2
         )
 

@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -30,14 +30,14 @@ import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.messagebar.rememberMessageBarState
 
 
-private fun getStartDestination(isFirstTime: Boolean): NavigationRoute {
+private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
 
     //Check if user already logged in. If yes, show Dashboard screen.
     // Else, show onboarding screen or Login screen.
-    return if (isFirstTime) {
-        NavigationRoute.AuthenticationScreen
-    } else {
+    return if (isAuthenticated) {
         NavigationRoute.ChallengeListScreen
+    } else {
+        NavigationRoute.AuthenticationScreen
     }
 }
 
@@ -48,7 +48,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
                   messageBarState: MessageBarState = rememberMessageBarState(),
                   appStateViewModel: AppStateViewModel = hiltViewModel()) {
     val showTopBar by appStateViewModel.showTopBar.collectAsState()
-    val isFirstTime by remember { mutableStateOf(appStateViewModel.isFirstTime) }
+    val isFirstTime by remember { mutableStateOf(appStateViewModel.isUserAuthenticated) }
 
     val toolBarVisibility = remember { mutableStateOf(true) }
     val navController = rememberNavController()
@@ -65,7 +65,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
 
     val startDestinationName by remember {
         derivedStateOf {
-            getStartDestination(isFirstTime = appStateViewModel.isFirstTime).name
+            getStartDestination(isAuthenticated = appStateViewModel.isUserAuthenticated).name
         }
     }
 
@@ -84,7 +84,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
                             navigationIcon = {
                                 if (showBackButton){
                                     IconButton(onClick = { navController.popBackStack() }) {
-                                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                                     }
                                 }else null
                             }
@@ -107,6 +107,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
     ) { innerPadding ->
 
         ContentWithMessageBar(messageBarState = messageBarState, modifier = Modifier.padding(innerPadding)) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

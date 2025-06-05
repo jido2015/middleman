@@ -62,12 +62,8 @@ class AuthRepositoryImpl @Inject constructor(
             Log.d("signInWithGoogle", "Checking Firebase Auth")
 
             val authResult = auth.signInWithCredential(googleCredential).await()
+
             Log.d("signInWithGoogleUser", "${authResult.user}")
-            val isNewUser = authResult.additionalUserInfo?.isNewUser == true
-//            if (isNewUser) {
-//                Log.d("isNewUser", "Add User To Firestore")
-//                addUserToFirestore()
-//            }
             addUserToFirestore()
             RequestState.Success(true)
         } catch (e: Exception) {

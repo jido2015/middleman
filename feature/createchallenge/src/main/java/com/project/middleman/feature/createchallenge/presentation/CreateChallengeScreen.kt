@@ -1,7 +1,6 @@
 package com.project.middleman.feature.createchallenge.presentation
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,18 +23,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.project.middleman.core.common.getSelectedTimeInMillis
+import com.project.middleman.feature.createchallenge.components.ComposeTimeInputDialogCustom
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.messagebar.rememberMessageBarState
 
 @Composable
 fun CreateChallengeUi(
     messageBarState: MessageBarState = rememberMessageBarState(),
-    onSaveChallenge: (title: String, description: String, amount: Double) -> Unit,
+    onSaveChallenge: (title: String, description: String, selectedTimeInMillis: Long, amount: Double) -> Unit,
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
+    var showTIme by remember { mutableStateOf(false) }
+    var selectedTimeInMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
 
     Column(
         modifier = Modifier
@@ -71,17 +75,27 @@ fun CreateChallengeUi(
             modifier = Modifier.fillMaxWidth()
         )
 
+        //Add Input Time picker
+        Button(
+            onClick = {
+                showTIme = true
+            },
+        ) {
+            Text("Post Challenge")
+        }
+
         if (showError) {
             Text("Please fill all fields correctly.", color = Color.Red)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Submit button
         Button(
             onClick = {
                 val stake = amount.toDoubleOrNull()
                 if (title.isNotBlank() && description.isNotBlank() && stake != null) {
-                    onSaveChallenge(title, description, stake)
+                    onSaveChallenge(title, description,selectedTimeInMillis, stake)
                 } else {
                     showError = true
                 }
@@ -93,6 +107,15 @@ fun CreateChallengeUi(
     }
 
 
+    // Show time picker
+    if (showTIme) {
+        ComposeTimeInputDialogCustom(
+            onConfirm = { hour, minute ->
+                selectedTimeInMillis = getSelectedTimeInMillis(hour, minute)
+                showTIme = false },
+            onDismiss = { showTIme = false })
+    }
+
     //Navigate to list of challenges
     fun launch(result: String) {
         Log.d("CreateChallengeScreen", "Challenge Created")
@@ -102,13 +125,12 @@ fun CreateChallengeUi(
     OnCreateChallengeEvent(launch = {launch(it)}, messageBarState = messageBarState)
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun CreateChallengeScreenPreview() {
     MaterialTheme {
         CreateChallengeUi(
-            onSaveChallenge = { title, description, amount ->
+            onSaveChallenge = { title, description, selectedTimeInMillis, amount ->
                 // For preview, we just print to log (won't actually be called here)
                 println("Submitted: $title, $description, $amount")
             }

@@ -11,7 +11,6 @@ data class Challenge(
     val winnerId: String? = null,
     val createdAt: Long = 0L,
     val startDate: Long = 0L,
-    val endDate: Long = 0L
 )
 
 data class ParticipantProgress(

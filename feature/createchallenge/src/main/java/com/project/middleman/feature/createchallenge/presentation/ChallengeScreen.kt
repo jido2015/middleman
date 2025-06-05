@@ -26,8 +26,8 @@ fun CreateChallengeScreen(
     //    val startDate: String = "",
     //    val endDate: String = ""
 
-    CreateChallengeUi { title, desc, stake ->
-        viewModel.createChallenge(title, desc, stake)
+    CreateChallengeUi { title, desc, selectedTimeInMillis,stake ->
+        viewModel.createChallenge(title, desc, selectedTimeInMillis,stake)
         onSaveChallenge()
     }
 }
