@@ -68,8 +68,9 @@ fun ChallengeCardItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Status: ${if (challenge.status =="open") "Open" else "Closed"}",
-                    color = if (challenge.status == "open") Color.Green else Color.Red,
+                    text = "Status: ${if (challenge.status =="open") "Open" else 
+                        if (challenge.status =="closed") "Closed" else "In-Progress"}",
+                    color = if (challenge.status == "open") Color.Green else Color.Magenta,
                     style = MaterialTheme.typography.labelMedium
                 )
 

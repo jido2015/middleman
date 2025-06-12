@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.project.middleman.core.source.data.model.Challenge
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,29 +22,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.FetchChallengeResponseHandler
-import com.project.middleman.feature.openchallenges.presentation.uistate_handler.UpdateChallengeResponseHandler
+import com.project.middleman.feature.openchallenges.presentation.uistate_handler.UpdateChallengeWrapper
 import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewModel
 import com.stevdzasan.messagebar.MessageBarState
 
-
 @Composable
 fun ChallengeListScreen(
-    messageBarState: MessageBarState,
     onCardChallengeClick: (Challenge) -> Unit,
-    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel()
+    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel(),
+    messageBarState: MessageBarState
 ) {
     var challenges by remember { mutableStateOf(emptyList<Challenge>()) }
     var showDialog by remember { mutableStateOf(false) }
     var updatedChallenge by remember { mutableStateOf(Challenge()) }
 
-
-    UpdateChallengeResponseHandler(messageBarState = messageBarState)
+    UpdateChallengeWrapper(
+        onErrorMessage = { message ->
+            messageBarState.addError(Exception(message))
+        },
+        onSuccessMessage = {
+            messageBarState.addSuccess("Challenge Accepted")
+        }
+    )
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
 
         openChallengeViewModel.setLoading(true)
         openChallengeViewModel.fetchChallenges()
@@ -57,10 +63,13 @@ fun ChallengeListScreen(
 
         //Observe challenges
         FetchChallengeResponseHandler(
+
             getChallenges = {
                 getChallenges(it)
             },
-            messageBarState = messageBarState
+            onErrorMessage = {
+                messageBarState.addError(Exception(it))
+            }
         )
 
         LazyColumn(
@@ -71,9 +80,10 @@ fun ChallengeListScreen(
             items(challenges) { challenge ->
                 ChallengeCardItem(userUid = openChallengeViewModel.getCurrentUser(),
 
-                    challenge = challenge, onCardClicked = {
+                    challenge = challenge,
+                    onCardClicked = {
                         //Navigate to challenge detail screen
-                        onCardChallengeClick(challenge) },
+                        onCardChallengeClick(challenge)},
                     onChallengeClick = {
                         updatedChallenge = it
                         //Show dialog to accept challenge

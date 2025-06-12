@@ -14,7 +14,7 @@ import java.lang.Exception
 fun CredentialManagerLogin(
     viewModel: AuthViewModel = hiltViewModel(),
     launch: (result: AuthCredential) -> Unit,
-    messageBarState: MessageBarState,
+    onError: (message: String) -> Unit
 ) {
     when(val credManagerSignInResponse = viewModel.credentialManagerSignInResponse) {
         is RequestState.Loading -> {}
@@ -25,7 +25,7 @@ fun CredentialManagerLogin(
             }
         }
         is RequestState.Error -> LaunchedEffect(Unit) {
-            messageBarState.addError(Exception(credManagerSignInResponse.error.message))
+            onError(credManagerSignInResponse.error.message.toString())
             viewModel.setLoading(false)
         }
     }

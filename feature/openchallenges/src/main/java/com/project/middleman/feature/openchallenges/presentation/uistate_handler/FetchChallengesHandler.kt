@@ -8,7 +8,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewModel
-import com.stevdzasan.messagebar.MessageBarState
 import androidx.compose.runtime.getValue
 
 
@@ -16,7 +15,7 @@ import androidx.compose.runtime.getValue
 fun FetchChallengeResponseHandler(
     viewModel: OpenChallengeViewModel = hiltViewModel(),
     getChallenges: (result: List<Challenge>) -> Unit,
-    messageBarState: MessageBarState,
+    onErrorMessage: (message: String) -> Unit
 ) {
     val openChallengeResponse by viewModel.challenges.collectAsState()
 
@@ -38,7 +37,7 @@ fun FetchChallengeResponseHandler(
         is RequestState.Error -> {
             val error = (openChallengeResponse as RequestState.Error).error
             LaunchedEffect(Unit) {
-                messageBarState.addError(Exception(error.message))
+                onErrorMessage(error.message.toString())
                 Log.d("DisplayChallengesData", error.message.toString())
                 viewModel.setLoading(false)
             }

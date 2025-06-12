@@ -47,20 +47,22 @@ class OpenChallengeViewModel @Inject constructor(
     // Participant accepts challenge
     fun onChallengeAccepted(challenge: Challenge){
 
+        val updatedChallenge = challenge.copy(title = "In-Progress")
+
         val participant = ParticipantProgress(
             status = "Participant",
             name = firebaseAuth.currentUser?.displayName.toString(),
             joinedAt = System.currentTimeMillis(),
-            amount = challenge.payoutAmount / 2,
+            amount = updatedChallenge.payoutAmount / 2,
             userId = getCurrentUser().toString(),
             won = false,
             winAmount = 0.0
         )
 
-        Log.d("LogChallengeId", challenge.id)
+        Log.d("LogChallengeId", updatedChallenge.id)
         viewModelScope.launch {
             _updateChallenge.value = RequestState.Loading
-            updateChallengeUseCase.invoke(challenge, participant).collect { state ->
+            updateChallengeUseCase.invoke(updatedChallenge, participant).collect { state ->
                 _updateChallenge.value = state
             }
         }
@@ -71,10 +73,10 @@ class OpenChallengeViewModel @Inject constructor(
     fun startListeningToChallengeUpdate(challenge: Challenge) {
         _challenges.update { currentState ->
             if (currentState is RequestState.Success) {
-                val updatedList = currentState.data?.map { currentChallenge ->
+                val updatedChallenge = currentState.data?.map { currentChallenge ->
                     if (currentChallenge.id == challenge.id) challenge else currentChallenge
                 }
-                RequestState.Success(updatedList)
+                RequestState.Success(updatedChallenge)
             } else {
                 currentState
             }

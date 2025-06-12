@@ -21,9 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
@@ -46,9 +48,11 @@ private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier,
                   messageBarState: MessageBarState = rememberMessageBarState(),
-                  appStateViewModel: AppStateViewModel = hiltViewModel()) {
+                  appStateViewModel: AppStateViewModel = hiltViewModel()
+) {
     val showTopBar by appStateViewModel.showTopBar.collectAsState()
-    val isFirstTime by remember { mutableStateOf(appStateViewModel.isUserAuthenticated) }
+
+    val sharedViewModel: SharedViewModel = viewModel()
 
     val toolBarVisibility = remember { mutableStateOf(true) }
     val navController = rememberNavController()
@@ -62,6 +66,8 @@ fun AppNavigation(modifier: Modifier = Modifier,
 
     val toolBarTitle = remember { mutableStateOf("") }
     val toolBarSubTitle = remember { mutableStateOf("") }
+    val shouldShowBottomBar = currentRoute in listOf("home", "profile", "settings")
+
 
     val startDestinationName by remember {
         derivedStateOf {
@@ -76,6 +82,11 @@ fun AppNavigation(modifier: Modifier = Modifier,
 
 
     Scaffold(
+//        bottomBar = {
+//            if (shouldShowBottomBar) {
+//                BottomNavigationBar(navController)
+//            }
+//        }
         topBar = {
                 if (showTopBar) {
 
@@ -114,9 +125,11 @@ fun AppNavigation(modifier: Modifier = Modifier,
         ) {
                 NavHost(navController = navController, startDestination = startDestinationName) {
                     featureNavigation(
-                        appStateViewModel,
                         navController = navController,
-                        messageBarState = messageBarState
+                        messageBarState = messageBarState,
+                        sharedViewModel = sharedViewModel,
+                        appStateViewModel = appStateViewModel,
+                        modifier = modifier
                     )
                 }
             }
