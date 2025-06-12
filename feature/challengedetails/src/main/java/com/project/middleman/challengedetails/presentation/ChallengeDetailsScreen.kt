@@ -29,7 +29,6 @@ fun ChallengeDetailsScreen(
 
     var challenge by remember { mutableStateOf(challengeDetails) }
     challengeDetailsViewModel.getChallengeDetails(challengeDetails)
-    val scope = rememberCoroutineScope()
 
     ChallengeDetailsWrapper(
         onSuccess = { challengeDetails ->

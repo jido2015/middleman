@@ -23,8 +23,6 @@ fun AuthenticationScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     onSignIn: () -> Unit
 ){
-
-    val scope = rememberCoroutineScope()
     AuthenticationContent(
         loadingState = viewModel.loadingState,
         onButtonClicked = {
