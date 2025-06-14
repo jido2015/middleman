@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.middleman.composables"
+    namespace = "com.project.middleman.designsystem"
     compileSdk = 35
 
     defaultConfig {
@@ -67,4 +67,5 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+
 }

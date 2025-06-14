@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -72,17 +71,34 @@ fun ChallengeDetailsScreen(
 
         }
 
-        Button(onClick = {
-            challengeDetailsViewModel.onChallengeAccepted(challenge)
-            onAcceptChallenge()
 
-            messageBarState.addSuccess("Challenge Accepted")
-        }, modifier = Modifier.constrainAs(acceptChallenge) {
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        }) {
-            Text(text = "Accept Challenge")
+        if (challengeDetailsViewModel.getCurrentUser() == challenge.participant.entries.find{
+                it.value.status == "Creator"}?.value?.userId ){
+
+            Button(onClick = {
+
+                messageBarState.addSuccess("Complete")
+            }, modifier = Modifier.constrainAs(acceptChallenge) {
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }) {
+                Text(text = "")
+            }
+        } else{
+            Button(onClick = {
+                challengeDetailsViewModel.onChallengeAccepted(challenge)
+                onAcceptChallenge()
+
+                messageBarState.addSuccess("Challenge Accepted")
+            }, modifier = Modifier.constrainAs(acceptChallenge) {
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }) {
+                Text(text = "Accept & Join")
+            }
         }
+
     }
 }

@@ -9,8 +9,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
 fun AuthenticationContent(
@@ -18,12 +20,22 @@ fun AuthenticationContent(
     onButtonClicked: () -> Unit
 ) {
 
-    Column(
+    ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(end = 20.dp, start = 20.dp)
+    ){
 
-    ) {
+        val (a, d, b) = createRefs()
+
+
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = "Challenge your crew." +
+                "Win more than bragging rights.")
+
+
 
         //Getting started button
         GettingStartedButton(loadingState, onButtonClicked)

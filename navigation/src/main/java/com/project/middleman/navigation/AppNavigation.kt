@@ -76,7 +76,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
     }
 
     // Set the top bar title and subtitle based on the current composable
-    ToolbarSetup(currentComposable.toString(), appStateViewModel, toolBarTitle, toolBarSubTitle,
+    ToolbarSetup(currentRoute, appStateViewModel, toolBarTitle, toolBarSubTitle,
         toolBarVisibility = toolBarVisibility)
 
 
@@ -91,7 +91,7 @@ fun AppNavigation(modifier: Modifier = Modifier,
                 if (showTopBar) {
 
                         TopAppBar(
-                            title = { Text(text = "SafeMeet") },
+                            title = { Text(text = toolBarTitle.value) },
                             navigationIcon = {
                                 if (showBackButton){
                                     IconButton(onClick = { navController.popBackStack() }) {

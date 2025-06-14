@@ -100,7 +100,7 @@ fun ChallengeCardItem(
                     shape = RoundedCornerShape(20)
                 ) {
                     Text(
-                        text = "Payout $${challenge.payoutAmount}"
+                        text = "Accept & Join"
                     )
                 }
             }
