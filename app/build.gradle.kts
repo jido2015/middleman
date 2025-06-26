@@ -106,6 +106,7 @@ dependencies {
     implementation(project(":core:source"))
     implementation(project(":feature:authentication"))
     implementation(project(":navigation"))
-
+    implementation(project(":composables"))
+    implementation(project(":designsystem"))
 
 }
