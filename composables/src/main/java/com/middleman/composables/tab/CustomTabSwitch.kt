@@ -30,8 +30,6 @@ fun SampleTabScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        CustomTab()
-
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(text = "Selected Tab: $selectedTab", style = MaterialTheme.typography.bodyLarge)

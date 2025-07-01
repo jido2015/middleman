@@ -15,16 +15,13 @@ import com.project.middleman.feature.openchallenges.presentation.ChallengeListSc
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.MessageBarState
 
-fun NavGraphBuilder.featureNavigation(
+fun NavGraphBuilder.authenticationNavigation(
     modifier: Modifier,
-    appStateViewModel: AppStateViewModel,
     navController: NavHostController,
-    sharedViewModel: SharedViewModel,
-    messageBarState: MessageBarState,
+    messageBarState: MessageBarState
 ) {
 
-    composable(route = NavigationRoute.AuthenticationScreen.name) {
-        // Ensure visibility is set before the screen is shown
+    composable(route = NavigationRoute.AuthenticationScreen.route) {
 
         Column(
             modifier = Modifier
@@ -33,11 +30,11 @@ fun NavGraphBuilder.featureNavigation(
 
             AuthenticationScreen(
                 onSignIn = {
-                    navController.navigate(NavigationRoute.ChallengeListScreen.name) {
-                        launchSingleTop = true
-                        popUpTo(NavigationRoute.ChallengeListScreen.name) {
+                    navController.navigate(NavigationRoute.ChallengeListScreen.route) {
+                        popUpTo(NavigationRoute.ChallengeListScreen.route) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 },
                 messageBarState = messageBarState,
@@ -45,16 +42,25 @@ fun NavGraphBuilder.featureNavigation(
         }
     }
 
-    composable(route = NavigationRoute.CreateChallengeScreen.name) {
+}
+fun NavGraphBuilder.featureNavigation(
+    modifier: Modifier,
+    appStateViewModel: AppStateViewModel,
+    navController: NavHostController,
+    sharedViewModel: SharedViewModel,
+    messageBarState: MessageBarState,
+) {
+
+    composable(route = NavigationRoute.CreateChallengeScreen.route) {
 
         CreateChallengeScreen(
             onSaveChallenge = {
-                navController.navigate(NavigationRoute.ChallengeListScreen.name)
+                navController.navigate(NavigationRoute.ChallengeListScreen.route)
             }
         )
     }
 
-    composable(route = NavigationRoute.ChallengeListScreen.name) {
+    composable(route = NavigationRoute.ChallengeListScreen.route) {
 
         Column(
             modifier = Modifier
@@ -64,13 +70,13 @@ fun NavGraphBuilder.featureNavigation(
                 messageBarState = messageBarState,
                 onCardChallengeClick = { challenge ->
                     sharedViewModel.challenge = challenge
-                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.name)
+                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
                 }
             )
         }
     }
 
-    composable(route = NavigationRoute.ChallengeDetailsScreen.name) {
+    composable(route = NavigationRoute.ChallengeDetailsScreen.route) {
 
         Column(
             modifier = Modifier

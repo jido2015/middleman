@@ -17,17 +17,17 @@ fun ToolbarSetup(
 
     LaunchedEffect(currentComposable) {
         when (currentComposable) {
-            NavigationRoute.AuthenticationScreen.name -> {
+            NavigationRoute.AuthenticationScreen.route -> {
                 appStateViewModel.setTopBarVisibility(toolBarVisibility)
                 toolBarTitle.value = "Welcome Back,"
                 toolBarSubTitle.value = "Please log in to your account"
             }
-            NavigationRoute.ChallengeListScreen.name -> {
+            NavigationRoute.ChallengeListScreen.route -> {
                 appStateViewModel.setTopBarVisibility(toolBarVisibility)
                 toolBarTitle.value = "Marketplace"
                 toolBarSubTitle.value = MarketplaceSubtitle.random()
             }
-            NavigationRoute.ChallengeDetailsScreen.name -> {
+            NavigationRoute.ChallengeDetailsScreen.route -> {
                 appStateViewModel.setTopBarVisibility(toolBarVisibility)
                 toolBarTitle.value = "Challenge Overview"
                 toolBarSubTitle.value = ChallengeOverviewSubtitle.random()

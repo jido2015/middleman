@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.middleman.composables.tab.SampleTabScreen
 import com.project.middleman.designsystem.themes.MiddlemanTheme
+import com.project.middleman.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,10 +30,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary,
                 ) {
-                    SampleTabScreen()
-//                    AppNavigation(
-//                        modifier = Modifier.padding()
-//                    )
+                   // SampleTabScreen()
+                    AppNavigation(
+                        modifier = Modifier.padding()
+                    )
                 }
 
             }

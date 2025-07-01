@@ -94,6 +94,7 @@ dependencies {
     implementation(project(":feature:challengedetails"))
     implementation(project(":core:source"))
     implementation(project(":core:common"))
+    implementation(project(":composables"))
 
     // Desugar JDK
     coreLibraryDesugaring(libs.core.library8)
