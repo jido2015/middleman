@@ -1,8 +1,7 @@
-package com.project.middleman.navigation
+package com.project.middleman.navigation.feature
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,40 +11,12 @@ import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.feature.createchallenge.presentation.CreateChallengeScreen
 import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
-import com.project.middleman.navigation.viewmodel.AppStateViewModel
+import com.project.middleman.navigation.NavigationRoute
 import com.stevdzasan.messagebar.MessageBarState
 
-fun NavGraphBuilder.authenticationNavigation(
-    modifier: Modifier,
-    navController: NavHostController,
-    messageBarState: MessageBarState
-) {
 
-    composable(route = NavigationRoute.AuthenticationScreen.route) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-
-            AuthenticationScreen(
-                onSignIn = {
-                    navController.navigate(NavigationRoute.ChallengeListScreen.route) {
-                        popUpTo(NavigationRoute.ChallengeListScreen.route) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
-                },
-                messageBarState = messageBarState,
-            )
-        }
-    }
-
-}
 fun NavGraphBuilder.featureNavigation(
     modifier: Modifier,
-    appStateViewModel: AppStateViewModel,
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
     messageBarState: MessageBarState,

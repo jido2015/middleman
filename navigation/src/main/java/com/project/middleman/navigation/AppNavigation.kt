@@ -1,10 +1,5 @@
 package com.project.middleman.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -16,16 +11,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.middleman.composables.tab.Tab
 import com.project.middleman.core.common.viewmodel.SharedViewModel
+import com.project.middleman.navigation.auth.AuthNavigationHost
+import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
@@ -39,35 +33,6 @@ private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     }
 }
 
-@Composable
-private fun NavigationContent(
-    navController: androidx.navigation.NavHostController,
-    startDestinationName: String,
-    messageBarState: MessageBarState,
-    sharedViewModel: SharedViewModel,
-    appStateViewModel: AppStateViewModel,
-    modifier: Modifier
-) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestinationName,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        authenticationNavigation(
-            navController = navController,
-            messageBarState = messageBarState,
-            modifier = modifier
-        )
-        featureNavigation(
-            navController = navController,
-            messageBarState = messageBarState,
-            sharedViewModel = sharedViewModel,
-            appStateViewModel = appStateViewModel,
-            modifier = modifier
-        )
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +41,8 @@ fun AppNavigation(
     messageBarState: MessageBarState = rememberMessageBarState(),
     appStateViewModel: AppStateViewModel = hiltViewModel()
 ) {
+    val isAuthenticated = appStateViewModel.isUserAuthenticated
+
     // State management
     val showTopBar by appStateViewModel.showTopBar.collectAsState()
     val sharedViewModel: SharedViewModel = viewModel()
@@ -123,34 +90,25 @@ fun AppNavigation(
             messageBarState = messageBarState,
             modifier = Modifier.padding(innerPadding)
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Animated Floating tab
-                AnimatedBottomTab(
-                    selectedTab = selectedTab,
-                    onTabSelected = { selectedTab = it },
-                    currentRoute = currentRoute,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 50.dp)
-                )
 
-                // Navigation content with space for floating tab
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(bottom = 100.dp)
-                ) {
-                    NavigationContent(
+                if (isAuthenticated) {
+                    FeatureContentLayout(
                         navController = navController,
-                        startDestinationName = startDestinationName.route,
+                        selectedTab = selectedTab,
+                        currentRoute = currentRoute,
+                        onTabSelected = { selectedTab = it },
                         messageBarState = messageBarState,
                         sharedViewModel = sharedViewModel,
                         appStateViewModel = appStateViewModel,
                         modifier = modifier
                     )
+                } else{
+                    AuthNavigationHost(
+                        navController = navController,
+                        messageBarState = messageBarState,
+                        startDestinationName = startDestinationName.route,
+                    )
                 }
-            }
         }
     }
 }
