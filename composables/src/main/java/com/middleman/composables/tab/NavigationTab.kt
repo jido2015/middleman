@@ -1,5 +1,6 @@
 package com.middleman.composables.tab
 
+import android.R.attr.tint
 import com.middleman.composables.R
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -35,14 +36,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.lightColorAccent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.project.middleman.designsystem.themes.Green
+import androidx.compose.ui.graphics.Brush
 import com.project.middleman.designsystem.themes.Grey
+import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.white
 
 enum class Tab {
@@ -50,50 +51,65 @@ enum class Tab {
 }
 
 @Composable
-fun CustomTab(
+fun CustomNavigationTab(
     modifier: Modifier = Modifier,
     selectedTab: Tab,
     onTabSelected: (Tab) -> Unit
 ) {
-
-    Card(
-        shape = RoundedCornerShape(100.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        modifier = modifier.width(192.dp).height(48.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 2.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TabIcon(
-                    tab = Tab.Home,
-                    selected = selectedTab == Tab.Home,
-                    onClick = { onTabSelected(Tab.Home) }
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(114.dp)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,          // fully transparent at the top
+                        Color.White.copy(alpha = 0.6f)  // semi-transparent white at bottom
+                    )
                 )
+            )
+    ){
 
-                CircularTabButton(
-                    selected = selectedTab == Tab.Add,
-                    onClick = { onTabSelected(Tab.Add)}
-                )
+         Card(
+             shape = RoundedCornerShape(100.dp),
+             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+             colors = CardDefaults.cardColors(containerColor = Color.White),
+             modifier = Modifier.align(Alignment.Center).width(192.dp).height(48.dp)
+         ) {
+             Row(
+                 modifier = Modifier
+                     .fillMaxWidth()
+                     .padding(top = 2.dp),
+                 horizontalArrangement = Arrangement.Center,
+                 verticalAlignment = Alignment.CenterVertically
+             ) {
+                 Row(
+                     horizontalArrangement = Arrangement.spacedBy(20.dp),
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+                     TabIcon(
+                         tab = Tab.Home,
+                         selected = selectedTab == Tab.Home,
+                         onClick = { onTabSelected(Tab.Home)
+                         }
+                     )
 
-                TabIcon(
-                    tab = Tab.Explore,
-                    selected = selectedTab == Tab.Explore,
-                    onClick = { onTabSelected(Tab.Explore)}
-                )
-            }
-        }
-    }
+                     CircularTabButton(
+                         selected = selectedTab == Tab.Add,
+                         onClick = { onTabSelected(Tab.Add)}
+                     )
+
+                     TabIcon(
+                         tab = Tab.Explore,
+                         selected = selectedTab == Tab.Explore,
+                         onClick = { onTabSelected(Tab.Explore)}
+                     )
+                 }
+             }
+         }
+     }
+
 }
-
 
 @Composable
 fun TabIcon(
@@ -101,7 +117,11 @@ fun TabIcon(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val tint = if (selected) Color.Black else Grey
+    val iconRes = when (tab) {
+        Tab.Home -> if (selected) R.drawable.home_filled else R.drawable.home
+        Tab.Explore -> if (selected) R.drawable.explore_filled else R.drawable.explore
+        else -> error("Unsupported tab")
+    }
 
     Box(
         modifier = Modifier
@@ -113,25 +133,20 @@ fun TabIcon(
                 indication = ripple(
                     bounded = false,
                     radius = 24.dp,
-                    color = Color.Gray // neutral ripple color
+                    color = Color.White
                 )
             ),
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(
-                id = when (tab) {
-                    Tab.Home -> R.drawable.home
-                    Tab.Explore -> R.drawable.explore
-                    else -> error("Unsupported tab")
-                }
-            ),
+            painter = painterResource(id = iconRes),
             contentDescription = null,
-            tint = tint,
+            tint = Color.Unspecified, // use the drawable's own fill/stroke
             modifier = Modifier.size(24.dp)
         )
     }
 }
+
 
 @Composable
 fun CircularTabButton(
@@ -187,7 +202,7 @@ fun CircularTabButton(
 @Preview(showBackground = true)
 @Composable
 fun CustomTabPreview(){
-    CustomTab(
+    CustomNavigationTab(
         selectedTab = Tab.Home,
         onTabSelected = {}
     )

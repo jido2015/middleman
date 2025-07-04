@@ -1,7 +1,8 @@
 package com.project.middleman.designsystem.themes
 
-import android.app.Activity
+import android.content.Context
 import android.os.Build
+import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -35,6 +36,8 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MiddlemanTheme(
+    window: Window,
+    context: Context,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -50,9 +53,11 @@ fun MiddlemanTheme(
         else -> LightColorScheme
     }
 
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
 }
+

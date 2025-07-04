@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Middleman" parent="android:Theme.Material.Light.NoActionBar" />
-</resources>
+    <style name="Theme.Middleman.SplashScreen" parent="Theme.SplashScreen">
+        <item name="android:statusBarColor" >@android:color/transparent</item>
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawabl</item>-->
+        <item name="postSplashScreenTheme">@style/Theme.Middleman</item>
+    </style>
+
+    <style name="Theme.Middleman" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor" >@android:color/transparent</item>
+    </style></resources>
+

@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/feature/common" />
             <option value="$PROJECT_DIR$/feature/createchallenge" />
             <option value="$PROJECT_DIR$/feature/dashboard" />
+            <option value="$PROJECT_DIR$/feature/notification" />
             <option value="$PROJECT_DIR$/feature/openchallenges" />
             <option value="$PROJECT_DIR$/navigation" />
           </set>

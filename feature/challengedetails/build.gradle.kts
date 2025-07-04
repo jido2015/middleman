@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-
-
 android {
     namespace = "com.project.middleman.challengedetails"
     compileSdk = 35

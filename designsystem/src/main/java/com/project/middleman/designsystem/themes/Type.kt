@@ -9,49 +9,50 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 
 //Set font family
-val gothamFont = FontFamily(
+val jakartaFont = FontFamily(
 
-    Font(R.font.gotham_rnd_bold, FontWeight.Bold),
-    Font(R.font.gotham_rnd_light, FontWeight.Light),
-    Font(R.font.gotham_rnd_medium, FontWeight.Medium)
+    Font(R.font.jakarta_bold, FontWeight.Bold),
+    Font(R.font.jakarta_light, FontWeight.Light),
+    Font(R.font.jakarta_medium, FontWeight.Medium),
+    Font(R.font.jakarta_regular, FontWeight.Normal),
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     labelMedium = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.Light,
         fontSize = 16.sp,
     ),
     titleLarge = TextStyle(
-        fontFamily =  gothamFont,
+        fontFamily =  jakartaFont,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
     ),
 
     labelSmall = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
     ),
 
     labelLarge = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
     ),
     titleSmall = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
     ),
     bodyLarge = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
     ),
     displayLarge = TextStyle(
-        fontFamily = gothamFont,
+        fontFamily = jakartaFont,
         fontWeight = FontWeight.Bold,
         fontSize = 25.sp,
     )
