@@ -29,8 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.primary,
                 ) {
                    // SampleTabScreen()
-                    AppNavigation(
-                    )
+                    AppNavigation()
                 }
 
             }

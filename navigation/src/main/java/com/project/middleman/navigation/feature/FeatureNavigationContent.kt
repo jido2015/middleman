@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.middleman.feature.dashboard.presentation.DashboardScreen
 import com.project.middleman.challengedetails.presentation.ChallengeDetailsScreen
 import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
@@ -38,13 +39,16 @@ fun NavGraphBuilder.featureNavigation(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            ChallengeListScreen(
-                messageBarState = messageBarState,
-                onCardChallengeClick = { challenge ->
-                    sharedViewModel.challenge = challenge
-                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
-                }
-            )
+
+
+            DashboardScreen(onProceedClicked = {})
+//            ChallengeListScreen(
+//                messageBarState = messageBarState,
+//                onCardChallengeClick = { challenge ->
+//                    sharedViewModel.challenge = challenge
+//                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
+//                }
+//            )
         }
     }
 

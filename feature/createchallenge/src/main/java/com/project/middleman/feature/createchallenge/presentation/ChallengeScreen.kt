@@ -10,7 +10,7 @@ fun CreateChallengeScreen(
     onSaveChallenge: () -> Unit,
     viewModel: CreateChallengeViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    LocalContext.current
 
 
     //    val id: String = "",

@@ -26,7 +26,7 @@ fun AuthenticationContent(
             .padding(end = 20.dp, start = 20.dp)
     ){
 
-        val (a, d, b) = createRefs()
+        val (_, _, _) = createRefs()
 
 
         Text(

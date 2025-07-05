@@ -94,4 +94,5 @@ dependencies {
     implementation(project(":core:source"))
     implementation(project(":core:common"))
     implementation(project(":designsystem"))
+    implementation(project(":composables"))
 }

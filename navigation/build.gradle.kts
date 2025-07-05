@@ -96,6 +96,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":composables"))
     implementation(project(":feature:notification"))
+    implementation(project(":feature:dashboard"))
 
     // Desugar JDK
     coreLibraryDesugaring(libs.core.library8)

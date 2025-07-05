@@ -40,7 +40,7 @@ fun ChallengeDetailsScreen(
         })
 
 
-    ConstraintLayout(){
+    ConstraintLayout {
         val (details, acceptChallenge) = createRefs()
 
         Column(

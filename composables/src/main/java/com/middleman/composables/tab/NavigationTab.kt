@@ -1,6 +1,5 @@
 package com.middleman.composables.tab
 
-import android.R.attr.tint
 import com.middleman.composables.R
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode

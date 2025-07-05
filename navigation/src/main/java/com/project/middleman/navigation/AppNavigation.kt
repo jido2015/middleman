@@ -60,7 +60,6 @@ fun AppNavigation(
     val isAuthenticated = appStateViewModel.isUserAuthenticated
 
     // State management
-    val showTopBar by appStateViewModel.showTopBar.collectAsState()
     val sharedViewModel: SharedViewModel = viewModel()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -79,7 +78,7 @@ fun AppNavigation(
         }
     }
     val canPop = navController.previousBackStackEntry != null
-    val showBackButton = canPop && currentRoute != NavigationRoute.ChallengeListScreen.route
+    canPop && currentRoute != NavigationRoute.ChallengeListScreen.route
 
     // Setup and effects
     ToolbarSetup(

@@ -1,7 +1,6 @@
 package com.middleman.feature.notification
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -16,6 +15,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.middleman.composables.button.ProceedButton
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.deepColorAccent
@@ -191,34 +192,20 @@ fun AnimatedNotificationBar(modifier: Modifier = Modifier, onProceedClicked: () 
                             }.size(24.dp)
 
                         )
-                        ProceedButton(onProceedClicked,
-                            modifier = Modifier.constrainAs(enter) {
+                        ProceedButton(
+                            proceedClicked = onProceedClicked,
+                        modifier = Modifier.clip(RoundedCornerShape(100.dp))
+                            .background(deepColorAccent).constrainAs(enter) {
                                 start.linkTo(parent.start)
                                 bottom.linkTo(parent.bottom)
-                            })
-
+                            },
+                            text = "Proceed",
+                            paddingValues = PaddingValues(10.dp),
+                            size = 24.dp,
+                            color = Color.White)
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun ProceedButton(proceedClicked: () -> Unit, modifier: Modifier){
-
-    Row(modifier = modifier.clip(RoundedCornerShape(100.dp)).background(deepColorAccent)) {
-        Icon(
-            painter = painterResource(id = R.drawable.arrow_right),
-            contentDescription = "Proceed Button",
-            tint = Color.White,
-            modifier = Modifier.clip(CircleShape).padding(10.dp).clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null // Let Material 3 apply default ripple
-            ) {
-                proceedClicked()
-            }.size(24.dp)
-
-        )
     }
 }
