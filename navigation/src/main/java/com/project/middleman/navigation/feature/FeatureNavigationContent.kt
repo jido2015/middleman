@@ -33,6 +33,12 @@ fun NavGraphBuilder.featureNavigation(
         )
     }
 
+    composable(route = NavigationRoute.DashboardScreen.route) {
+
+        DashboardScreen(onProceedClicked = {})
+
+    }
+
     composable(route = NavigationRoute.ChallengeListScreen.route) {
 
         Column(
@@ -41,14 +47,13 @@ fun NavGraphBuilder.featureNavigation(
         ) {
 
 
-            DashboardScreen(onProceedClicked = {})
-//            ChallengeListScreen(
-//                messageBarState = messageBarState,
-//                onCardChallengeClick = { challenge ->
-//                    sharedViewModel.challenge = challenge
-//                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
-//                }
-//            )
+            ChallengeListScreen(
+                messageBarState = messageBarState,
+                onCardChallengeClick = { challenge ->
+                    sharedViewModel.challenge = challenge
+                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
+                }
+            )
         }
     }
 

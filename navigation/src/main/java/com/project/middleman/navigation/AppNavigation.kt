@@ -25,14 +25,13 @@ import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
-import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.messagebar.rememberMessageBarState
 
 private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     return if (isAuthenticated) {
-        NavigationRoute.ChallengeListScreen
+        NavigationRoute.DashboardScreen
     } else {
         NavigationRoute.AuthenticationScreen
     }
@@ -64,12 +63,7 @@ fun AppNavigation(
     }
 
     val canPop = navController.previousBackStackEntry != null
-    canPop && currentRoute != NavigationRoute.ChallengeListScreen.route
-
-    // Setup and effects
-
-//    UpdateSelectedTabOnNavigation(navBackStackEntry) { selectedTab = it }
-//    HandleTabNavigation(selectedTab, currentRoute, navController)
+    canPop && currentRoute != NavigationRoute.DashboardScreen.route
 
     Scaffold(
        contentWindowInsets = WindowInsets.safeDrawing

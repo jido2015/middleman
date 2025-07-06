@@ -41,13 +41,13 @@ internal fun HandleTabNavigation(
 ) {
     LaunchedEffect(selectedTab) {
         val targetRoute = when (selectedTab) {
-            Tab.Home -> NavigationRoute.ChallengeListScreen
-            Tab.Add -> NavigationRoute.CreateChallengeScreen
-            Tab.Explore -> NavigationRoute.ChallengeListScreen
+            Tab.Home -> NavigationRoute.DashboardScreen.route
+            Tab.Add -> NavigationRoute.CreateChallengeScreen.route
+            Tab.Explore -> NavigationRoute.ChallengeListScreen.route
         }
 
-        if (currentRoute != targetRoute.route) {
-            navController.navigate(targetRoute.route) {
+        if (currentRoute != targetRoute) {
+            navController.navigate(targetRoute) {
                 launchSingleTop = true
                 restoreState = true
             }
@@ -62,8 +62,9 @@ internal fun UpdateSelectedTabOnNavigation(
 ) {
     LaunchedEffect(navBackStackEntry?.destination?.route) {
         when (navBackStackEntry?.destination?.route) {
-            NavigationRoute.ChallengeListScreen.route -> onTabUpdate(Tab.Home)
+            NavigationRoute.ChallengeListScreen.route -> onTabUpdate(Tab.Explore)
             NavigationRoute.CreateChallengeScreen.route -> onTabUpdate(Tab.Add)
+            NavigationRoute.DashboardScreen.route -> onTabUpdate(Tab.Home)
         }
     }
 }

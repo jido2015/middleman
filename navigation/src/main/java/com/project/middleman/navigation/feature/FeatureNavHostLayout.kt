@@ -24,6 +24,8 @@ import com.project.middleman.navigation.NavigationRoute
 import com.stevdzasan.messagebar.MessageBarState
 import androidx.compose.runtime.getValue
 import com.middleman.composables.topbar.MainToolBar
+import com.project.middleman.navigation.HandleTabNavigation
+import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
 
 @Composable
 fun FeatureContentLayout(
@@ -37,34 +39,9 @@ fun FeatureContentLayout(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    // Handle tab navigation within the feature navigation context
-    LaunchedEffect(selectedTab) {
-        val targetRoute = when (selectedTab) {
-            Tab.Home -> NavigationRoute.ChallengeListScreen.route
-            Tab.Add -> NavigationRoute.CreateChallengeScreen.route
-            Tab.Explore -> NavigationRoute.ChallengeListScreen.route
-        }
+    UpdateSelectedTabOnNavigation(navBackStackEntry) { it }
+    HandleTabNavigation(selectedTab, currentRoute, navController)
 
-        // Only navigate if we're not already on the target route
-        if (currentRoute != targetRoute) {
-            try {
-                navController.navigate(targetRoute) {
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            } catch (e: Exception) {
-                println("Feature navigation error: ${e.message}")
-            }
-        }
-    }
-
-    // Update selected tab based on current route
-    LaunchedEffect(navBackStackEntry?.destination?.route) {
-        when (navBackStackEntry?.destination?.route) {
-            NavigationRoute.ChallengeListScreen.route -> onTabSelected(Tab.Home)
-            NavigationRoute.CreateChallengeScreen.route -> onTabSelected(Tab.Add)
-        }
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -116,7 +93,7 @@ fun FeatureNavigationHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.ChallengeListScreen.route,
+        startDestination = NavigationRoute.DashboardScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         featureNavigation(navController =navController, messageBarState = messageBarState,
