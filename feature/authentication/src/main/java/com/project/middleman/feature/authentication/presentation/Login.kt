@@ -1,19 +1,17 @@
 package com.project.middleman.feature.authentication.presentation
 
-
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.feature.authentication.components.CredentialManagerLogin
 import com.project.middleman.feature.authentication.components.SignInWithGoogle
 import com.stevdzasan.messagebar.MessageBarState
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -23,6 +21,8 @@ fun AuthenticationScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     onSignIn: () -> Unit
 ){
+
+
     AuthenticationContent(
         loadingState = viewModel.loadingState,
         onButtonClicked = {

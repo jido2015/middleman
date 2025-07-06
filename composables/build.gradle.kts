@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.compose.constraintlayout)
     implementation(libs.compose.navigation)
     implementation(libs.kotlin.coroutine)
+    implementation(libs.skydoves.image.loader)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

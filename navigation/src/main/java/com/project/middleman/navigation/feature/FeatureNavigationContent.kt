@@ -1,6 +1,5 @@
 package com.project.middleman.navigation.feature
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -10,9 +9,7 @@ import androidx.navigation.compose.composable
 import com.middleman.feature.dashboard.presentation.DashboardScreen
 import com.project.middleman.challengedetails.presentation.ChallengeDetailsScreen
 import com.project.middleman.core.common.viewmodel.SharedViewModel
-import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.feature.createchallenge.presentation.CreateChallengeScreen
-import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.NavigationRoute
 import com.stevdzasan.messagebar.MessageBarState
 
@@ -35,13 +32,14 @@ fun NavGraphBuilder.featureNavigation(
 
     composable(route = NavigationRoute.ChallengeListScreen.route) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-
-
-            DashboardScreen(onProceedClicked = {})
+        DashboardScreen(onProceedClicked = {})
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//        ) {
+//
+//
+//
 //            ChallengeListScreen(
 //                messageBarState = messageBarState,
 //                onCardChallengeClick = { challenge ->
@@ -49,7 +47,7 @@ fun NavGraphBuilder.featureNavigation(
 //                    navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
 //                }
 //            )
-        }
+//        }
     }
 
     composable(route = NavigationRoute.ChallengeDetailsScreen.route) {

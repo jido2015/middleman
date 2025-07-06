@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,10 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.project.middleman.designsystem.themes.MiddlemanTheme
+import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
+
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity() : ComponentActivity() {
+
+    private val viewModel by viewModels<AuthViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +35,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.primary,
                 ) {
                    // SampleTabScreen()
-                    AppNavigation()
-                }
 
+                    AppNavigation(modifier = Modifier)
             }
         }
     }
@@ -43,4 +48,5 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier
     )
+}
 }

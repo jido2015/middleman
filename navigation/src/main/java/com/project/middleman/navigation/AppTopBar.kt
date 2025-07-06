@@ -41,15 +41,32 @@ internal fun HandleTabNavigation(
 ) {
     LaunchedEffect(selectedTab) {
         val targetRoute = when (selectedTab) {
-            Tab.Home -> NavigationRoute.ChallengeListScreen
-            Tab.Add -> NavigationRoute.CreateChallengeScreen
-            Tab.Explore -> NavigationRoute.ChallengeListScreen
+            Tab.Home -> NavigationRoute.ChallengeListScreen.route
+            Tab.Add -> NavigationRoute.CreateChallengeScreen.route
+            Tab.Explore -> NavigationRoute.ChallengeListScreen.route
         }
 
-        if (currentRoute != targetRoute.route) {
-            navController.navigate(targetRoute.route) {
-                launchSingleTop = true
-                restoreState = true
+        // Only navigate if we're not already on the target route
+        if (currentRoute != targetRoute) {
+            try {
+                // Check if the route exists in the current navigation graph
+                val graph = navController.graph
+                val destination = graph.findNode(targetRoute)
+                
+                if (destination != null) {
+                    navController.navigate(targetRoute) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                } else {
+                    // If the route doesn't exist in the current graph, 
+                    // it might be because we're in the feature navigation
+                    // In this case, we'll let the feature navigation handle it
+                    println("Route $targetRoute not found in current navigation graph")
+                }
+            } catch (e: Exception) {
+                // Handle navigation errors gracefully
+                println("Navigation error: ${e.message}")
             }
         }
     }
