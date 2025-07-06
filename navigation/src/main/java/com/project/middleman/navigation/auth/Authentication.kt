@@ -8,19 +8,18 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.navigation.NavigationRoute
-import com.project.middleman.navigation.auth.authenticationNavigation
 import com.stevdzasan.messagebar.MessageBarState
-
-
 
 
 @Composable
 fun AuthNavigationHost(
-    startDestinationName : String,
+    authViewModel: AuthViewModel,
+    startDestinationName: String,
     navController: NavHostController,
-    messageBarState: MessageBarState
+    messageBarState: MessageBarState,
 ) {
     NavHost(
         navController = navController,
@@ -28,6 +27,7 @@ fun AuthNavigationHost(
         modifier = Modifier.fillMaxSize()
     ) {
         authenticationNavigation(
+            authViewModel = authViewModel,
             navController = navController,
             messageBarState = messageBarState,
         )    }
@@ -35,6 +35,7 @@ fun AuthNavigationHost(
 
 
 fun NavGraphBuilder.authenticationNavigation(
+    authViewModel: AuthViewModel,
     navController: NavHostController,
     messageBarState: MessageBarState
 ) {
@@ -48,13 +49,9 @@ fun NavGraphBuilder.authenticationNavigation(
         ) {
 
             AuthenticationScreen(
+                //  viewModel = authViewModel,
                 onSignIn = {
-                    navController.navigate(NavigationRoute.ChallengeListScreen.route) {
-                        popUpTo(NavigationRoute.ChallengeListScreen.route) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
+                    authViewModel.onLoginComplete()
                 },
                 messageBarState = messageBarState,
             )

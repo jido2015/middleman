@@ -15,6 +15,8 @@ import com.project.middleman.core.source.data.model.UserProfile
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -26,8 +28,14 @@ class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
 ) : AuthRepository {
-    override val isUserAuthenticatedInFirebase = auth.currentUser != null
 
+    private val _isUserAuthenticatedInFirebase = MutableStateFlow(auth.currentUser != null)
+    override val isUserAuthenticatedInFirebase: StateFlow<Boolean> = _isUserAuthenticatedInFirebase
+
+    // Optional: call this after login/logout to update auth state
+    override fun refreshAuthState() {
+        _isUserAuthenticatedInFirebase.value = auth.currentUser != null
+    }
 
     override suspend fun credentialManagerWithGoogle(): AuthCredentialResponse {
         return try {
