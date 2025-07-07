@@ -1,5 +1,6 @@
 package com.project.middleman.navigation.feature
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,8 @@ fun NavGraphBuilder.featureNavigation(
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
     messageBarState: MessageBarState,
+    onScrollDown: () -> Unit,
+    onScrollUp: () -> Unit
 ) {
 
     composable(route = NavigationRoute.CreateChallengeScreen.route) {
@@ -35,7 +38,11 @@ fun NavGraphBuilder.featureNavigation(
 
     composable(route = NavigationRoute.DashboardScreen.route) {
 
-        DashboardScreen(onProceedClicked = {})
+        DashboardScreen(onProceedClicked = {}, onScrollDown = {
+            onScrollDown()
+            Log.d("ScrollDownT", "Scrolling Down") }, onScrollUp = {
+            onScrollUp()
+            Log.d("ScrollDownT", "Scrolling Up")})
 
     }
 

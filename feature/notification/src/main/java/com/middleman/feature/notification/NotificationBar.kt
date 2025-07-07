@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -49,15 +50,16 @@ import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.deepColorAccent
 
-
 @Composable
-fun AnimatedNotificationBar(modifier: Modifier = Modifier, onProceedClicked: () -> Unit) {
-    var visibility by remember { mutableStateOf(false) }
+fun AnimatedNotificationBar(
+    modifier: Modifier = Modifier,
+    visible: Boolean,
+    isRotated: Boolean,
+    onToggle: () -> Unit,
+    onProceedClicked: () -> Unit
+) {
     val density = LocalDensity.current
 
-    var isRotated by remember { mutableStateOf(false) }
-
-    // Animate the rotation of the icon
     val rotationAngle by animateFloatAsState(
         targetValue = if (isRotated) 180f else 0f,
         animationSpec = tween(durationMillis = 300),
@@ -65,61 +67,55 @@ fun AnimatedNotificationBar(modifier: Modifier = Modifier, onProceedClicked: () 
     )
 
     Column(modifier = modifier) {
-
-            Row(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 60.dp, bottom = 12.dp)
+                .background(Color.Black),
+            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 60.dp, bottom = 12.dp)
-                    .background(Color.Black),
-                horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(colorAccent)
             ) {
-                // Box with text
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(colorAccent)
-                ) {
-                    Text(
-                        text = "Head 2 Head",
-                        style = Typography.bodySmall,
-                        modifier = Modifier.padding(10.dp),
-                        color = Color.White
-                    )
-                }
-
-                // Middle Text with fixed max width
                 Text(
-                    text = "Derahn invited you to a match and more details about the game",
+                    text = "Head 2 Head",
                     style = Typography.bodySmall,
-                    color = Color.White,
-                    modifier = Modifier.widthIn(max = 200.dp),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                // Icon with animated rotation
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_up),
-                    contentDescription = "Notification",
-                    tint = Color.White,
-                    modifier = Modifier.clip(CircleShape).clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null // Let Material 3 apply default ripple
-                    ) {
-                        isRotated = !isRotated // Toggle on click
-                        visibility = !visibility
-                    }
-                        .size(24.dp)
-                        .graphicsLayer {
-                            rotationZ = rotationAngle
-                        }
+                    modifier = Modifier.padding(10.dp),
+                    color = Color.White
                 )
             }
 
+            Text(
+                text = "Derahn invited you to a match and more details about the game",
+                style = Typography.bodySmall,
+                color = Color.White,
+                modifier = Modifier.widthIn(max = 200.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_up),
+                contentDescription = "Notification",
+                tint = Color.White,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { onToggle() }
+                    .size(24.dp)
+                    .graphicsLayer {
+                        rotationZ = rotationAngle
+                    }
+            )
+        }
 
         AnimatedVisibility(
-            visible = visibility,
+            visible = visible,
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
@@ -144,68 +140,96 @@ fun AnimatedNotificationBar(modifier: Modifier = Modifier, onProceedClicked: () 
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 12.dp)
-
+                        .padding(20.dp)
                         .align(Alignment.Center)
                 ) {
-                    ConstraintLayout (
+                    ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(colorAccent)
                             .padding(12.dp)
-                    ){
-                        val (title, stake, close , enter ) = createRefs()
+                    ) {
+                        val (title, stake, close, enter) = createRefs()
 
                         Text(
                             text = "FC25 game match on playstation.",
-                            style = Typography.bodyMedium.copy(fontSize = 18.sp),
+                            style = Typography.bodyMedium.copy(fontSize = 16.sp),
                             modifier = Modifier.constrainAs(title) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                             },
                             color = Color.White
                         )
+
                         Text(
                             text = "$100 staked presently.",
-                            style = Typography.bodyMedium.copy(fontSize = 18.sp),
-                            modifier = Modifier.padding(top = 12.dp)
+                            style = Typography.bodyMedium.copy(fontSize = 12.sp),
+                            modifier = Modifier
+                                .padding(top = 12.dp, bottom = 12.dp)
                                 .constrainAs(stake) {
                                     top.linkTo(title.bottom)
                                     start.linkTo(parent.start)
                                 },
                             color = Color.White
                         )
+
                         Icon(
                             painter = painterResource(id = R.drawable.cancel),
-                            contentDescription = "Notification",
+                            contentDescription = "Close",
                             tint = Color.White,
-                            modifier = Modifier.clip(CircleShape)
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) { onToggle() }
+                                .size(24.dp)
                                 .constrainAs(close) {
                                     top.linkTo(parent.top)
                                     end.linkTo(parent.end)
-                                }.clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null // Let Material 3 apply default ripple
-                            ) {
-                                    isRotated = !isRotated // Toggle on click
-                                    visibility = !visibility
-                            }.size(24.dp)
-
+                                }
                         )
+
                         ProceedButton(
                             proceedClicked = onProceedClicked,
-                        modifier = Modifier.clip(RoundedCornerShape(100.dp))
-                            .background(deepColorAccent).constrainAs(enter) {
-                                start.linkTo(parent.start)
-                                bottom.linkTo(parent.bottom)
-                            },
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(RoundedCornerShape(100.dp))
+                                .background(deepColorAccent)
+                                .constrainAs(enter) {
+                                    top.linkTo(stake.bottom)
+                                    start.linkTo(parent.start)
+                                    bottom.linkTo(parent.bottom)
+                                },
                             text = "Proceed",
                             paddingValues = PaddingValues(10.dp),
                             size = 24.dp,
-                            color = Color.White)
+                            color = Color.White
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAnimatedNotificationBar() {
+    // Local states to simulate visibility and rotation in the preview
+    var visible by remember { mutableStateOf(true) }
+    var isRotated by remember { mutableStateOf(true) }
+
+    AnimatedNotificationBar(
+        modifier = Modifier,
+        visible = visible,
+        isRotated = isRotated,
+        onToggle = {
+            visible = !visible
+            isRotated = !isRotated
+        },
+        onProceedClicked = {
+            // No-op for preview
+        }
+    )
 }

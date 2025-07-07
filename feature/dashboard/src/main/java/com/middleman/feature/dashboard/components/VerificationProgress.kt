@@ -40,9 +40,11 @@ fun VerificationProgress(
 ) {
     var currentProgress by remember { mutableIntStateOf(2) }
 
-        ConstraintLayout(Modifier.fillMaxWidth().clip(
+        ConstraintLayout(Modifier.fillMaxWidth().
+        padding(horizontal = 20.dp, vertical = 4.dp).clip(
             RoundedCornerShape(10.dp)
-        ).background(surface)) {
+        ).background(surface)
+        ) {
 
             val (title, progressBar, proceedBtn) = createRefs()
 

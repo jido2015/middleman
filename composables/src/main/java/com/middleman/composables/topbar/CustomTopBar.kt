@@ -59,7 +59,7 @@ fun MainToolBar(
 
                     GlideImage(
                         modifier = Modifier
-                            .size(28.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
                             .clickable(enabled = true, onClick = { /* handle click */ }),
                         imageModel = {R.drawable.avatar },
@@ -73,7 +73,7 @@ fun MainToolBar(
 
                         Text("Balance",
                             modifier = Modifier.padding(end = 7.dp),
-                            style = Typography.bodySmall.copy(fontSize = 14.sp),
+                            style = Typography.bodySmall.copy(fontSize = 18.sp),
                             color = Color.Black)
                         // Icon with animated rotation
                         Image(
@@ -81,7 +81,7 @@ fun MainToolBar(
                             contentDescription = "Notification",
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .size(12.dp)
+                                .size(14.dp)
 
                         )
                     }
@@ -104,13 +104,13 @@ fun MainToolBar(
                     Image(
                         painter = painterResource(R.drawable.offer_icon),
                         modifier = Modifier.padding(end = 20.dp)
-                            .size(30.dp),
+                            .size(25.dp),
                         contentDescription = "offer icon",
                     )
                     Image(
                         painter = painterResource(R.drawable.notification_icon),
                         modifier = Modifier
-                            .size(30.dp),
+                            .size(25.dp),
                         contentDescription = "notification icon",
                     )
                 }

@@ -79,16 +79,15 @@ fun AppNavigation(
             )
         ) {
             if (isAuthenticated) {
-                FeatureContentLayout(
-                    navController = navController,
-                    selectedTab = selectedTab,
-                    currentRoute = currentRoute,
-                    onTabSelected = { selectedTab = it },
-                    messageBarState = messageBarState,
-                    sharedViewModel = sharedViewModel,
-                    modifier = modifier
+                    FeatureContentLayout(
+                        navController = navController,
+                        selectedTab = selectedTab,
+                        currentRoute = currentRoute,
+                        onTabSelected = { selectedTab = it },
+                        messageBarState = messageBarState,
+                        sharedViewModel = sharedViewModel,
+                        modifier = modifier)
 
-                )
             } else{
                 AuthNavigationHost(
                     authViewModel = authViewModel,

@@ -95,6 +95,7 @@ dependencies {
     implementation(project(":core:source"))
     implementation(project(":core:common"))
     implementation(project(":composables"))
+    implementation(project(":designsystem"))
     implementation(project(":feature:notification"))
     implementation(project(":feature:dashboard"))
 
