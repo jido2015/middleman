@@ -44,7 +44,8 @@ import com.project.middleman.designsystem.themes.white
 fun DashboardScreen(
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,
-    onProceedClicked: () -> Unit
+    onProceedClicked: () -> Unit,
+    createWagerButton: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -113,7 +114,7 @@ fun DashboardScreen(
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = buttonColors(containerColor = colorAccent),
-                    onClick = { },
+                    onClick = { createWagerButton()},
                     shape = RoundedCornerShape(100),
                     border = BorderStroke(1.dp, lightColorAccent)
                 ) {
@@ -134,7 +135,9 @@ fun DashboardScreen(
 @Preview(showBackground = true)
 fun PreviewDashboardScreen() {
     MaterialTheme {
-        DashboardScreen(onProceedClicked = {}, onScrollDown = {}, onScrollUp = {})
+        DashboardScreen(onProceedClicked = {},
+            onScrollDown = {}, onScrollUp = {},
+            createWagerButton = {})
     }
 
 }

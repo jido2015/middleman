@@ -1,16 +1,13 @@
 package com.project.middleman.navigation.feature
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,37 +18,53 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.middleman.composables.tab.Tab
 import com.middleman.feature.notification.AnimatedNotificationBar
-import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.navigation.AnimatedBottomTab
 import com.project.middleman.navigation.NavigationRoute
 import com.stevdzasan.messagebar.MessageBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.middleman.composables.topbar.MainToolBar
+import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
+import com.project.middleman.navigation.viewmodel.AppStateViewModel
 
 @Composable
 fun FeatureContentLayout(
     navController: NavHostController,
     currentRoute: String?,
     messageBarState: MessageBarState,
-    sharedViewModel: SharedViewModel,
-    selectedTab: Tab,
-    onTabSelected: (Tab) -> Unit,
+    appStateViewModel: AppStateViewModel,
     modifier: Modifier = Modifier
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
+    val showCreateWagerSheet by appStateViewModel.showCreateWagerSheet.collectAsState()
+
 
     // 🧠 State to control AnimatedNotificationBar
     var isNotificationVisible by remember { mutableStateOf(false) }
     var isRotated by remember { mutableStateOf(false) }
 
+    // ✅ Update selected tab on navigation
     UpdateSelectedTabOnNavigation(navBackStackEntry) { it }
+
+        // ✅ Create a modal bottom sheet
+        CreateBetModalSheet(
+            openBottomSheet = showCreateWagerSheet,
+            onDismissRequest = { appStateViewModel.setShowCreateWagerSheet(false) },
+            onNewBetClicked = { /* handle new bet */ },
+            onCreateFromExistingClicked = { /* handle existing bet */ }
+        )
+
+
+    // ✅ Handle tab navigation
     HandleTabNavigation(selectedTab, currentRoute, navController)
 
+    //
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -91,7 +104,7 @@ fun FeatureContentLayout(
                     FeatureNavigationHost(
                         navController = navController,
                         messageBarState = messageBarState,
-                        sharedViewModel = sharedViewModel,
+                        appStateViewModel = appStateViewModel,
                         modifier = modifier,
                         onScrollDown = {
                             if (isNotificationVisible) {
@@ -110,7 +123,7 @@ fun FeatureContentLayout(
 
         AnimatedBottomTab(
             selectedTab = selectedTab,
-            onTabSelected = onTabSelected,
+            onTabSelected = {selectedTab = it},
             modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
@@ -121,7 +134,7 @@ fun FeatureContentLayout(
 fun FeatureNavigationHost(
     navController: NavHostController,
     messageBarState: MessageBarState,
-    sharedViewModel: SharedViewModel,
+    appStateViewModel: AppStateViewModel,
     modifier: Modifier,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit
@@ -131,8 +144,8 @@ fun FeatureNavigationHost(
         startDestination = NavigationRoute.DashboardScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
-        featureNavigation(navController =navController, messageBarState = messageBarState,
-            sharedViewModel = sharedViewModel,
+        featureNavigation(navController = navController, messageBarState = messageBarState,
+            appStateViewModel = appStateViewModel,
             modifier = modifier, onScrollDown = {
                 onScrollDown()}, onScrollUp = {onScrollUp()})
     }

@@ -11,20 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.middleman.composables.tab.Tab
-import com.project.middleman.core.common.viewmodel.SharedViewModel
 import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
+import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.messagebar.rememberMessageBarState
@@ -48,12 +43,10 @@ fun AppNavigation(
     val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
 
     // State management
-    val sharedViewModel: SharedViewModel = viewModel()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
+    val appStateViewModel: AppStateViewModel = hiltViewModel()
 
     // Derived state
     val startDestinationName by remember {
@@ -81,11 +74,9 @@ fun AppNavigation(
             if (isAuthenticated) {
                     FeatureContentLayout(
                         navController = navController,
-                        selectedTab = selectedTab,
                         currentRoute = currentRoute,
-                        onTabSelected = { selectedTab = it },
                         messageBarState = messageBarState,
-                        sharedViewModel = sharedViewModel,
+                        appStateViewModel = appStateViewModel,
                         modifier = modifier)
 
             } else{

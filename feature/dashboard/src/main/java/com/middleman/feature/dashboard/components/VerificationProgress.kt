@@ -59,7 +59,7 @@ fun VerificationProgress(
 
             Card(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-                    .border(2.dp, borderGrey, RoundedCornerShape(100.dp))
+                    .border(1.dp, borderGrey, RoundedCornerShape(100.dp))
                     .fillMaxWidth().constrainAs(progressBar) {
                         top.linkTo(title.bottom)
                         start.linkTo(parent.start)

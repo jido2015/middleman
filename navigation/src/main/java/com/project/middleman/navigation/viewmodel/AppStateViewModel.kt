@@ -1,8 +1,11 @@
 package com.project.middleman.navigation.viewmodel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
+import com.project.middleman.core.source.data.model.Challenge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,14 +13,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppStateViewModel @Inject constructor(
-    private val repo: AuthRepository
 ) : ViewModel() {
+    var challenge by mutableStateOf<Challenge?>(null)
+
+    private val _showCreateWagerSheet = MutableStateFlow(false)
+    val showCreateWagerSheet: StateFlow<Boolean> = _showCreateWagerSheet
+
     private val _showTopBar = MutableStateFlow(true)
     val showTopBar: StateFlow<Boolean> = _showTopBar
 
-    val isUserAuthenticated get() = repo.isUserAuthenticatedInFirebase
-
     fun setTopBarVisibility(visible: MutableState<Boolean>) {
         _showTopBar.value = visible.value
+    }
+
+    fun setShowCreateWagerSheet(visible: Boolean) {
+        _showCreateWagerSheet.value = visible
     }
 }

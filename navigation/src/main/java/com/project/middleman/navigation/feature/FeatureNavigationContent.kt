@@ -1,7 +1,6 @@
 package com.project.middleman.navigation.feature
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -10,21 +9,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.middleman.feature.dashboard.presentation.DashboardScreen
 import com.project.middleman.challengedetails.presentation.ChallengeDetailsScreen
-import com.project.middleman.core.common.viewmodel.SharedViewModel
-import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.feature.createchallenge.presentation.CreateChallengeScreen
 import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.NavigationRoute
+import com.project.middleman.navigation.viewmodel.AppStateViewModel
 import com.stevdzasan.messagebar.MessageBarState
 
 
 fun NavGraphBuilder.featureNavigation(
     modifier: Modifier,
     navController: NavHostController,
-    sharedViewModel: SharedViewModel,
     messageBarState: MessageBarState,
     onScrollDown: () -> Unit,
-    onScrollUp: () -> Unit
+    onScrollUp: () -> Unit,
+    appStateViewModel: AppStateViewModel,
 ) {
 
     composable(route = NavigationRoute.CreateChallengeScreen.route) {
@@ -38,11 +36,17 @@ fun NavGraphBuilder.featureNavigation(
 
     composable(route = NavigationRoute.DashboardScreen.route) {
 
-        DashboardScreen(onProceedClicked = {}, onScrollDown = {
+        DashboardScreen(
+            onProceedClicked = {}, onScrollDown = {
             onScrollDown()
-            Log.d("ScrollDownT", "Scrolling Down") }, onScrollUp = {
+            Log.d("ScrollDownT", "Scrolling Down")
+        }, onScrollUp = {
             onScrollUp()
-            Log.d("ScrollDownT", "Scrolling Up")})
+        },
+            createWagerButton = {
+                appStateViewModel.setShowCreateWagerSheet(true)
+            }
+        )
 
     }
 
@@ -57,7 +61,7 @@ fun NavGraphBuilder.featureNavigation(
             ChallengeListScreen(
                 messageBarState = messageBarState,
                 onCardChallengeClick = { challenge ->
-                    sharedViewModel.challenge = challenge
+                   // sharedViewModel.challenge = challenge
                     navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
                 }
             )
@@ -70,7 +74,7 @@ fun NavGraphBuilder.featureNavigation(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val challenge = sharedViewModel.challenge
+            val challenge = appStateViewModel.challenge
             if (challenge != null) {
 
                 ChallengeDetailsScreen(
