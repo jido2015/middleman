@@ -37,23 +37,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.middleman.designsystem.themes.lightColorAccent
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Brush
-import com.project.middleman.designsystem.themes.Grey
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.white
 
 enum class Tab {
-    Home, Explore, Add
+    Home, Explore
 }
 
 @Composable
-fun CustomNavigationTab(
+fun CustomBottomTab(
     modifier: Modifier = Modifier,
     selectedTab: Tab,
-    onTabSelected: (Tab) -> Unit
+    onTabSelected: (Tab) -> Unit,
+    onCreateButtonSelected: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -94,8 +92,9 @@ fun CustomNavigationTab(
                      )
 
                      CircularTabButton(
-                         selected = selectedTab == Tab.Add,
-                         onClick = { onTabSelected(Tab.Add)}
+                         onClick = {
+                             onCreateButtonSelected()
+                         }
                      )
 
                      TabIcon(
@@ -149,7 +148,6 @@ fun TabIcon(
 
 @Composable
 fun CircularTabButton(
-    selected: Boolean,
     onClick: () -> Unit,
     backgroundColor: Color = colorAccent,
     borderColor: Color = lightColorAccent,
@@ -201,9 +199,10 @@ fun CircularTabButton(
 @Preview(showBackground = true)
 @Composable
 fun CustomTabPreview(){
-    CustomNavigationTab(
+    CustomBottomTab(
         selectedTab = Tab.Home,
-        onTabSelected = {}
+        onTabSelected = {},
+        onCreateButtonSelected = {}
     )
 }
 

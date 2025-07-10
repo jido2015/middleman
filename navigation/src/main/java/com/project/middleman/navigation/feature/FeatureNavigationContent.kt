@@ -13,13 +13,11 @@ import com.project.middleman.feature.createchallenge.presentation.CreateChalleng
 import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.NavigationRoute
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
-import com.stevdzasan.messagebar.MessageBarState
 
 
 fun NavGraphBuilder.featureNavigation(
     modifier: Modifier,
     navController: NavHostController,
-    messageBarState: MessageBarState,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,
     appStateViewModel: AppStateViewModel,
@@ -59,7 +57,6 @@ fun NavGraphBuilder.featureNavigation(
 
 
             ChallengeListScreen(
-                messageBarState = messageBarState,
                 onCardChallengeClick = { challenge ->
                    // sharedViewModel.challenge = challenge
                     navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
@@ -78,7 +75,6 @@ fun NavGraphBuilder.featureNavigation(
             if (challenge != null) {
 
                 ChallengeDetailsScreen(
-                    messageBarState = messageBarState,
                     challengeDetails = challenge,
                     onAcceptChallenge = {}
                 )

@@ -6,13 +6,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
-import com.stevdzasan.messagebar.MessageBarState
 
 @Composable
 fun OnCreateChallengeEvent(
     viewModel: CreateChallengeViewModel = hiltViewModel(),
     launch: (result: String) -> Unit,
-    messageBarState: MessageBarState,
 ){
     when(val credManagerSignInResponse = viewModel.createChallengeResponse) {
         is RequestState.Loading -> {}
@@ -23,7 +21,7 @@ fun OnCreateChallengeEvent(
             }
         }
         is RequestState.Error -> LaunchedEffect(Unit) {
-            messageBarState.addError(Exception(credManagerSignInResponse.error.message))
+         // Exception(credManagerSignInResponse.error.message)
            // viewModel.setLoading(false)
         }
     }

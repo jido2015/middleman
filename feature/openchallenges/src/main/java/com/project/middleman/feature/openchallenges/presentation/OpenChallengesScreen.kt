@@ -23,13 +23,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.FetchChallengeResponseHandler
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.UpdateChallengeWrapper
 import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewModel
-import com.stevdzasan.messagebar.MessageBarState
 
 @Composable
 fun ChallengeListScreen(
     onCardChallengeClick: (Challenge) -> Unit,
-    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel(),
-    messageBarState: MessageBarState
+    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel()
 ) {
     var challenges by remember { mutableStateOf(emptyList<Challenge>()) }
     var showDialog by remember { mutableStateOf(false) }
@@ -37,10 +35,10 @@ fun ChallengeListScreen(
 
     UpdateChallengeWrapper(
         onErrorMessage = { message ->
-            messageBarState.addError(Exception(message))
+            //Exception(message)
         },
         onSuccessMessage = {
-            messageBarState.addSuccess("Challenge Accepted")
+            //"Challenge Accepted"
         }
     )
 
@@ -67,7 +65,7 @@ fun ChallengeListScreen(
                 getChallenges(it)
             },
             onErrorMessage = {
-                messageBarState.addError(Exception(it))
+             //   Exception(it)
             }
         )
 
@@ -107,7 +105,6 @@ fun ChallengeListScreen(
 @Composable
 fun ChallengeListPreview() {
     ChallengeListScreen(
-        messageBarState = MessageBarState(),
         onCardChallengeClick = {}
     )
 

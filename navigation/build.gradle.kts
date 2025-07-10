@@ -71,7 +71,6 @@ dependencies {
     implementation(libs.material.icons.extended)
     implementation(libs.skydoves.image.loader)
     implementation(libs.compose.constraintlayout)
-    implementation(libs.stevdza.messageBarCompose)
     ksp(libs.hilt.ksp)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)

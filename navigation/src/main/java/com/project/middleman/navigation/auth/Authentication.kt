@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.navigation.NavigationRoute
-import com.stevdzasan.messagebar.MessageBarState
 
 
 @Composable
@@ -19,7 +18,6 @@ fun AuthNavigationHost(
     authViewModel: AuthViewModel,
     startDestinationName: String,
     navController: NavHostController,
-    messageBarState: MessageBarState,
 ) {
     NavHost(
         navController = navController,
@@ -27,17 +25,14 @@ fun AuthNavigationHost(
         modifier = Modifier.fillMaxSize()
     ) {
         authenticationNavigation(
-            authViewModel = authViewModel,
-            navController = navController,
-            messageBarState = messageBarState,
-        )    }
+            authViewModel = authViewModel
+        )
+    }
 }
 
 
 fun NavGraphBuilder.authenticationNavigation(
-    authViewModel: AuthViewModel,
-    navController: NavHostController,
-    messageBarState: MessageBarState
+    authViewModel: AuthViewModel
 ) {
 
     composable(route = NavigationRoute.AuthenticationScreen.route) {
@@ -52,8 +47,7 @@ fun NavGraphBuilder.authenticationNavigation(
                 //  viewModel = authViewModel,
                 onSignIn = {
                     authViewModel.onLoginComplete()
-                },
-                messageBarState = messageBarState,
+                }
             )
         }
     }

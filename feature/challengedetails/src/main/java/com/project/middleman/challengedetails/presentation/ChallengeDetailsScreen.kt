@@ -17,13 +17,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.challengedetails.presentation.uistate_handler.ChallengeDetailsWrapper
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.source.data.model.Challenge
-import com.stevdzasan.messagebar.MessageBarState
 
 @Composable
 fun ChallengeDetailsScreen(
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     onAcceptChallenge: () -> Unit,
-    messageBarState: MessageBarState,
     challengeDetails: Challenge){
 
     var challenge by remember { mutableStateOf(challengeDetails) }
@@ -34,7 +32,7 @@ fun ChallengeDetailsScreen(
             challenge = challengeDetails
         },
         onErrorMessage = {
-            messageBarState.addError(Exception(it))
+           //Exception(it)
         },
         onSuccessMessage = {
         })
@@ -77,7 +75,7 @@ fun ChallengeDetailsScreen(
 
             Button(onClick = {
 
-                messageBarState.addSuccess("Complete")
+                //"Complete"
             }, modifier = Modifier.constrainAs(acceptChallenge) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
@@ -90,7 +88,7 @@ fun ChallengeDetailsScreen(
                 challengeDetailsViewModel.onChallengeAccepted(challenge)
                 onAcceptChallenge()
 
-                messageBarState.addSuccess("Challenge Accepted")
+                //"Challenge Accepted"
             }, modifier = Modifier.constrainAs(acceptChallenge) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)

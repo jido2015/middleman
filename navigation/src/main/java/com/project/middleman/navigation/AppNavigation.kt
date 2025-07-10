@@ -2,6 +2,8 @@ package com.project.middleman.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawing
@@ -20,10 +22,6 @@ import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
-import com.stevdzasan.messagebar.ContentWithMessageBar
-import com.stevdzasan.messagebar.MessageBarState
-import com.stevdzasan.messagebar.rememberMessageBarState
-
 private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     return if (isAuthenticated) {
         NavigationRoute.DashboardScreen
@@ -37,7 +35,6 @@ private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
-    messageBarState: MessageBarState = rememberMessageBarState(),
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
@@ -65,9 +62,8 @@ fun AppNavigation(
         Box(
             Modifier.safeContentPadding()
         )
-        ContentWithMessageBar(
-            messageBarState = messageBarState,
-            modifier = Modifier.padding(
+        Box(
+            modifier = Modifier.fillMaxSize().padding(
                 bottom = innerPadding.calculateBottomPadding()  // only bottom padding
             )
         ) {
@@ -75,7 +71,6 @@ fun AppNavigation(
                     FeatureContentLayout(
                         navController = navController,
                         currentRoute = currentRoute,
-                        messageBarState = messageBarState,
                         appStateViewModel = appStateViewModel,
                         modifier = modifier)
 
@@ -83,7 +78,6 @@ fun AppNavigation(
                 AuthNavigationHost(
                     authViewModel = authViewModel,
                     navController = navController,
-                    messageBarState = messageBarState,
                     startDestinationName = startDestinationName.route,
                 )
             }

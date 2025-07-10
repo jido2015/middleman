@@ -20,7 +20,6 @@ import com.middleman.composables.tab.Tab
 import com.middleman.feature.notification.AnimatedNotificationBar
 import com.project.middleman.navigation.AnimatedBottomTab
 import com.project.middleman.navigation.NavigationRoute
-import com.stevdzasan.messagebar.MessageBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ import com.project.middleman.navigation.viewmodel.AppStateViewModel
 fun FeatureContentLayout(
     navController: NavHostController,
     currentRoute: String?,
-    messageBarState: MessageBarState,
     appStateViewModel: AppStateViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +54,10 @@ fun FeatureContentLayout(
         CreateBetModalSheet(
             openBottomSheet = showCreateWagerSheet,
             onDismissRequest = { appStateViewModel.setShowCreateWagerSheet(false) },
-            onNewBetClicked = { /* handle new bet */ },
+            onNewBetClicked = {
+                appStateViewModel.setShowCreateWagerSheet(false)
+                navController.navigate(NavigationRoute.CreateChallengeScreen.route)
+            },
             onCreateFromExistingClicked = { /* handle existing bet */ }
         )
 
@@ -103,7 +104,6 @@ fun FeatureContentLayout(
                     // ✅ Pass real scroll callbacks
                     FeatureNavigationHost(
                         navController = navController,
-                        messageBarState = messageBarState,
                         appStateViewModel = appStateViewModel,
                         modifier = modifier,
                         onScrollDown = {
@@ -124,7 +124,8 @@ fun FeatureContentLayout(
         AnimatedBottomTab(
             selectedTab = selectedTab,
             onTabSelected = {selectedTab = it},
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onCreateButtonSelected = {appStateViewModel.setShowCreateWagerSheet(true)}
         )
     }
 }
@@ -133,7 +134,6 @@ fun FeatureContentLayout(
 @Composable
 fun FeatureNavigationHost(
     navController: NavHostController,
-    messageBarState: MessageBarState,
     appStateViewModel: AppStateViewModel,
     modifier: Modifier,
     onScrollDown: () -> Unit,
@@ -144,7 +144,7 @@ fun FeatureNavigationHost(
         startDestination = NavigationRoute.DashboardScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
-        featureNavigation(navController = navController, messageBarState = messageBarState,
+        featureNavigation(navController = navController,
             appStateViewModel = appStateViewModel,
             modifier = modifier, onScrollDown = {
                 onScrollDown()}, onScrollUp = {onScrollUp()})

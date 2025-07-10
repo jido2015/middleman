@@ -25,12 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.middleman.core.common.getSelectedTimeInMillis
 import com.project.middleman.feature.createchallenge.components.ComposeTimeInputDialogCustom
-import com.stevdzasan.messagebar.MessageBarState
-import com.stevdzasan.messagebar.rememberMessageBarState
 
 @Composable
 fun CreateChallengeUi(
-    messageBarState: MessageBarState = rememberMessageBarState(),
     onSaveChallenge: (title: String, description: String, selectedTimeInMillis: Long, amount: Double) -> Unit,
 ) {
     var title by remember { mutableStateOf("") }
@@ -119,10 +116,9 @@ fun CreateChallengeUi(
     //Navigate to list of challenges
     fun launch(result: String) {
         Log.d("CreateChallengeScreen", "Challenge Created")
-        messageBarState.addSuccess(result)
     }
 
-    OnCreateChallengeEvent(launch = {launch(it)}, messageBarState = messageBarState)
+    OnCreateChallengeEvent(launch = {launch(it)})
 }
 
 @Preview(showBackground = true)
