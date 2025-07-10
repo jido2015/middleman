@@ -24,7 +24,7 @@ fun NavGraphBuilder.featureNavigation(
 ) {
 
     composable(route = NavigationRoute.CreateChallengeScreen.route) {
-
+        appStateViewModel.setBottomBarVisibility(false)
         CreateChallengeScreen(
             onSaveChallenge = {
                 navController.navigate(NavigationRoute.ChallengeListScreen.route)
@@ -33,6 +33,7 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.DashboardScreen.route) {
+        appStateViewModel.setBottomBarVisibility(true)
 
         DashboardScreen(
             onProceedClicked = {}, onScrollDown = {
@@ -49,7 +50,7 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.ChallengeListScreen.route) {
-
+        appStateViewModel.setBottomBarVisibility(true)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,6 +67,7 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.ChallengeDetailsScreen.route) {
+        appStateViewModel.setBottomBarVisibility(true)
 
         Column(
             modifier = Modifier

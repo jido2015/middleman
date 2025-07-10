@@ -1,6 +1,5 @@
 package com.project.middleman.navigation.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,11 +18,13 @@ class AppStateViewModel @Inject constructor(
     private val _showCreateWagerSheet = MutableStateFlow(false)
     val showCreateWagerSheet: StateFlow<Boolean> = _showCreateWagerSheet
 
-    private val _showTopBar = MutableStateFlow(true)
-    val showTopBar: StateFlow<Boolean> = _showTopBar
 
-    fun setTopBarVisibility(visible: MutableState<Boolean>) {
-        _showTopBar.value = visible.value
+    private val _showBottomTabSheet = MutableStateFlow(false)
+    val showBottomTabSheet: StateFlow<Boolean> = _showBottomTabSheet
+
+
+    fun setBottomBarVisibility(visible: Boolean) {
+        _showBottomTabSheet.value = visible
     }
 
     fun setShowCreateWagerSheet(visible: Boolean) {

@@ -41,6 +41,7 @@ fun FeatureContentLayout(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
     val showCreateWagerSheet by appStateViewModel.showCreateWagerSheet.collectAsState()
+    val showBottomBarSheet by appStateViewModel.showBottomTabSheet.collectAsState()
 
 
     // 🧠 State to control AnimatedNotificationBar
@@ -122,10 +123,13 @@ fun FeatureContentLayout(
         }
 
         AnimatedBottomTab(
+            showBottomBarSheet = showBottomBarSheet,
             selectedTab = selectedTab,
             onTabSelected = {selectedTab = it},
             modifier = Modifier.align(Alignment.BottomCenter),
-            onCreateButtonSelected = {appStateViewModel.setShowCreateWagerSheet(true)}
+            onCreateButtonSelected = {
+                appStateViewModel.setShowCreateWagerSheet(true)
+            }
         )
     }
 }
