@@ -52,8 +52,9 @@ import com.project.middleman.designsystem.themes.deepColorAccent
 
 @Composable
 fun AnimatedNotificationBar(
+    isNotificationBarSheet: Boolean,
     modifier: Modifier = Modifier,
-    visible: Boolean,
+    isMessageVisible: Boolean,
     isRotated: Boolean,
     onToggle: () -> Unit,
     onProceedClicked: () -> Unit
@@ -66,11 +67,13 @@ fun AnimatedNotificationBar(
         label = "Arrow Rotation"
     )
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(top = 60.dp,  bottom = 12.dp)) {
+
+        if (isNotificationBarSheet){
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 60.dp, bottom = 12.dp)
                 .background(Color.Black),
             horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
@@ -115,7 +118,7 @@ fun AnimatedNotificationBar(
         }
 
         AnimatedVisibility(
-            visible = visible,
+            visible = isMessageVisible,
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
@@ -209,7 +212,7 @@ fun AnimatedNotificationBar(
                     }
                 }
             }
-        }
+        } }
     }
 }
 
@@ -221,8 +224,9 @@ fun PreviewAnimatedNotificationBar() {
     var isRotated by remember { mutableStateOf(true) }
 
     AnimatedNotificationBar(
+        isNotificationBarSheet = true,
         modifier = Modifier,
-        visible = visible,
+        isMessageVisible = visible,
         isRotated = isRotated,
         onToggle = {
             visible = !visible

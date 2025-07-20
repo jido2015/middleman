@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,6 +23,7 @@ import com.project.middleman.feature.authentication.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
+
 private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     return if (isAuthenticated) {
         NavigationRoute.DashboardScreen
@@ -29,7 +31,6 @@ private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
         NavigationRoute.AuthenticationScreen
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,9 +40,11 @@ fun AppNavigation(
 ) {
     val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
 
-    // State management
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    // Separate NavControllers for auth and feature flows
+    val authNavController = rememberNavController()
+    val featureNavController = rememberNavController()
+    
+    val navBackStackEntry by featureNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val appStateViewModel: AppStateViewModel = hiltViewModel()
 
@@ -52,8 +55,16 @@ fun AppNavigation(
         }
     }
 
-    val canPop = navController.previousBackStackEntry != null
-    canPop && currentRoute != NavigationRoute.DashboardScreen.route
+    // Handle authentication state changes
+    LaunchedEffect(isAuthenticated) {
+        if (isAuthenticated) {
+            // When user becomes authenticated, navigate to dashboard
+            featureNavController.navigate(NavigationRoute.DashboardScreen.route) {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
 
     Scaffold(
        contentWindowInsets = WindowInsets.safeDrawing
@@ -68,16 +79,16 @@ fun AppNavigation(
             )
         ) {
             if (isAuthenticated) {
-                    FeatureContentLayout(
-                        navController = navController,
-                        currentRoute = currentRoute,
-                        appStateViewModel = appStateViewModel,
-                        modifier = modifier)
-
-            } else{
+                FeatureContentLayout(
+                    navController = featureNavController,
+                    currentRoute = currentRoute,
+                    appStateViewModel = appStateViewModel,
+                    modifier = modifier
+                )
+            } else {
                 AuthNavigationHost(
                     authViewModel = authViewModel,
-                    navController = navController,
+                    navController = authNavController,
                     startDestinationName = startDestinationName.route,
                 )
             }

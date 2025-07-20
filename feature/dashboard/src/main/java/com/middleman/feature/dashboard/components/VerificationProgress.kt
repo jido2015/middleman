@@ -79,7 +79,7 @@ fun VerificationProgress(
                         modifier = Modifier.padding(end = 8.dp, top = 4.dp,
                             bottom = 4.dp, start = 8.dp)
                     )
-                    ProgressBarUI(currentProgress,
+                    ProgressBarUI(currentProgress/3f,
                         modifier = Modifier.padding(end = 8.dp))
                 }
             }

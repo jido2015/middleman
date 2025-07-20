@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.compiler)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.wallet)
     platform(libs.firebase.bom)
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -93,4 +94,6 @@ dependencies {
     coreLibraryDesugaring(libs.core.library8)
     implementation(project(":core:source"))
     implementation(project(":core:common"))
+    implementation(project(":designsystem"))
+    implementation(project(":composables"))
 }

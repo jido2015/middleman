@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,8 +26,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.middleman.composables.topbar.MainToolBar
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
+import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
@@ -42,11 +46,18 @@ fun FeatureContentLayout(
     var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
     val showCreateWagerSheet by appStateViewModel.showCreateWagerSheet.collectAsState()
     val showBottomBarSheet by appStateViewModel.showBottomTabSheet.collectAsState()
-
+    val showTopBarSheet by appStateViewModel.showTopBarSheet.collectAsState()
+    val showNotificationBarSheet by appStateViewModel.showNotificationBarSheet.collectAsState()
+    val showNavigationTopBarSheet by appStateViewModel.showNavigationTopBarSheet.collectAsState()
+    val navigationCurrentProgress by appStateViewModel.navigationCurrentProgress.collectAsState()
+    val navigationTitle by appStateViewModel.navigationTitle.collectAsState()
 
     // 🧠 State to control AnimatedNotificationBar
     var isNotificationVisible by remember { mutableStateOf(false) }
     var isRotated by remember { mutableStateOf(false) }
+
+    // Create ViewModel once at the parent level to prevent recreation
+    val createViewModel: CreateChallengeViewModel = hiltViewModel()
 
     // ✅ Update selected tab on navigation
     UpdateSelectedTabOnNavigation(navBackStackEntry) { it }
@@ -54,10 +65,11 @@ fun FeatureContentLayout(
         // ✅ Create a modal bottom sheet
         CreateBetModalSheet(
             openBottomSheet = showCreateWagerSheet,
-            onDismissRequest = { appStateViewModel.setShowCreateWagerSheet(false) },
+            onDismissRequest = { appStateViewModel.setCreateWagerVisibility(false) },
             onNewBetClicked = {
-                appStateViewModel.setShowCreateWagerSheet(false)
-                navController.navigate(NavigationRoute.CreateChallengeScreen.route)
+                appStateViewModel.setCreateWagerVisibility(false)
+                navController.navigate(NavigationRoute.CreateChallengeTitleScreen.route)
+
             },
             onCreateFromExistingClicked = { /* handle existing bet */ }
         )
@@ -74,10 +86,11 @@ fun FeatureContentLayout(
                 .background(color = Color.Black)
         ) {
 
-            // ✅ Notification controlled by scroll
+            // ✅ Notification Top Modal Sheet controlled by scroll
             AnimatedNotificationBar(
+                isNotificationBarSheet = showNotificationBarSheet,
                 modifier = modifier,
-                visible = isNotificationVisible,
+                isMessageVisible = isNotificationVisible,
                 isRotated = isRotated,
                 onToggle = {
                     isNotificationVisible = !isNotificationVisible
@@ -94,18 +107,19 @@ fun FeatureContentLayout(
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
 
-                    MainToolBar(
-                        showTopBar = true,
-                        toolBarTitle = "Dashboard",
-                        profilePhoto = "",
-                        showBackButton = true,
-                        onBackClick = {}
-                    )
+                    // ✅ Navigation Top Bar With Progress Bar
+                    NavigationTopBarWithProgressBar(
+                        title = navigationTitle,
+                        progress = navigationCurrentProgress/3f,
+                        showNavigationTopBarSheet = showNavigationTopBarSheet,
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
+
 
                     // ✅ Pass real scroll callbacks
                     FeatureNavigationHost(
                         navController = navController,
                         appStateViewModel = appStateViewModel,
+                        createViewModel = createViewModel, // Pass the ViewModel from parent
                         modifier = modifier,
                         onScrollDown = {
                             if (isNotificationVisible) {
@@ -128,7 +142,7 @@ fun FeatureContentLayout(
             onTabSelected = {selectedTab = it},
             modifier = Modifier.align(Alignment.BottomCenter),
             onCreateButtonSelected = {
-                appStateViewModel.setShowCreateWagerSheet(true)
+                appStateViewModel.setCreateWagerVisibility(true)
             }
         )
     }
@@ -139,6 +153,7 @@ fun FeatureContentLayout(
 fun FeatureNavigationHost(
     navController: NavHostController,
     appStateViewModel: AppStateViewModel,
+    createViewModel: CreateChallengeViewModel, // Accept ViewModel as parameter
     modifier: Modifier,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit
@@ -148,9 +163,13 @@ fun FeatureNavigationHost(
         startDestination = NavigationRoute.DashboardScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
+
         featureNavigation(navController = navController,
             appStateViewModel = appStateViewModel,
-            modifier = modifier, onScrollDown = {
-                onScrollDown()}, onScrollUp = {onScrollUp()})
+            createViewModel = createViewModel, // Use the passed ViewModel
+            modifier = modifier, 
+            onScrollDown = { onScrollDown() }, 
+            onScrollUp = { onScrollUp() }
+        )
     }
 }

@@ -1,5 +1,6 @@
 package com.project.middleman.core.source.data.repository.challenge
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
@@ -23,6 +24,7 @@ class ChallengeRepositoryImpl  @Inject constructor(
         return try {
 
             if (challenge.title.isBlank() || challenge.description.isBlank()){
+                Log.d("CreateChallengeScreen", "Fields are empty: title ${challenge.title}, description ${challenge.description}")
                 RequestState.Error(Exception("Empty fields"))
             }else{
                 db.collection("challenges").document(challenge.id)

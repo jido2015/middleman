@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary,
                 ) {
-                   // SampleTabScreen()
                     AppNavigation()
                 }
 

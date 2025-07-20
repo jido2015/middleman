@@ -1,6 +1,9 @@
 package com.project.middleman.feature.createchallenge.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -15,7 +18,6 @@ import com.project.middleman.core.source.data.model.ParticipantProgress
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
-import kotlin.String
 
 @HiltViewModel
 class CreateChallengeViewModel @Inject constructor(
@@ -23,13 +25,18 @@ class CreateChallengeViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
+    var title by mutableStateOf("")
+    var description by mutableStateOf("")
+    var selectedTimeInMillis by mutableLongStateOf(0)
+    var stake by mutableDoubleStateOf(0.0)
+
     // Represents the state of the create challenge operation
     var createChallengeResponse by mutableStateOf<CreateChallengeResponse>(RequestState.Success(null))
         private set
     /**
      * Creates a new challenge with the current user as creator.
      */
-    fun createChallenge(title: String, description: String, selectedTimeInMillis: Long, stake: Double) {
+    fun createChallenge() {
         val user = auth.currentUser
         if (user == null) {
             createChallengeResponse = RequestState.Error(IllegalStateException("User is not authenticated."))
@@ -58,7 +65,6 @@ class CreateChallengeViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-
             createChallengeResponse = RequestState.Loading
             createChallengeResponse = try {
                 repo.invoke(challenge)
@@ -69,6 +75,11 @@ class CreateChallengeViewModel @Inject constructor(
 
         }
     }
+
+    init {
+        Log.d("CreateChallengeViewModel", "ViewModel created")
+    }
+
 }
 
 

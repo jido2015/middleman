@@ -8,14 +8,12 @@ import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
 
 @Composable
-fun ProgressBarUI(completedSteps: Int, modifier: Modifier){
-    val totalSteps = 4
-    val progress = completedSteps.toFloat() / totalSteps
+fun ProgressBarUI(completedSteps: Float, modifier: Modifier){
 
     LinearProgressIndicator(
         trackColor = borderGrey,
         color = colorAccent,
-        progress = { progress },
+        progress = { completedSteps },
         modifier = modifier.fillMaxWidth(),
     )
 }

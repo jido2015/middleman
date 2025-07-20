@@ -22,12 +22,49 @@ class AppStateViewModel @Inject constructor(
     private val _showBottomTabSheet = MutableStateFlow(false)
     val showBottomTabSheet: StateFlow<Boolean> = _showBottomTabSheet
 
+    private val _showNotificationBarSheet = MutableStateFlow(false)
+    val showNotificationBarSheet: StateFlow<Boolean> = _showNotificationBarSheet
+
+    private val _showNavigationTopBarSheet = MutableStateFlow(false)
+    val showNavigationTopBarSheet: StateFlow<Boolean> = _showNavigationTopBarSheet
+
+    private val _navigationCurrentProgress = MutableStateFlow(0f)
+    val navigationCurrentProgress: StateFlow<Float> = _navigationCurrentProgress
+
+    private val _navigationTitle = MutableStateFlow("")
+    val navigationTitle: StateFlow<String> = _navigationTitle
+
+    private val _showTopBar = MutableStateFlow(false)
+    val showTopBarSheet: StateFlow<Boolean> = _showTopBar
+
+
+
+    fun setTopBarVisibility(visible: Boolean) {
+        _showTopBar.value = visible
+    }
+
+
+    fun setNotificationBarVisibility(visible: Boolean) {
+        _showNotificationBarSheet.value = visible
+    }
 
     fun setBottomBarVisibility(visible: Boolean) {
         _showBottomTabSheet.value = visible
     }
 
-    fun setShowCreateWagerSheet(visible: Boolean) {
+    fun setCreateWagerVisibility(visible: Boolean) {
         _showCreateWagerSheet.value = visible
+    }
+
+    fun setNavigationTopBarVisibility(visible: Boolean) {
+        _showNavigationTopBarSheet.value = visible
+    }
+
+    fun setNavigationCurrentProgress(progress: Float) {
+        _navigationCurrentProgress.value = progress
+    }
+
+    fun setNavigationTitle(title: String) {
+        _navigationTitle.value = title
     }
 }

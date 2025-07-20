@@ -40,6 +40,7 @@ kotlinStdlib = "2.1.0"
 kotlinTest = "2.1.0"
 runner = "1.5.2"
 core = "1.5.0"
+playServicesWallet = "19.4.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -111,6 +112,7 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "playServicesWallet" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "kotlinGradlePlugin" }

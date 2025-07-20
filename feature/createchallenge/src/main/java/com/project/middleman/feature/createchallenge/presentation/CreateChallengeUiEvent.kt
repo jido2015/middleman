@@ -9,19 +9,19 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 
 @Composable
 fun OnCreateChallengeEvent(
-    viewModel: CreateChallengeViewModel = hiltViewModel(),
+    viewModel: CreateChallengeViewModel,
     launch: (result: String) -> Unit,
 ){
-    when(val credManagerSignInResponse = viewModel.createChallengeResponse) {
+    when(val onCreateChallengeResponse = viewModel.createChallengeResponse) {
         is RequestState.Loading -> {}
-        is RequestState.Success -> credManagerSignInResponse.data?.let {
-            Log.d("CredentialManagerSignSignIn", "")
+        is RequestState.Success -> onCreateChallengeResponse.data?.let {
+            Log.d("onCreateChallengeResponse", "Created")
             LaunchedEffect(it) {
-                launch("Challenge created")
+                launch("Challenge Created")
             }
         }
         is RequestState.Error -> LaunchedEffect(Unit) {
-         // Exception(credManagerSignInResponse.error.message)
+         // Exception(onCreateChallengeResponse.error.message)
            // viewModel.setLoading(false)
         }
     }
