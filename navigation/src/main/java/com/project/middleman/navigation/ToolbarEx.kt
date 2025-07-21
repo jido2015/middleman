@@ -22,7 +22,7 @@ fun ToolbarSetup(
                 toolBarTitle.value = "Welcome Back,"
                 toolBarSubTitle.value = "Please log in to your account"
             }
-            NavigationRoute.ChallengeListScreen.route -> {
+            NavigationRoute.ChallengeTabScreen.route -> {
               //  appStateViewModel.setTopBarVisibility(toolBarVisibility)
                 toolBarTitle.value = "Marketplace"
                 toolBarSubTitle.value = MarketplaceSubtitle.random()

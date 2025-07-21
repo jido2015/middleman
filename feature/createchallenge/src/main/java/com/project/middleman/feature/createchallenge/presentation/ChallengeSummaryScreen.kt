@@ -187,7 +187,7 @@ fun ChallengeSummaryScreen(
             // Navigate to view wager screen or perform action
         },
         onClickInviteParticipants = {
-            showDialog = false
+           // showDialog = false
             // Trigger invite action
         }
     )

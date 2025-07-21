@@ -13,7 +13,7 @@ import com.project.middleman.feature.createchallenge.presentation.CreateChalleng
 import com.project.middleman.feature.createchallenge.presentation.InputAmountScreen
 import com.project.middleman.feature.createchallenge.presentation.ChallengeSummaryScreen
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
-import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
+import com.project.middleman.feature.openchallenges.presentation.ChallengesScreen
 import com.project.middleman.navigation.NavigationRoute
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
 
@@ -64,7 +64,7 @@ fun NavGraphBuilder.featureNavigation(
         ChallengeSummaryScreen(
             viewModel = createViewModel,
             createWagerButton = {
-                navController.navigate(NavigationRoute.DashboardScreen.route) {
+                navController.navigate(NavigationRoute.ChallengeTabScreen.route) {
                     popUpTo(0) // Clear all back stack
                     launchSingleTop = true // Avoid re-creating if already on that screen
                 }
@@ -92,7 +92,7 @@ fun NavGraphBuilder.featureNavigation(
 
     }
 
-    composable(route = NavigationRoute.ChallengeListScreen.route) {
+    composable(route = NavigationRoute.ChallengeTabScreen.route) {
         appStateViewModel.setBottomBarVisibility(true)
         appStateViewModel.setNavigationTopBarVisibility(false)
         Column(
@@ -101,7 +101,7 @@ fun NavGraphBuilder.featureNavigation(
         ) {
 
 
-            ChallengeListScreen(
+            ChallengesScreen(
                 onCardChallengeClick = { challenge ->
                    // sharedViewModel.challenge = challenge
                     navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
@@ -113,6 +113,7 @@ fun NavGraphBuilder.featureNavigation(
     composable(route = NavigationRoute.ChallengeDetailsScreen.route) {
         appStateViewModel.setBottomBarVisibility(true)
         appStateViewModel.setNavigationTopBarVisibility(false)
+        appStateViewModel.setTopBarVisibility(true)
 
         Column(
             modifier = Modifier

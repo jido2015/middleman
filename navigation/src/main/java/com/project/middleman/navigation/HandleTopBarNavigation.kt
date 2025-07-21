@@ -15,7 +15,7 @@ internal fun HandleTabNavigation(
     LaunchedEffect(selectedTab) {
         val targetRoute = when (selectedTab) {
             Tab.Home -> NavigationRoute.DashboardScreen.route
-            Tab.Explore -> NavigationRoute.ChallengeListScreen.route
+            Tab.Explore -> NavigationRoute.ChallengeTabScreen.route
         }
 
         if (currentRoute != targetRoute) {
@@ -34,7 +34,7 @@ internal fun UpdateSelectedTabOnNavigation(
 ) {
     LaunchedEffect(navBackStackEntry?.destination?.route) {
         when (navBackStackEntry?.destination?.route) {
-            NavigationRoute.ChallengeListScreen.route -> onTabUpdate(Tab.Explore)
+            NavigationRoute.ChallengeTabScreen.route -> onTabUpdate(Tab.Explore)
             NavigationRoute.DashboardScreen.route -> onTabUpdate(Tab.Home)
         }
     }

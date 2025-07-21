@@ -2,7 +2,7 @@ package com.project.middleman.navigation
 
 sealed class NavigationRoute(val route: String) {
     object AuthenticationScreen : NavigationRoute("AuthenticationScreen")
-    object ChallengeListScreen : NavigationRoute("ChallengeListScreen")
+    object ChallengeTabScreen : NavigationRoute("ChallengeTabScreen")
     object CreateChallengeTitleScreen : NavigationRoute("CreateChallengeTitleScreen")
     object InputAmountScreen : NavigationRoute("InputAmountScreen")
     object ChallengeSummaryScreen : NavigationRoute("ChallengeSummaryScreen")

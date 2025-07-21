@@ -47,11 +47,15 @@ fun PopDialog(
     openBottomSheet: Boolean,
     onDismissRequest: () -> Unit,
     onClickViewWager: () -> Unit,
-    onClickInviteParticipants: () -> Unit
+    onClickInviteParticipants: () -> Unit,
 ) {
     if (openBottomSheet) {
+
         Dialog(onDismissRequest = onDismissRequest,
-            properties = DialogProperties(usePlatformDefaultWidth = false) // <--- important
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,// <--- important
+                dismissOnBackPress = false, //Block the back press
+                dismissOnClickOutside = false)
         ) {
 
             Box(
@@ -61,7 +65,7 @@ fun PopDialog(
 
             ) {
 
-                Box(modifier = Modifier.fillMaxSize().clickable( onClick = onDismissRequest)){}
+                Box(modifier = Modifier.fillMaxSize()){}
                 Box(
                     modifier = Modifier
                         .padding(horizontal = 0.dp) // or skip it entirely

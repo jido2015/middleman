@@ -46,10 +46,6 @@ fun DashboardScreen(
     Column(modifier = Modifier.fillMaxSize()){
         MainToolBar(
             showTopBar = true,
-            toolBarTitle = "Dashboard",
-            profilePhoto = "",
-            showBackButton = true,
-            onBackClick = {}
         )
 
         val scrollState = rememberScrollState()

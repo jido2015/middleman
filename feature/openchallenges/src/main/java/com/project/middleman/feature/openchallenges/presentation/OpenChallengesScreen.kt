@@ -72,7 +72,6 @@ fun ChallengeListScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
             items(challenges) { challenge ->
                 ChallengeCardItem(userUid = openChallengeViewModel.getCurrentUser(),

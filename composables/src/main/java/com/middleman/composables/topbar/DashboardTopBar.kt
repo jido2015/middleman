@@ -32,11 +32,7 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainToolBar(
-    showTopBar: Boolean,
-    toolBarTitle: String,
-    profilePhoto: String,
-    showBackButton: Boolean,
-    onBackClick: () -> Unit
+    showTopBar: Boolean
 ) {
     if (showTopBar) {
         Box(modifier = Modifier.fillMaxWidth().background(surfaceBrandLight).padding(top = 15.dp, bottom = 15.dp)) {
@@ -125,9 +121,5 @@ fun MainToolBar(
 fun PreviewMainToolBar() {
     MainToolBar(
         showTopBar = true,
-        toolBarTitle = "Dashboard",
-        profilePhoto = "", // placeholder URL
-        showBackButton = true,
-        onBackClick = {}
     )
 }
