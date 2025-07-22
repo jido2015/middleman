@@ -89,5 +89,8 @@ dependencies {
     // Desugar JDK
     coreLibraryDesugaring(libs.core.library8)
     implementation(project(":core:source"))
+    implementation(project(":core:common"))
+    implementation(project(":designsystem"))
+    implementation(project(":composables"))
 
 }
