@@ -20,13 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.middleman.core.source.data.model.Challenge
 
 @Composable
 fun ChallengeCardItem(
     userUid: String? = null,
-    challenge: Challenge,
+    challenge: Challenge = Challenge(),
     onCardClicked: () -> Unit,
     onChallengeClick: (Challenge) -> Unit
 ) {
@@ -55,7 +56,7 @@ fun ChallengeCardItem(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = challenge.description,
+                text = challenge.category,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -107,5 +108,16 @@ fun ChallengeCardItem(
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewChallengeCardItem() {
+
+    ChallengeCardItem(
+        userUid = "user123",
+        onCardClicked = { /* Preview: card clicked */ },
+        onChallengeClick = { /* Preview: challenge clicked */ }
+    )
 }
 

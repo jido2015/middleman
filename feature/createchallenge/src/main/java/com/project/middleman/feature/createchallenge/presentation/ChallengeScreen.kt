@@ -1,7 +1,6 @@
 package com.project.middleman.feature.createchallenge.presentation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 
 @Composable
@@ -10,7 +9,7 @@ fun CreateChallengeTitleScreen(
     viewModel: CreateChallengeViewModel
 ) {
 
-    CreateChallengeUi(
+    CreateChallengeTitle(
        onSaveChallenge = onSaveChallenge,
         viewModel = viewModel
     )

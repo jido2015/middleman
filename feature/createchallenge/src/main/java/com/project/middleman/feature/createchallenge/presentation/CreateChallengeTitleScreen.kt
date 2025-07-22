@@ -39,14 +39,12 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 import kotlinx.coroutines.delay
 
 @Composable
-fun CreateChallengeUi(
+fun CreateChallengeTitle(
     onSaveChallenge: () -> Unit,
     viewModel: CreateChallengeViewModel,
 ) {
     val context = LocalContext.current
-
     var challengeTitle by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("...") }
     var showTIme by remember { mutableStateOf(false) }
     var selectedTimeInMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
 
@@ -54,6 +52,10 @@ fun CreateChallengeUi(
     val focusManager = LocalFocusManager.current
 
     val duration = Toast.LENGTH_SHORT
+    var selectedCategory by remember { mutableStateOf("Select a category for this wager") }
+    val category = listOf("Sports",
+        "Gaming", "Politics",
+        "Stocks", "Entertainment", "Crypto", "Others")
 
     var message = "Please fill all fields correctly."
     val toast = Toast.makeText(context, message, duration)
@@ -68,7 +70,7 @@ fun CreateChallengeUi(
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button) = createRefs()
+        val (constraintTitle, subtitle, textFieldTitle, charCount, button, dropDown) = createRefs()
 
         Text(
             "Wager Name",
@@ -119,6 +121,17 @@ fun CreateChallengeUi(
             }
         )
 
+        CustomDropdownMenu(
+            modifier = Modifier.fillMaxWidth().constrainAs(dropDown) {
+                top.linkTo(charCount.bottom, margin = 70.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            selectedOption = selectedCategory,
+            onOptionSelected = { selectedCategory = it },
+            options = category
+        )
+
         CustomButton(
             modifier = Modifier.fillMaxWidth()
                 .constrainAs(button) {
@@ -127,10 +140,12 @@ fun CreateChallengeUi(
                     end.linkTo(parent.end)
                 },
             onClick = {
-                if (challengeTitle.isNotBlank() && description.isNotBlank()) {
-
+                if (challengeTitle.isNotBlank()
+                    && selectedCategory.isNotBlank() &&
+                    selectedCategory != "Select a category for this wager"
+                ) {
                     viewModel.title = challengeTitle
-                    viewModel.description = description
+                    viewModel.category = selectedCategory
                     viewModel.selectedTimeInMillis = selectedTimeInMillis
                     onSaveChallenge()
                 } else {
@@ -166,7 +181,7 @@ fun CreateChallengeUi(
 @Composable
 fun CreateChallengeScreenPreview() {
     MaterialTheme {
-        CreateChallengeUi(
+        CreateChallengeTitle(
             onSaveChallenge = { ->
                 // For preview, we just print to log (won't actually be called here)
             },

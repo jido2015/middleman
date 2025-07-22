@@ -54,7 +54,7 @@ fun ChallengeDetailsScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = "Terms and Conditions")
-            Text(text = challenge.description)
+            Text(text = challenge.category)
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = "Stake")

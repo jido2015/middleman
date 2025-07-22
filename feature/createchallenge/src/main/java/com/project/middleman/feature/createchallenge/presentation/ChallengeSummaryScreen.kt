@@ -88,7 +88,7 @@ fun ChallengeSummaryScreen(
 
         LabelValueRow(
             label = "Category",
-            value = "Gaming."
+            value = viewModel.category
         )
 
         HorizontalDivider(

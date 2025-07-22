@@ -26,7 +26,7 @@ class CreateChallengeViewModel @Inject constructor(
 ) : ViewModel() {
 
     var title by mutableStateOf("")
-    var description by mutableStateOf("")
+    var category by mutableStateOf("")
     var selectedTimeInMillis by mutableLongStateOf(0)
     var stake by mutableDoubleStateOf(0.0)
 
@@ -57,7 +57,7 @@ class CreateChallengeViewModel @Inject constructor(
             id = UUID.randomUUID().toString(),
             title = title,
             participant = mapOf(user.uid to creator),
-            description = description,
+            category = this@CreateChallengeViewModel.category,
             status = "open",
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,

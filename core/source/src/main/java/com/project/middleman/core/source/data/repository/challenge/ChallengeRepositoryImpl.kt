@@ -23,8 +23,8 @@ class ChallengeRepositoryImpl  @Inject constructor(
     override suspend fun createChallenge(challenge: Challenge): CreateChallengeResponse {
         return try {
 
-            if (challenge.title.isBlank() || challenge.description.isBlank()){
-                Log.d("CreateChallengeScreen", "Fields are empty: title ${challenge.title}, description ${challenge.description}")
+            if (challenge.title.isBlank() || challenge.category.isBlank()){
+                Log.d("CreateChallengeScreen", "Fields are empty: title ${challenge.title}, description ${challenge.category}")
                 RequestState.Error(Exception("Empty fields"))
             }else{
                 db.collection("challenges").document(challenge.id)

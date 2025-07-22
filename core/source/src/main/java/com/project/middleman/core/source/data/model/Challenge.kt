@@ -4,9 +4,9 @@ data class Challenge(
     val id: String = "",
     val payoutAmount: Double = 0.0,
     val title: String = "",
-    val description: String = "",
+    val category: String = "",
     val participant: Map<String, ParticipantProgress> = emptyMap(),
-    val visibility: String = "public", // or "invite-only or public"
+    val visibility: String = "public", // or "invite-only or public" or "private"
     val status: String = "open", // open, active, completed
     val winnerId: String? = null,
     val createdAt: Long = 0L,
