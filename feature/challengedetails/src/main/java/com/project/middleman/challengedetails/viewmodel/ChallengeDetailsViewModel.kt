@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.ParticipantProgress
 import com.project.middleman.core.source.data.sealedclass.RequestState
@@ -31,25 +32,29 @@ class ChallengeDetailsViewModel @Inject constructor(
     fun setLoading(loading: Boolean){
         loadingState.value = loading
     }
-    fun getCurrentUser(): String? {
+
+    fun getCurrentUser(): FirebaseUser? {
         val user = firebaseAuth.currentUser
-        return user?.uid
+        return user
     }
 
     // Participant accepts challenge
     fun onChallengeAccepted(challenge: Challenge){
 
-        val updatedChallenge = challenge.copy(title = "In-Progress")
+        val updatedChallenge = challenge.copy(title = "In-Progress", status = "pending")
 
         val participant = ParticipantProgress(
             status = "Participant",
-            name = firebaseAuth.currentUser?.displayName.toString(),
             joinedAt = System.currentTimeMillis(),
             amount = updatedChallenge.payoutAmount / 2,
-            userId = getCurrentUser().toString(),
+            userId = getCurrentUser()?.uid ?: "",
+            displayName = getCurrentUser()?.displayName ?: "",
+            photoUrl = getCurrentUser()?.photoUrl?.toString() ?: "",
             won = false,
             winAmount = 0.0
         )
+
+
 
         Log.d("LogChallengeId", updatedChallenge.id)
         viewModelScope.launch {

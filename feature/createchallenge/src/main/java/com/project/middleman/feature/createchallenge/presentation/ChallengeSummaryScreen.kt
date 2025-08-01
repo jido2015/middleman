@@ -86,9 +86,21 @@ fun ChallengeSummaryScreen(
             color = borderGrey
         )
 
+
         LabelValueRow(
             label = "Category",
             value = viewModel.category
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 20.dp),
+            thickness = 1.dp,
+            color = borderGrey
+        )
+
+        LabelValueRow(
+            label = "Terms",
+            value = viewModel.description
         )
 
         HorizontalDivider(
@@ -109,9 +121,21 @@ fun ChallengeSummaryScreen(
         )
 
         LabelValueRow(
+            label = "Invite-Only",
+            value = if (viewModel.visibility) "No" else "Yes"
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 20.dp),
+            thickness = 1.dp,
+            color = borderGrey
+        )
+
+        LabelValueRow(
             label = "Fees",
             value = "$$fee"
         )
+
 
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 20.dp),

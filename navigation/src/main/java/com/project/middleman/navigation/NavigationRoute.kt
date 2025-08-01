@@ -5,6 +5,7 @@ sealed class NavigationRoute(val route: String) {
     object ChallengeTabScreen : NavigationRoute("ChallengeTabScreen")
     object CreateChallengeTitleScreen : NavigationRoute("CreateChallengeTitleScreen")
     object InputAmountScreen : NavigationRoute("InputAmountScreen")
+    object DescriptionScreen : NavigationRoute("DescriptionScreen")
     object ChallengeSummaryScreen : NavigationRoute("ChallengeSummaryScreen")
     object ChallengeDetailsScreen : NavigationRoute("ChallengeDetailsScreen")
     object DashboardScreen : NavigationRoute("DashboardScreen")

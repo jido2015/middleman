@@ -9,6 +9,6 @@ import javax.inject.Singleton
 class ProfileUseCase @Inject constructor(
     private val profileRepository: ProfileRepository
 ) {
-    suspend operator fun invoke(): GetUserProfileResponse
-            = profileRepository.getUserProfile()
+    suspend operator fun invoke(userId: String): GetUserProfileResponse
+            = profileRepository.getUserProfile(userId = userId)
 }

@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,39 +30,30 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.button.CustomButton
 import com.middleman.composables.textfield.BorderlessTextField
-import com.project.middleman.core.common.getSelectedTimeInMillis
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorBlack
-import com.project.middleman.feature.createchallenge.components.ComposeTimeInputDialogCustom
-import com.project.middleman.feature.createchallenge.components.VisibilityCheckbox
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import kotlinx.coroutines.delay
 
+
 @Composable
-fun CreateChallengeTitle(
+fun CreateChallengeDescription(
     onSaveChallenge: () -> Unit,
     viewModel: CreateChallengeViewModel,
 ) {
     val context = LocalContext.current
-    var challengeTitle by remember { mutableStateOf("") }
-    var showTIme by remember { mutableStateOf(false) }
-    var selectedTimeInMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    val isInviteOnly = remember { mutableStateOf(true) }
+    var challengeDescription by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     val duration = Toast.LENGTH_SHORT
-    var selectedCategory by remember { mutableStateOf("Select a category for this wager") }
-    val category = listOf("Sports",
-        "Gaming", "Politics",
-        "Stocks", "Entertainment", "Crypto", "Others")
 
     var message = "Please fill all fields correctly."
     val toast = Toast.makeText(context, message, duration)
 
     // Character limit
-    val maxCharacters = 50
-    val currentCharCount = challengeTitle.length
+    val maxCharacters = 200
+    val currentCharCount = challengeDescription.length
 
     ConstraintLayout(
         modifier = Modifier
@@ -71,10 +61,10 @@ fun CreateChallengeTitle(
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button, dropDown, checkbox) = createRefs()
+        val (constraintTitle, subtitle, textFieldTitle, charCount, button) = createRefs()
 
         Text(
-            "Wager Name",
+            "Wager Description",
             style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
             modifier = Modifier.constrainAs(constraintTitle) {
                 top.linkTo(parent.top, margin = 16.dp)
@@ -83,7 +73,7 @@ fun CreateChallengeTitle(
         )
 
         Text(
-            "Name your wager in few words",
+            "What is the bet about?",
             style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
             modifier = Modifier.constrainAs(subtitle) {
                 top.linkTo(constraintTitle.bottom, margin = 12.dp)
@@ -101,14 +91,14 @@ fun CreateChallengeTitle(
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 },
-            text = challengeTitle,
+            text = challengeDescription,
             onValueChange = { newText ->
                 // Only allow input if it's within the character limit
                 if (newText.length <= maxCharacters) {
-                    challengeTitle = newText
+                    challengeDescription = newText
                 }
             },
-            placeholder = "First player to score a goal?",
+            placeholder = "Describe and state your terms",
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
         )
@@ -122,23 +112,6 @@ fun CreateChallengeTitle(
             }
         )
 
-        CustomDropdownMenu(
-            modifier = Modifier.fillMaxWidth().constrainAs(dropDown) {
-                top.linkTo(charCount.bottom, margin = 70.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            selectedOption = selectedCategory,
-            onOptionSelected = { selectedCategory = it },
-            options = category
-        )
-        VisibilityCheckbox(visibilityState = isInviteOnly,
-            modifier = Modifier.constrainAs(checkbox) {
-            top.linkTo(dropDown.bottom, margin = 20.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        })
-
 
         CustomButton(
             modifier = Modifier.fillMaxWidth()
@@ -148,14 +121,9 @@ fun CreateChallengeTitle(
                     end.linkTo(parent.end)
                 },
             onClick = {
-                if (challengeTitle.isNotBlank()
-                    && selectedCategory.isNotBlank() &&
-                    selectedCategory != "Select a category for this wager"
+                if (challengeDescription.isNotBlank()
                 ) {
-                    viewModel.title = challengeTitle
-                    viewModel.category = selectedCategory
-                    viewModel.visibility = isInviteOnly.value
-                    viewModel.selectedTimeInMillis = selectedTimeInMillis
+                    viewModel.description = challengeDescription
                     onSaveChallenge()
                 } else {
                     toast.show()
@@ -164,7 +132,7 @@ fun CreateChallengeTitle(
             },
             text = "Continue",
 
-        )
+            )
 
         // Request focus when the screen is displayed
         LaunchedEffect(Unit) {
@@ -173,24 +141,13 @@ fun CreateChallengeTitle(
         }
     }
 
-
-    // Show time picker
-    if (showTIme) {
-        ComposeTimeInputDialogCustom(
-            onConfirm = { hour, minute ->
-                selectedTimeInMillis = getSelectedTimeInMillis(hour, minute)
-                showTIme = false
-            },
-            onDismiss = { showTIme = false })
-    }
-
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CreateChallengeScreenPreview() {
+fun ChallengeDescriptionPreview() {
     MaterialTheme {
-        CreateChallengeTitle(
+        CreateChallengeDescription(
             onSaveChallenge = { ->
                 // For preview, we just print to log (won't actually be called here)
             },

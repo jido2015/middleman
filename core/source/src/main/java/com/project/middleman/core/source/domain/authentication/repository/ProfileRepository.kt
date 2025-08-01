@@ -7,9 +7,6 @@ typealias SignOutResponse = RequestState<Boolean>
 typealias GetUserProfileResponse = RequestState<UserDTO>
 
 interface ProfileRepository {
-    val displayName: String
-    val photoUrl: String
-
     suspend fun signOut(): SignOutResponse
-    suspend fun getUserProfile(): GetUserProfileResponse
+    suspend fun getUserProfile(userId: String): GetUserProfileResponse
 }

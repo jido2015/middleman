@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
@@ -46,7 +45,6 @@ fun FeatureContentLayout(
     var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
     val showCreateWagerSheet by appStateViewModel.showCreateWagerSheet.collectAsState()
     val showBottomBarSheet by appStateViewModel.showBottomTabSheet.collectAsState()
-    val showTopBarSheet by appStateViewModel.showTopBarSheet.collectAsState()
     val showNotificationBarSheet by appStateViewModel.showNotificationBarSheet.collectAsState()
     val showNavigationTopBarSheet by appStateViewModel.showNavigationTopBarSheet.collectAsState()
     val navigationCurrentProgress by appStateViewModel.navigationCurrentProgress.collectAsState()
@@ -109,11 +107,11 @@ fun FeatureContentLayout(
 
                     // ✅ Navigation Top Bar With Progress Bar
                     NavigationTopBarWithProgressBar(
+                        handleBackPressed = { navController.popBackStack() },
                         title = navigationTitle,
-                        progress = navigationCurrentProgress/3f,
+                        progress = navigationCurrentProgress/4f,
                         showNavigationTopBarSheet = showNavigationTopBarSheet,
                         modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
-
 
                     // ✅ Pass real scroll callbacks
                     FeatureNavigationHost(

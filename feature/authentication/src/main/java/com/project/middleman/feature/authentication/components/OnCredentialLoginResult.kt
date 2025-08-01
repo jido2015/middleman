@@ -9,7 +9,7 @@ import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.authentication.AuthViewModel
 
 @Composable
-fun CredentialManagerLogin(
+fun OnCredentialLoginResult(
     viewModel: AuthViewModel = hiltViewModel(),
     launch: (result: AuthCredential) -> Unit,
     onError: (message: String) -> Unit

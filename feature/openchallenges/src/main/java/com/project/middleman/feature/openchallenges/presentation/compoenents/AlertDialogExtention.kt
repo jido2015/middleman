@@ -1,4 +1,4 @@
-package com.project.middleman.feature.openchallenges.presentation
+package com.project.middleman.feature.openchallenges.presentation.compoenents
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

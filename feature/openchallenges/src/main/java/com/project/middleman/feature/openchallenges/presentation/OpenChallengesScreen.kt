@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.project.middleman.feature.openchallenges.presentation.compoenents.ChallengeDialog
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.FetchChallengeResponseHandler
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.UpdateChallengeWrapper
 import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewModel
@@ -74,16 +75,15 @@ fun ChallengeListScreen(
                 .fillMaxSize()
         ) {
             items(challenges) { challenge ->
-                ChallengeCardItem(userUid = openChallengeViewModel.getCurrentUser(),
-
+                ChallengeCardItem(
+                    userUid = FirebaseAuth.getInstance().currentUser,
                     challenge = challenge,
-                    onCardClicked = {
-                        //Navigate to challenge detail screen
-                        onCardChallengeClick(challenge)},
                     onChallengeClick = {
-                        updatedChallenge = it
+
+                        onCardChallengeClick(challenge)
+                       // updatedChallenge = it
                         //Show dialog to accept challenge
-                        showDialog = true
+                       // showDialog = true
                     })
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -91,11 +91,13 @@ fun ChallengeListScreen(
     }
 
     // Show the dialog when showDialog is true
-    ChallengeDialog(showDialog = showDialog, onDismiss =
+    ChallengeDialog(
+        showDialog = showDialog, onDismiss =
         { showDialog = false }, onConfirm = {
 
         openChallengeViewModel.onChallengeAccepted(updatedChallenge)
-        showDialog = false})
+        showDialog = false
+    })
 
 }
 

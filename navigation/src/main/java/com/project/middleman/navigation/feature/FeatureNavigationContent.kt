@@ -12,6 +12,7 @@ import com.project.middleman.challengedetails.presentation.ChallengeDetailsScree
 import com.project.middleman.feature.createchallenge.presentation.CreateChallengeTitleScreen
 import com.project.middleman.feature.createchallenge.presentation.InputAmountScreen
 import com.project.middleman.feature.createchallenge.presentation.ChallengeSummaryScreen
+import com.project.middleman.feature.createchallenge.presentation.CreateChallengeDescription
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.feature.openchallenges.presentation.ChallengesScreen
 import com.project.middleman.navigation.NavigationRoute
@@ -31,11 +32,23 @@ fun NavGraphBuilder.featureNavigation(
     // Create Title for Challenge Routes
     composable(route = NavigationRoute.CreateChallengeTitleScreen.route) {
         appStateViewModel.setBottomBarVisibility(false)
-        appStateViewModel.setTopBarVisibility(false)
         appStateViewModel.setNavigationTopBarVisibility(true)
         appStateViewModel.setNavigationCurrentProgress(1f)
         appStateViewModel.setNavigationTitle("Create Wager")
         CreateChallengeTitleScreen(
+            viewModel = createViewModel,
+            onSaveChallenge = {
+                navController.navigate(NavigationRoute.DescriptionScreen.route)
+            }
+        )
+    }
+
+    // Create Stake for Challenge Routes
+    composable(route = NavigationRoute.DescriptionScreen.route) {
+        appStateViewModel.setNavigationTopBarVisibility(true)
+        appStateViewModel.setNavigationCurrentProgress(2f)
+        appStateViewModel.setNavigationTitle("Description")
+        CreateChallengeDescription(
             viewModel = createViewModel,
             onSaveChallenge = {
                 navController.navigate(NavigationRoute.InputAmountScreen.route)
@@ -43,11 +56,9 @@ fun NavGraphBuilder.featureNavigation(
         )
     }
 
-    // Create Stake for Challenge Routes
     composable(route = NavigationRoute.InputAmountScreen.route) {
-        appStateViewModel.setTopBarVisibility(false)
         appStateViewModel.setNavigationTopBarVisibility(true)
-        appStateViewModel.setNavigationCurrentProgress(2f)
+        appStateViewModel.setNavigationCurrentProgress(3f)
         appStateViewModel.setNavigationTitle("Stake Amount")
         InputAmountScreen(
             viewModel = createViewModel,
@@ -59,7 +70,7 @@ fun NavGraphBuilder.featureNavigation(
 
     // Tag a friend for Challenge Routes
     composable(route = NavigationRoute.ChallengeSummaryScreen.route) {
-        appStateViewModel.setNavigationCurrentProgress(3f)
+        appStateViewModel.setNavigationCurrentProgress(4f)
         appStateViewModel.setNavigationTitle("Review Your Wager")
         ChallengeSummaryScreen(
             viewModel = createViewModel,
@@ -78,7 +89,6 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationTopBarVisibility(false)
 
         DashboardScreen(
-
             onProceedClicked = {}, onScrollDown = {
             onScrollDown()
             Log.d("ScrollDownT", "Scrolling Down")
@@ -103,7 +113,7 @@ fun NavGraphBuilder.featureNavigation(
 
             ChallengesScreen(
                 onCardChallengeClick = { challenge ->
-                   // sharedViewModel.challenge = challenge
+                    appStateViewModel.challenge = challenge
                     navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)
                 }
             )
@@ -111,9 +121,8 @@ fun NavGraphBuilder.featureNavigation(
     }
 
     composable(route = NavigationRoute.ChallengeDetailsScreen.route) {
-        appStateViewModel.setBottomBarVisibility(true)
+        appStateViewModel.setBottomBarVisibility(false)
         appStateViewModel.setNavigationTopBarVisibility(false)
-        appStateViewModel.setTopBarVisibility(true)
 
         Column(
             modifier = Modifier
@@ -124,7 +133,10 @@ fun NavGraphBuilder.featureNavigation(
 
                 ChallengeDetailsScreen(
                     challengeDetails = challenge,
-                    onAcceptChallenge = {}
+                    onAcceptChallenge = {},
+                    onBackClicked = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

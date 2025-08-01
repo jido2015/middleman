@@ -1,4 +1,4 @@
-package com.project.middleman.feature.openchallenges.presentation
+package com.project.middleman.feature.openchallenges.presentation.compoenents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +31,6 @@ import androidx.compose.animation.core.tween
 
 @Composable
 fun OpenChallengeTabPager(pages: List<@Composable () -> Unit>, modifier: Modifier = Modifier) {
-
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val coroutineScope = rememberCoroutineScope()
@@ -116,7 +115,7 @@ fun OpenChallengeTabPager(pages: List<@Composable () -> Unit>, modifier: Modifie
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .padding(16.dp) // Padding inside each page
+                        .padding(start = 16.dp, end = 16.dp) // Padding inside each page
                         .wrapContentSize(Alignment.Center)
                 ) {
                     pages[page]()  // Show each Composable here

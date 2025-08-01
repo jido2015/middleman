@@ -10,10 +10,13 @@ data class UserProfile(
     var uid: String?,
     var displayName: String?,
     var email: String?,
+    var firstName: String?,
+    var lastName: String?,
+    var phoneNumber: String?,
     var photoUrl: String,
     var createdAt: FieldValue? = null
 ){
-    constructor() : this("","", "", "", null)
+    constructor() : this("","", "", "", "", "", "", null)
 
 }
 
@@ -22,6 +25,9 @@ data class UserDTO(
     var uid: String?="",
     var displayName: String?="",
     var email: String?="",
+    var firstName: String? ="",
+    var lastName: String? ="",
+    var phoneNumber: String?="",
     var photoUrl: String? ="",
     var createdAt: Timestamp? = Timestamp.now(),
 ){
@@ -34,6 +40,9 @@ data class UserDTO(
             "email" to email,
             "photoUrl" to photoUrl,
             "createdAt" to createdAt,
+            "firstName" to firstName,
+            "lastName" to lastName,
+            "phoneNumber" to phoneNumber
         )
     }
 }

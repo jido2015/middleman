@@ -68,5 +68,8 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     implementation(project(":designsystem"))
+    implementation(project(":core:source"))
+    implementation(project(":core:common"))
+    implementation(project(":feature:common"))
 
 }

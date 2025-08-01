@@ -17,8 +17,6 @@ class ProfileRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore
 ) : ProfileRepository {
-    override val displayName = auth.currentUser?.displayName.toString()
-    override val photoUrl = auth.currentUser?.photoUrl.toString()
 
     override suspend fun signOut(): SignOutResponse {
         return try {
@@ -29,11 +27,10 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserProfile(): GetUserProfileResponse {
+    override suspend fun getUserProfile(userIduid: String): GetUserProfileResponse {
         return try {
             val user = auth.currentUser?.let { firebaseUser ->
-                val id = firebaseUser.uid
-                val snapshot = db.collection("users").document(id).get().await()
+                val snapshot = db.collection("users").document(userIduid).get().await()
                 if (snapshot.exists()) {
                     Log.d("getUserProfile", "${snapshot.data}")
                     snapshot.toObject(UserDTO::class.java)

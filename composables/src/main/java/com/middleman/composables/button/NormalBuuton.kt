@@ -23,15 +23,16 @@ fun CustomButton(
     text: String,
     containerColor : Color = colorAccent,
     borderColor : Color = lightColorAccent,
-    textColor : Color = white
+    textColor : Color = white,
+    enableButton: Boolean = true
 ) {
     Button(
         modifier = modifier
-            .height(50.dp),
+            .height(56.dp),
+        enabled = enableButton,
         colors = buttonColors(containerColor = containerColor),
         onClick = { onClick()},
-        shape = RoundedCornerShape(100),
-        border = BorderStroke(1.dp, borderColor)
+        shape = RoundedCornerShape(100)
     ) {
         Text(
             text,

@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.project.middleman.feature.authentication.AuthViewModel
-import com.project.middleman.feature.authentication.components.CredentialManagerLogin
+import com.project.middleman.feature.authentication.components.OnCredentialLoginResult
 import com.project.middleman.feature.authentication.components.SignInWithGoogle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,7 +40,7 @@ fun AuthenticationScreen(
         }
     }
 
-    CredentialManagerLogin(
+    OnCredentialLoginResult(
         onError = {
         },
         launch = {

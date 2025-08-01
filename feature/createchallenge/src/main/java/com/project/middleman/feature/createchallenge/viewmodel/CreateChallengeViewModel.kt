@@ -29,6 +29,8 @@ class CreateChallengeViewModel @Inject constructor(
     var category by mutableStateOf("")
     var selectedTimeInMillis by mutableLongStateOf(0)
     var stake by mutableDoubleStateOf(0.0)
+    var visibility by mutableStateOf(false)
+    var description by mutableStateOf("")
 
     // Represents the state of the create challenge operation
     var createChallengeResponse by mutableStateOf<CreateChallengeResponse>(RequestState.Success(null))
@@ -45,9 +47,10 @@ class CreateChallengeViewModel @Inject constructor(
 
         val creator = ParticipantProgress(
             status = "Creator",
-            name = auth.currentUser?.displayName.toString(),
             joinedAt = System.currentTimeMillis(),
             amount = stake,
+            displayName = user.displayName ?: "",
+            photoUrl = user.photoUrl?.toString() ?: "",
             userId = user.uid,
             won = false,
             winAmount = 0.0
@@ -57,11 +60,13 @@ class CreateChallengeViewModel @Inject constructor(
             id = UUID.randomUUID().toString(),
             title = title,
             participant = mapOf(user.uid to creator),
-            category = this@CreateChallengeViewModel.category,
+            category = category,
             status = "open",
+            visibility = visibility,
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,
-            payoutAmount = stake * 2
+            payoutAmount = stake * 2,
+            description = description
         )
 
         viewModelScope.launch {

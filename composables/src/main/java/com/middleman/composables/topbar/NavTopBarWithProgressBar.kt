@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +26,7 @@ import com.project.middleman.designsystem.themes.Typography
 
 @Composable
 fun NavigationTopBarWithProgressBar(
+    handleBackPressed : () -> Unit,
     progress: Float,
     modifier: Modifier = Modifier,
     showNavigationTopBarSheet: Boolean = false,
@@ -49,7 +49,7 @@ fun NavigationTopBarWithProgressBar(
         ) {
 
             IconButton(
-                onClick = {},
+                onClick = {handleBackPressed()},
                 modifier = Modifier
                     .background(color = surface, shape = RoundedCornerShape(15.dp))
                     .size(36.dp) // Size of the entire circle
@@ -94,8 +94,11 @@ fun NavigationTopBarWithProgressBar(
 
 @Preview(showBackground = true)
 @Composable
-fun NavigationTopBarScreenPreview() {
-    MaterialTheme {
-        NavigationTopBarWithProgressBar(2f)
-    }
+fun PreviewNavigationTopBarWithProgressBar() {
+    NavigationTopBarWithProgressBar(
+        handleBackPressed = {},
+        progress = 0.5f, // 50% progress
+        showNavigationTopBarSheet = true,
+        title = "Create Wager"
+    )
 }

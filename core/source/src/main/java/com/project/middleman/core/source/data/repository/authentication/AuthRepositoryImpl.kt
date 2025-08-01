@@ -92,6 +92,9 @@ class AuthRepositoryImpl @Inject constructor(
     private fun FirebaseUser.toUser(): UserProfile {
         return UserProfile(
             uid = uid,
+            firstName = displayName?.split(" ")?.firstOrNull(),
+            lastName = displayName?.split(" ")?.lastOrNull(),
+            phoneNumber = phoneNumber,
             displayName = displayName.toString(),
             email = email.toString(),
             photoUrl = photoUrl.toString(),
