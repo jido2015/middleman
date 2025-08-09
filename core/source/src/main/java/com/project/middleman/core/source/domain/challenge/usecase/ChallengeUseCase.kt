@@ -6,7 +6,7 @@ import com.project.middleman.core.source.domain.challenge.repository.ChallengeRe
 import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
 import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesRepository
 import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesResponse
-import com.project.middleman.core.source.domain.challenge.repository.UpdateChallengeResponse
+import com.project.middleman.core.source.domain.challenge.repository.AcceptChallengeResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,11 +19,11 @@ class CreateChallengeUseCase @Inject constructor(
 }
 
 @Singleton
-class UpdateChallengeUseCase @Inject constructor(
+class AcceptChallengeUseCase @Inject constructor(
     private val challengeRepository: ChallengeRepository
 ) {
-     operator fun invoke(challenge: Challenge, participant: Participant): UpdateChallengeResponse =
-        challengeRepository.updateChallenge(challenge, participant)
+     operator fun invoke(challenge: Challenge, participant: Participant): AcceptChallengeResponse =
+        challengeRepository.acceptChallenge(challenge, participant)
 }
 
 @Singleton
@@ -31,3 +31,9 @@ class FetchChallengesUseCase @Inject constructor(
     private val fetchChallengesRepository: FetchChallengesRepository){
     operator fun invoke(): FetchChallengesResponse = fetchChallengesRepository.fetchChallenges()
 }
+
+@Singleton
+class GetChallengeDetailsUseCase @Inject constructor(
+    private val fetchChallengesRepository: FetchChallengesRepository){
+    operator fun invoke(challengeId: String) = fetchChallengesRepository.getChallengeDetails(challengeId)
+    }

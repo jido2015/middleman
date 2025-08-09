@@ -2,12 +2,12 @@ package com.project.middleman.core.source.data.repository.challenge
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.Source
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesRepository
 import javax.inject.Inject
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.domain.challenge.repository.UpdateChallengeResponse
+import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesResponse
+import com.project.middleman.core.source.domain.challenge.repository.GetChallengeDetailsResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -18,7 +18,7 @@ class FetchChallengesRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : FetchChallengesRepository {
 
-    override fun fetchChallenges(): Flow<RequestState<List<Challenge>>> = callbackFlow {
+    override fun fetchChallenges(): FetchChallengesResponse = callbackFlow {
         trySend(RequestState.Loading) // Optional: Emit loading state
 
         val listenerRegistration = db.collection("challenges")
@@ -46,4 +46,24 @@ class FetchChallengesRepositoryImpl @Inject constructor(
     }.catch { e ->
         emit(RequestState.Error(e))
     }
+
+
+    override fun getChallengeDetails(challengeId: String): GetChallengeDetailsResponse = callbackFlow {
+        val listener = db.collection("challenges")
+            .document(challengeId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error) // Stop the flow if there's an error
+                    return@addSnapshotListener
+                }
+                val challenge = snapshot?.toObject(Challenge::class.java)
+                if (challenge != null) {
+                    trySend(RequestState.Success(challenge))
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+
 }

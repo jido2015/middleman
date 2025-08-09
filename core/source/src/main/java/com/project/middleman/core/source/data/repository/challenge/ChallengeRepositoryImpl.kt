@@ -1,6 +1,5 @@
 package com.project.middleman.core.source.data.repository.challenge
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
@@ -36,7 +35,7 @@ class ChallengeRepositoryImpl  @Inject constructor(
         }
     }
 
-    override fun updateChallenge(
+    override fun acceptChallenge(
         challenge: Challenge,
         participant: Participant
     ): Flow<RequestState<Challenge>> = callbackFlow {
@@ -44,7 +43,7 @@ class ChallengeRepositoryImpl  @Inject constructor(
 
         val challengeRef = db.collection("challenges").document(challenge.id)
 
-        // Start snapshot listener for real-time sync
+        // Snapshot listener for real-time sync
         val listenerRegistration = challengeRef.addSnapshotListener { snapshot, error ->
             if (error != null) {
                 trySend(RequestState.Error(error)).isSuccess
@@ -61,28 +60,38 @@ class ChallengeRepositoryImpl  @Inject constructor(
             }
         }
 
-        // Run transaction in a coroutine
-            try {
-                db.runTransaction { transaction ->
-                    // 1. Get current challenge (optional if needed)
+        try {
+            db.runTransaction { transaction ->
+                val snapshot = transaction.get(challengeRef)
 
-                    // 2. Update status field
-                    transaction.update(challengeRef, "status", challenge.status)
+                // Current participants map (or empty if none)
+                val participantsMap = snapshot.get("participant") as? Map<String, Any> ?: emptyMap()
 
-                    // 3. Add participant to nested map
-                    val updatePath = "participant.${participant.userId}"
-                    transaction.update(challengeRef, updatePath, participant)
+                // Check participant limit
+                if (participantsMap.size >= 2) {
+                    throw Exception("Challenge already has maximum participants")
+                }
 
-                    null // Transactions must return something
-                }.await()
-            } catch (e: Exception) {
-                trySend(RequestState.Error(e)).isSuccess
-            }
+                // Optional: prevent the same user from joining twice
+                if (participantsMap.containsKey(participant.userId)) {
+                    throw Exception("User already joined this challenge")
+                }
 
+                // Update status
+                transaction.update(challengeRef, "status", challenge.status)
+
+                // Add participant
+                val updatePath = "participant.${participant.userId}"
+                transaction.update(challengeRef, updatePath, participant)
+
+                null // Transaction return type
+            }.await()
+        } catch (e: Exception) {
+            trySend(RequestState.Error(e)).isSuccess
+        }
 
         awaitClose { listenerRegistration.remove() }
     }
-
 
 
     override suspend fun deleteChallenge(challengeId: String): DeleteChallengeResponse {

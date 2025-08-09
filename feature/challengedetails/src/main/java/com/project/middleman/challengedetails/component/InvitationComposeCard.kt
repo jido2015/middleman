@@ -49,7 +49,6 @@ fun InvitationComposeCard(
     challenge: Challenge,
     currentUser: FirebaseUser?,
     creator: Participant?,
-    onRequestAccepted: () -> Unit,
 ) {
 
     Log.d("InvitationComposeCard", "$participant")
@@ -96,6 +95,8 @@ fun InvitationComposeCard(
                         append(" ${participant?.displayName}")
                     }
 
+                    Log.d("ChallengeStatus", currentUser?.uid ?: "participant")
+                    Log.d("ChallengeStatus", creator?.userId ?: "creator")
                     when (challenge.status){
 
                         BetStatus.PENDING.name   ->
@@ -109,7 +110,6 @@ fun InvitationComposeCard(
                             }
                             else -> {
                                 append(" has requested to join challenge.")
-
                             }
                         }
 
@@ -126,7 +126,6 @@ fun InvitationComposeCard(
                             }
                         }
                     }
-
                 },
                 style = Typography.labelMedium,
                 overflow = TextOverflow.Ellipsis,

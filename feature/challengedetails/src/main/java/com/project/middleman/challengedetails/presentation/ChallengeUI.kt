@@ -20,8 +20,7 @@ import com.project.middleman.designsystem.themes.borderGrey
 @Composable
 fun ChallengeDetailUi(
     modifier: Modifier = Modifier,
-    challenge: Challenge = Challenge(),
-    onAcceptChallenge: () -> Unit = {}) {
+    challenge: Challenge = Challenge()) {
 
     val creator =  challenge.participant.entries.find {
         it.value.status == "Creator"

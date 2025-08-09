@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +34,7 @@ import com.project.middleman.challengedetails.uistate_handler.AcceptParticipantW
 import com.project.middleman.challengedetails.uistate_handler.ChallengeDetailsWrapper
 import com.project.middleman.challengedetails.uistate_handler.DeleteParticipantWrapper
 import com.project.middleman.challengedetails.uistate_handler.FetchParticipantWrapper
+import com.project.middleman.challengedetails.uistate_handler.GetChallengeDetailsWrapper
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
@@ -46,7 +46,9 @@ fun ChallengeDetailsScreen(
     onBackClicked: () -> Unit,
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     onAcceptChallenge: () -> Unit,
-    challengeDetails: Challenge = Challenge()) {
+    challengeDetails:
+    Challenge = Challenge()
+) {
 
     var challenge by remember { mutableStateOf(challengeDetails) }
     var actionMessage by remember { mutableStateOf("") }
@@ -57,18 +59,31 @@ fun ChallengeDetailsScreen(
         challengeDetailsViewModel.getChallengeDetails(challengeDetails)
     }
 
+    challengeDetailsViewModel.getUpdatedChallengeDetails( challengeDetails.id)
+    // Get challenge details
+    GetChallengeDetailsWrapper(
+        onErrorMessage = {
+            Log.d("GetChallengeDetailsWrapper", "Failed")
+        },
+        onSuccess = {
+            challenge = it
+            Log.d("GetChallengeDetailsWrapper", "Success")
+        }
+    )
 
+    // Accept participant
     AcceptParticipantWrapper(
         onErrorMessage = {
             Log.d("AcceptParticipantWrapper", "Failed")
 
         },
         onSuccessMessage = {
-            challengeDetailsViewModel.getChallengeDetails(
-                challengeDetails.copy(status = BetStatus.ACTIVE.name))
+           challenge = challenge.copy(status = BetStatus.ACTIVE.name)
             Log.d("AcceptParticipantWrapper", "Success")
         }
     )
+
+
     ChallengeDetailsWrapper(
         onSuccess = { challengeDetails ->
             challenge = challengeDetails
@@ -81,11 +96,13 @@ fun ChallengeDetailsScreen(
 
 
 
+    // Delete participant
     DeleteParticipantWrapper(
         onSuccess = {
-            challengeDetailsViewModel.getChallengeDetails(challengeDetails)
-
-            Log.d("DeleteParticipantWrapper", "Success")
+            challenge = challenge.copy(status = BetStatus.OPEN.name,
+                participant = challenge.participant
+                    .filterValues { it.status != "Participant" }
+            )
         },
         onErrorMessage = {
             Log.d("DeleteParticipantWrapper", "Failed")
@@ -105,7 +122,6 @@ fun ChallengeDetailsScreen(
 
     FetchParticipantWrapper(
         getParticipants = {
-            Log.d("getParticipants", it.toString())
             getParticipants(it)
         },
         onErrorMessage = {
@@ -166,7 +182,6 @@ fun ChallengeDetailsScreen(
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                     challenge = challenge,
-                    onAcceptChallenge = onAcceptChallenge
                 )
 
                 Spacer(modifier = Modifier.height(100.dp)) // Space before "Invitations"
@@ -174,10 +189,10 @@ fun ChallengeDetailsScreen(
 
             // Section add participant
             item {
-                AddParticipantView(participants,
+                AddParticipantView(
                     creator?.userId,
-                    currentUser?.uid)
-
+                    currentUser?.uid,
+                            challenge)
             }
 
             // Invitations list
@@ -187,8 +202,7 @@ fun ChallengeDetailsScreen(
                     singleParticipant,
                     challenge,
                     creator = creator,
-                    currentUser = currentUser,
-                    onRequestAccepted = {}
+                    currentUser = currentUser
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }

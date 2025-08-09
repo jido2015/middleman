@@ -15,7 +15,8 @@ import com.project.middleman.core.source.domain.challenge.repository.DeleteParti
 import com.project.middleman.core.source.domain.challenge.usecase.AcceptParticipantUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.FetchParticipantsUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.RemoveParticipantUseCase
-import com.project.middleman.core.source.domain.challenge.usecase.UpdateChallengeUseCase
+import com.project.middleman.core.source.domain.challenge.usecase.AcceptChallengeUseCase
+import com.project.middleman.core.source.domain.challenge.usecase.GetChallengeDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,15 +26,19 @@ import javax.inject.Inject
 @HiltViewModel
 class ChallengeDetailsViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val updateChallengeUseCase: UpdateChallengeUseCase,
+    private val acceptChallengeUseCase: AcceptChallengeUseCase,
     private val deleteParticipantUseCase: RemoveParticipantUseCase,
     private val acceptParticipantUseCase: AcceptParticipantUseCase,
-    private val fetchParticipantsUseCase: FetchParticipantsUseCase
+    private val fetchParticipantsUseCase: FetchParticipantsUseCase,
+    private val getChallengeDetailsUseCase: GetChallengeDetailsUseCase
 ): ViewModel() {
 
     // Represents the state of the update challenge operation
     private val _updateChallenge = MutableStateFlow<RequestState<Challenge>>(RequestState.Loading)
     val updateChallenge: StateFlow<RequestState<Challenge>> = _updateChallenge
+
+    private val _getChallengeState = MutableStateFlow<RequestState<Challenge>>(RequestState.Loading)
+    val getChallengeState: StateFlow<RequestState<Challenge>> = _getChallengeState
 
     var loadingState = mutableStateOf(false)
 
@@ -78,7 +83,7 @@ class ChallengeDetailsViewModel @Inject constructor(
         Log.d("LogChallengeId", updatedChallenge.id)
         viewModelScope.launch {
             _updateChallenge.value = RequestState.Loading
-            updateChallengeUseCase.invoke(updatedChallenge, participant).collect { state ->
+            acceptChallengeUseCase.invoke(updatedChallenge, participant).collect { state ->
                 _updateChallenge.value = state
             }
         }
@@ -90,6 +95,7 @@ class ChallengeDetailsViewModel @Inject constructor(
             fetchParticipantsUseCase.invoke(challengeId)
                 .collect { state ->
                     _participants.value = state
+
                 }
         }
     }
@@ -97,21 +103,33 @@ class ChallengeDetailsViewModel @Inject constructor(
     fun removeParticipant(challengeId: String, participantId: String) {
         viewModelScope.launch {
             _deleteParticipantState.value = RequestState.Loading
-            val result = deleteParticipantUseCase(BetStatus.OPEN.name,challengeId, participantId)
+            val result =
+                deleteParticipantUseCase(BetStatus.OPEN.name, challengeId, participantId)
             _deleteParticipantState.value = result
+        }
+    }
+
+    fun getUpdatedChallengeDetails(challengeId: String){
+        viewModelScope.launch {
+            _getChallengeState.value = RequestState.Loading
+            getChallengeDetailsUseCase.invoke(challengeId)
+                .collect { state ->
+                    _getChallengeState.value = state
+                }
         }
     }
 
     fun acceptParticipantRequest(challengeId: String, participantId: String) {
         viewModelScope.launch {
             _acceptParticipantState.value = RequestState.Loading
-            val result = acceptParticipantUseCase(BetStatus.ACTIVE.name, challengeId, participantId)
+            val result =
+                acceptParticipantUseCase(BetStatus.ACTIVE.name, challengeId, participantId)
             _acceptParticipantState.value = result
         }
     }
 
-
     fun getChallengeDetails(challenge: Challenge) {
         _updateChallenge.value = RequestState.Success(challenge)
     }
+
 }

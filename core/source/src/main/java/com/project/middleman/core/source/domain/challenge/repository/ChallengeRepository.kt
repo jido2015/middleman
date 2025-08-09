@@ -6,16 +6,18 @@ import com.project.middleman.core.source.data.model.Participant
 import kotlinx.coroutines.flow.Flow
 
 typealias CreateChallengeResponse = RequestState<Challenge>
-typealias UpdateChallengeResponse = Flow<RequestState<Challenge>>
+typealias AcceptChallengeResponse = Flow<RequestState<Challenge>>
 typealias DeleteChallengeResponse = RequestState<Challenge>
 typealias FetchChallengesResponse = Flow<RequestState<List<Challenge>>>
+typealias GetChallengeDetailsResponse = Flow<RequestState<Challenge>>
 
 interface ChallengeRepository {
     suspend fun createChallenge(challenge: Challenge): CreateChallengeResponse
-    fun updateChallenge(challenge: Challenge, participant: Participant): UpdateChallengeResponse
+    fun acceptChallenge(challenge: Challenge, participant: Participant): AcceptChallengeResponse
     suspend fun deleteChallenge(challengeId: String): DeleteChallengeResponse
 }
 
 interface FetchChallengesRepository {
     fun fetchChallenges():FetchChallengesResponse
+    fun getChallengeDetails(challengeId: String): GetChallengeDetailsResponse
 }

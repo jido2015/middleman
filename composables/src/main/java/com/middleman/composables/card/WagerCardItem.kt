@@ -33,7 +33,9 @@ import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.colorBlack
+import com.project.middleman.designsystem.themes.lightColorAccent
 import com.project.middleman.designsystem.themes.surfaceBrandLight
+import com.project.middleman.designsystem.themes.white
 
 
 @Composable
@@ -115,7 +117,7 @@ fun ChallengeCard(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .background(
-                            color = borderGrey,
+                            color = colorAccent,
                             shape = RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 5.dp)
@@ -124,7 +126,7 @@ fun ChallengeCard(
                         text = challenge.category,
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
                         fontWeight = FontWeight.Bold,
-                        color = colorBlack
+                        color = white
                     )
                 }
 
