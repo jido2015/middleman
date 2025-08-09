@@ -15,13 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Typography
+import com.project.middleman.designsystem.themes.cardMultiColor
 import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.designsystem.themes.surfaceBrandLight
 
 @Composable
 fun SpendableCardUI() {
 
-    Box(modifier = Modifier.fillMaxWidth().background(surfaceBrandLight)
+    Box(modifier = Modifier.fillMaxWidth().background(cardMultiColor)
 
         .padding(horizontal = 20.dp, vertical = 18.dp)){
         Column(
@@ -31,12 +32,10 @@ fun SpendableCardUI() {
         ) {
 
             Text("Spendable", style = Typography.bodySmall,
-                modifier = Modifier.padding(bottom = 4.dp),
-                color = colorBlack)
+                modifier = Modifier.padding(bottom = 4.dp))
 
             Text("$0.00", style = MaterialTheme.
-            typography.labelLarge.copy(fontSize = 32.sp),
-                color = colorBlack)
+            typography.labelLarge.copy(fontSize = 32.sp))
         }
     }
 

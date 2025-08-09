@@ -21,7 +21,7 @@ import com.middleman.composables.R
 fun ProceedButton(
     proceedClicked: () -> Unit, size: Dp,
     modifier: Modifier, text: String,
-    color: Color, paddingValues: PaddingValues
+    color: Color = Color.Unspecified, paddingValues: PaddingValues
 ){
 
     Row(modifier = modifier) {

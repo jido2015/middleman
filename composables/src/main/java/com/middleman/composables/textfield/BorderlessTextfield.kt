@@ -26,7 +26,9 @@ fun BorderlessTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
+    singleLine: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = Color.Green,
@@ -61,7 +63,9 @@ fun BorderlessTextField(
             keyboardOptions = keyboardOptions,
             keyboardActions = KeyboardActions(
                 onAny = { onImeAction() }
-            )
+            ),
+            maxLines = maxLines,
+            singleLine = singleLine,
         )
     }
 }

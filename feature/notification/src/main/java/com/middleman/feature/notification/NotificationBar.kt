@@ -49,6 +49,10 @@ import com.middleman.composables.button.ProceedButton
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.deepColorAccent
+import com.middleman.composables.R
+import com.project.middleman.designsystem.themes.SetStatusBarStyle
+import com.project.middleman.designsystem.themes.colorBlack
+import com.project.middleman.designsystem.themes.white
 
 @Composable
 fun AnimatedNotificationBar(
@@ -70,7 +74,7 @@ fun AnimatedNotificationBar(
     Column(modifier = modifier.padding(top = 60.dp,  bottom = 12.dp)) {
 
         if (isNotificationBarSheet){
-
+            SetStatusBarStyle(white, useDarkIcons = false)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,9 +216,15 @@ fun AnimatedNotificationBar(
                     }
                 }
             }
-        } }
+        } } else{
+
+            SetStatusBarStyle(colorBlack, useDarkIcons = true)
+        }
     }
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable

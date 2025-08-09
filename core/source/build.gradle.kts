@@ -64,4 +64,5 @@ dependencies {
     platform(libs.firebase.bom)
     implementation (libs.play.services.auth)
     implementation(libs.google.identity.library)
+    implementation(libs.gson)
 }

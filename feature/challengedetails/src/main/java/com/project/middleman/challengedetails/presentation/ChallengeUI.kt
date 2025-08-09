@@ -42,6 +42,8 @@ fun ChallengeDetailUi(
             )
         }
     }
+
+
 }
 
 @Composable

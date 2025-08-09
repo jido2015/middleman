@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.middleman.composables.R
 import com.project.middleman.designsystem.themes.Typography
+import com.project.middleman.designsystem.themes.cardMultiColor
 import com.project.middleman.designsystem.themes.surfaceBrandLight
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -35,11 +37,10 @@ fun MainToolBar(
     showTopBar: Boolean
 ) {
     if (showTopBar) {
-        Box(modifier = Modifier.fillMaxWidth().background(surfaceBrandLight).padding(top = 15.dp, bottom = 15.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().background(cardMultiColor).padding(top = 15.dp, bottom = 15.dp)) {
             ConstraintLayout(
-                modifier = Modifier.fillMaxWidth().background(surfaceBrandLight)
+                modifier = Modifier.fillMaxWidth().background(cardMultiColor)
                     .fillMaxWidth()
-                    .background(surfaceBrandLight)
                     .padding(start = 16.dp, end = 16.dp)
             ) {
                 val (notificationIcon, profileIcon) = createRefs()
@@ -69,10 +70,9 @@ fun MainToolBar(
 
                         Text("Balance",
                             modifier = Modifier.padding(end = 7.dp),
-                            style = Typography.bodySmall.copy(fontSize = 18.sp),
-                            color = Color.Black)
+                            style = Typography.bodySmall.copy(fontSize = 18.sp))
                         // Icon with animated rotation
-                        Image(
+                        Icon(
                             painter = painterResource(id = R.drawable.arrow_right2),
                             contentDescription = "Notification",
                             modifier = Modifier
@@ -97,13 +97,13 @@ fun MainToolBar(
                         contentDescription = "offer",)
 
 
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.offer_icon),
                         modifier = Modifier.padding(end = 20.dp)
                             .size(25.dp),
                         contentDescription = "offer icon",
                     )
-                    Image(
+                    Icon(
                         painter = painterResource(R.drawable.notification_icon),
                         modifier = Modifier
                             .size(25.dp),

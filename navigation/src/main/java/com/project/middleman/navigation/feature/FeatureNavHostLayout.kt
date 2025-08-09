@@ -29,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
+import com.project.middleman.designsystem.themes.SetStatusBarStyle
+import com.project.middleman.designsystem.themes.white
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
@@ -77,11 +79,14 @@ fun FeatureContentLayout(
     HandleTabNavigation(selectedTab, currentRoute, navController)
 
     //
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(if (showNotificationBarSheet){
+        Color.Black
+    } else {
+        Color.Transparent
+    })) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.Black)
         ) {
 
             // ✅ Notification Top Modal Sheet controlled by scroll
@@ -101,9 +106,8 @@ fun FeatureContentLayout(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                    .background(Color.White)
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize().background(white)) {
 
                     // ✅ Navigation Top Bar With Progress Bar
                     NavigationTopBarWithProgressBar(

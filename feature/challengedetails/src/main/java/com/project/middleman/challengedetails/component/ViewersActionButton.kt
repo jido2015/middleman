@@ -6,19 +6,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.quickations.QuickActions
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
+import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
+import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
+import com.project.middleman.designsystem.themes.lightVColorAccent
+import com.project.middleman.designsystem.themes.white
+import javax.annotation.meta.When
 
 @Composable
 fun ActionButton(
     onClick: () -> Unit,
     btnText: String,
     containerColor: Color,
+    btnTextColor: Color = white,
     enableButton: Boolean
 ) {
     QuickActions(
+        btnTextColor = btnTextColor,
         enableButton = enableButton,
         onButtonClick = onClick,
         btnText = btnText,
@@ -33,12 +41,12 @@ fun ActionButton(
 
 @Composable
 fun ViewersActionButton(
-    challengeDetailsViewModel: ChallengeDetailsViewModel,
+    challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     onAcceptChallenge: () -> Unit,
     challenge: Challenge
 ) {
     when (challenge.status) {
-        "open" -> {
+        BetStatus.OPEN.name -> {
             ActionButton(
                 onClick = {
                     challengeDetailsViewModel.onChallengeAccepted(challenge)
@@ -50,11 +58,12 @@ fun ViewersActionButton(
             )
         }
 
-        "pending", "something_else" -> {
+        else -> {
             ActionButton(
+                btnTextColor = white,
                 onClick = { /* Add logic to conclude wager */ },
-                btnText = "Conclude wager",
-                containerColor = colorAccent,
+                btnText = "Join Wager",
+                containerColor = lightVColorAccent,
                 enableButton = false
             )
         }
@@ -66,9 +75,9 @@ fun viewersActionMessage(
     challenge: Challenge
 ): String{
 
-        return if (challenge.status == "open") {
+        return if (challenge.status == BetStatus.OPEN.name) {
             "No challengers yet. Send your request to get the ball rolling!"
-        }else if (challenge.status == "pending") {
+        }else if (challenge.status == BetStatus.PENDING.name) {
 
             "Another player has already requested to join this bet." +
                     " Click the bell Icon to stay up to date on the status of this wager."

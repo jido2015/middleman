@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.Challenge
-import com.project.middleman.core.source.data.model.ParticipantProgress
+import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.core.source.domain.challenge.repository.ChallengeRepository
 import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
 import com.project.middleman.core.source.domain.challenge.repository.DeleteChallengeResponse
@@ -24,7 +24,6 @@ class ChallengeRepositoryImpl  @Inject constructor(
         return try {
 
             if (challenge.title.isBlank() || challenge.category.isBlank()){
-                Log.d("CreateChallengeScreen", "Fields are empty: title ${challenge.title}, description ${challenge.category}")
                 RequestState.Error(Exception("Empty fields"))
             }else{
                 db.collection("challenges").document(challenge.id)
@@ -37,44 +36,53 @@ class ChallengeRepositoryImpl  @Inject constructor(
         }
     }
 
-
     override fun updateChallenge(
         challenge: Challenge,
-        participant: ParticipantProgress
+        participant: Participant
     ): Flow<RequestState<Challenge>> = callbackFlow {
-        trySend(RequestState.Loading).isSuccess
+        trySend(RequestState.Loading)
 
-        // Start listening to the document snapshot IMMEDIATELY
-        val listenerRegistration = db.collection("challenges")
-            .document(challenge.id)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    trySend(RequestState.Error(error)).isSuccess
-                    return@addSnapshotListener
-                }
+        val challengeRef = db.collection("challenges").document(challenge.id)
 
-                if (snapshot != null && snapshot.exists()) {
-                    val updatedChallenge = snapshot.toObject(Challenge::class.java)
-                    if (updatedChallenge != null) {
-                        trySend(RequestState.Success(updatedChallenge)).isSuccess
-                    } else {
-                        trySend(RequestState.Error(Exception("Challenge is null"))).isSuccess
-                    }
-                }
+        // Start snapshot listener for real-time sync
+        val listenerRegistration = challengeRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                trySend(RequestState.Error(error)).isSuccess
+                return@addSnapshotListener
             }
 
-        // Perform the update AFTER setting up snapshot listener
-        val updatePath = "participant.${firebaseAuth.currentUser?.uid}"
-        db.collection("challenges")
-            .document(challenge.id)
-            .update(updatePath, participant)
-            .addOnFailureListener { e ->
+            if (snapshot != null && snapshot.exists()) {
+                val updatedChallenge = snapshot.toObject(Challenge::class.java)
+                if (updatedChallenge != null) {
+                    trySend(RequestState.Success(updatedChallenge)).isSuccess
+                } else {
+                    trySend(RequestState.Error(Exception("Challenge is null"))).isSuccess
+                }
+            }
+        }
+
+        // Run transaction in a coroutine
+            try {
+                db.runTransaction { transaction ->
+                    // 1. Get current challenge (optional if needed)
+
+                    // 2. Update status field
+                    transaction.update(challengeRef, "status", challenge.status)
+
+                    // 3. Add participant to nested map
+                    val updatePath = "participant.${participant.userId}"
+                    transaction.update(challengeRef, updatePath, participant)
+
+                    null // Transactions must return something
+                }.await()
+            } catch (e: Exception) {
                 trySend(RequestState.Error(e)).isSuccess
             }
 
-        // Clean up snapshot listener when flow is closed
+
         awaitClose { listenerRegistration.remove() }
     }
+
 
 
     override suspend fun deleteChallenge(challengeId: String): DeleteChallengeResponse {

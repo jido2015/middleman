@@ -3,30 +3,43 @@ package com.project.middleman.challengedetails.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
+import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
+import com.project.middleman.designsystem.themes.colorAccent
+import com.project.middleman.designsystem.themes.colorGreen
+import com.project.middleman.designsystem.themes.lightVColorAccent
 
 
 @Composable
 fun CreatorActionButton(
-    challenge: Challenge
+    challenge: Challenge,
+    challengeDetailsViewModel: ChallengeDetailsViewModel
 ) {
     when (challenge.status) {
-        "open", "pending" -> {
+        BetStatus.PENDING.name,  BetStatus.OPEN.name -> {
             ActionButton(
                 onClick = { /* Add logic to conclude wager */ },
                 btnText = "Cancel Wager",
                 containerColor = Color.Red,
                 enableButton = false
-
             )
         }
 
-        else -> {
+        BetStatus.ACTIVE.name -> {
             ActionButton(
                 onClick = { /* Add logic to conclude wager */ },
                 btnText = "Conclude wager",
-                containerColor = Color.Green,
+                containerColor = colorGreen,
                 enableButton = true
+            )
+        }
+        BetStatus.COMPLETED.name -> {
+            ActionButton(
+                onClick = { /* Add logic to conclude wager */ },
+                btnText = "Conclude wager",
+                containerColor = colorAccent,
+                enableButton = false
             )
         }
     }
@@ -34,6 +47,6 @@ fun CreatorActionButton(
 
 fun creatorActionMessage(
 ): String{
-    return " You don't have to do anything right now. \n\nAlways keep verifiable evidence of your wagers for dispute resolution purposes."
+    return "Always keep verifiable evidence of your wagers for dispute resolution purposes."
 }
 

@@ -2,39 +2,43 @@ package com.project.middleman.challengedetails.presentation
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.MainNavigationTopBar
-import com.project.middleman.challengedetails.component.CreatorActionButton
-import com.project.middleman.challengedetails.component.ParticipantActionButton
+import com.project.middleman.challengedetails.component.AddParticipantView
+import com.project.middleman.challengedetails.component.ChallengeActionButtons
+import com.project.middleman.challengedetails.component.InvitationComposeCard
 import com.project.middleman.challengedetails.component.participantActionMessage
-import com.project.middleman.challengedetails.component.ViewersActionButton
 import com.project.middleman.challengedetails.component.creatorActionMessage
 import com.project.middleman.challengedetails.component.viewersActionMessage
-import com.project.middleman.challengedetails.presentation.uistate_handler.ChallengeDetailsWrapper
+import com.project.middleman.challengedetails.uistate_handler.AcceptParticipantWrapper
+import com.project.middleman.challengedetails.uistate_handler.ChallengeDetailsWrapper
+import com.project.middleman.challengedetails.uistate_handler.DeleteParticipantWrapper
+import com.project.middleman.challengedetails.uistate_handler.FetchParticipantWrapper
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
+import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
-import com.project.middleman.designsystem.themes.Typography
+import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.white
 
 @Composable
@@ -42,102 +46,166 @@ fun ChallengeDetailsScreen(
     onBackClicked: () -> Unit,
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     onAcceptChallenge: () -> Unit,
-    challengeDetails: Challenge = Challenge()){
+    challengeDetails: Challenge = Challenge()) {
 
     var challenge by remember { mutableStateOf(challengeDetails) }
     var actionMessage by remember { mutableStateOf("") }
+
+    var participants by remember { mutableStateOf(emptyList<Participant>()) }
 
     LaunchedEffect(key1 = challengeDetails.id) {
         challengeDetailsViewModel.getChallengeDetails(challengeDetails)
     }
 
+
+    AcceptParticipantWrapper(
+        onErrorMessage = {
+            Log.d("AcceptParticipantWrapper", "Failed")
+
+        },
+        onSuccessMessage = {
+            challengeDetailsViewModel.getChallengeDetails(
+                challengeDetails.copy(status = BetStatus.ACTIVE.name))
+            Log.d("AcceptParticipantWrapper", "Success")
+        }
+    )
     ChallengeDetailsWrapper(
         onSuccess = { challengeDetails ->
             challenge = challengeDetails
         },
         onErrorMessage = {
-           //Exception(it)
+            //Exception(it)
         },
         onSuccessMessage = {
         })
 
-    val creatorId = challenge.participant.entries.find { it.value.status == "Creator" }?.value?.userId
-    val participantId = challenge.participant.entries.find { it.value.status == "Participant" }?.value?.userId
 
-    actionMessage = if (challengeDetailsViewModel.getCurrentUser()?.uid == participantId){
-        participantActionMessage(challenge)
-    } else if (challengeDetailsViewModel.getCurrentUser()?.uid == creatorId){
-        creatorActionMessage()
-    }else{
-        viewersActionMessage(challenge)
+
+    DeleteParticipantWrapper(
+        onSuccess = {
+            challengeDetailsViewModel.getChallengeDetails(challengeDetails)
+
+            Log.d("DeleteParticipantWrapper", "Success")
+        },
+        onErrorMessage = {
+            Log.d("DeleteParticipantWrapper", "Failed")
+        })
+
+
+    challengeDetailsViewModel.setLoading(true)
+    challengeDetailsViewModel.fetchParticipants(challenge.id)
+
+    fun getParticipants(result: List<Participant>) {
+        challengeDetailsViewModel.setLoading(false)
+        participants = result
+        Log.d("getParticipant", result.toString())
     }
 
-    Column(modifier = Modifier.padding(12.dp)) {
-        // ✅ Main Navigation Top Bar
+    //Observe challenges
+
+    FetchParticipantWrapper(
+        getParticipants = {
+            Log.d("getParticipants", it.toString())
+            getParticipants(it)
+        },
+        onErrorMessage = {
+            //   Exception(it)
+        }
+    )
+
+
+    val creator =  challenge.participant.entries.find { it.value.status == "Creator" }?.value
+
+    val participant = challenge.participant.entries.find { it.value.status == "Participant" }?.value
+
+
+    LaunchedEffect(challenge) {
+        Log.d("ChallengeRecomposition", "Challenge updated: ${challenge.participant}")
+    }
+
+    val currentUser = challengeDetailsViewModel.getCurrentUser()
+
+    actionMessage = when (currentUser?.uid) {
+        participant?.userId -> {
+            participantActionMessage(challenge)
+        }
+        currentUser?.uid -> {
+            creatorActionMessage()
+        }
+        else -> {
+            viewersActionMessage(challenge)
+        }
+    }
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        // Top bar (still outside scrollable area)
         MainNavigationTopBar(
             details = "Wager Overview",
-            handleBackPressed = {
-                onBackClicked()
-            }
+            handleBackPressed = { onBackClicked() },
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(1f) // Keep it above the scroll content
+                .background(white) // Optional: match your theme background
         )
-        ConstraintLayout(modifier = Modifier.fillMaxSize().background(color = white).padding(top = 12.dp)) {
-            val (card,actionButtons) = createRefs()
-            ChallengeDetailUi(
-                modifier = Modifier.constrainAs(card) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-                challenge = challenge, onAcceptChallenge)
 
-
-            Column(
-                modifier = Modifier.constrainAs(actionButtons){
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-            ){
-                HorizontalDivider(
+        // Scrollable content
+        LazyColumn(
+            modifier = Modifier
+                .padding(top = 70.dp, bottom = 100.dp) // Adjust top padding to leave space for the fixed top bar
+                .fillMaxSize()
+                .background(white)
+                .padding(horizontal = 12.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        )  {
+            // Challenge card section
+            item {
+                ChallengeDetailUi(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(1.dp)
-                        .background(color = white))
-
-
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp, end = 12.dp, top = 20.dp),
-                    text = actionMessage,
-                    style = Typography.labelSmall.copy(fontSize = 14.sp),
-                    textAlign = TextAlign.Center,
-                    overflow = TextOverflow.Ellipsis
+                        .padding(top = 12.dp),
+                    challenge = challenge,
+                    onAcceptChallenge = onAcceptChallenge
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(100.dp)) // Space before "Invitations"
+            }
 
-                // Creator Actions
-                if (challengeDetailsViewModel.getCurrentUser()?.uid == creatorId ){
-                    // Creator Actions
-                    Log.d("Creator", "Creator Message Reached")
+            // Section add participant
+            item {
+                AddParticipantView(participants,
+                    creator?.userId,
+                    currentUser?.uid)
 
-                    CreatorActionButton(challenge)
+            }
 
-                } else
-                    // Participant Actions
-                    if (challengeDetailsViewModel.getCurrentUser()?.uid == participantId){
-
-                         ParticipantActionButton(challenge)
-                } else {
-                    // Viewers Actions
-
-                       ViewersActionButton( challengeDetailsViewModel = challengeDetailsViewModel,
-                         challenge = challenge,
-                        onAcceptChallenge = onAcceptChallenge)
-                }
+            // Invitations list
+            items(participants.filter { it.status == "Participant" }) { singleParticipant ->
+                InvitationComposeCard(
+                    challengeDetailsViewModel,
+                    singleParticipant,
+                    challenge,
+                    creator = creator,
+                    currentUser = currentUser,
+                    onRequestAccepted = {}
+                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
+
+        // Bottom action buttons pinned
+        ChallengeActionButtons(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            actionMessage = actionMessage,
+            challengeDetailsViewModel = challengeDetailsViewModel,
+            creatorId = creator?.userId,
+            challenge = challenge,
+            participant = participant,
+            onAcceptChallenge = onAcceptChallenge
+        )
     }
 }
 

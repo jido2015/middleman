@@ -31,8 +31,6 @@ fun ChallengeListScreen(
     openChallengeViewModel: OpenChallengeViewModel = hiltViewModel()
 ) {
     var challenges by remember { mutableStateOf(emptyList<Challenge>()) }
-    var showDialog by remember { mutableStateOf(false) }
-    var updatedChallenge by remember { mutableStateOf(Challenge()) }
 
     UpdateChallengeWrapper(
         onErrorMessage = { message ->
@@ -90,14 +88,6 @@ fun ChallengeListScreen(
         }
     }
 
-    // Show the dialog when showDialog is true
-    ChallengeDialog(
-        showDialog = showDialog, onDismiss =
-        { showDialog = false }, onConfirm = {
-
-        openChallengeViewModel.onChallengeAccepted(updatedChallenge)
-        showDialog = false
-    })
 
 }
 

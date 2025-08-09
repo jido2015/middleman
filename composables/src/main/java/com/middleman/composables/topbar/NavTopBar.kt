@@ -33,7 +33,7 @@ fun MainNavigationTopBar(
     modifier: Modifier = Modifier,
 ) {
         Column(
-            modifier = modifier.padding(bottom = 20.dp, top = 20.dp)
+            modifier = modifier.padding(bottom = 20.dp, start = 12.dp, end = 12.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -68,7 +68,7 @@ fun MainNavigationTopBar(
                         top.linkTo(parent.top)
                     },
                     text = details,
-                    style = Typography.labelSmall.copy(fontSize = 14.sp),
+                    style = Typography.labelSmall.copy(fontSize = 16.sp),
                     fontWeight = FontWeight.Bold,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,

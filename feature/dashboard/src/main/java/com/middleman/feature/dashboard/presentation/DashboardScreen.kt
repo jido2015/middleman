@@ -30,9 +30,7 @@ import com.middleman.feature.dashboard.components.SpendableCardUI
 import com.middleman.feature.dashboard.components.VerificationProgress
 import com.middleman.feature.dashboard.components.handleScrollDirection
 import com.project.middleman.designsystem.themes.Typography
-import com.project.middleman.designsystem.themes.colorBlack
-import com.project.middleman.designsystem.themes.surfaceBrandLight
-import com.project.middleman.designsystem.themes.white
+import com.project.middleman.designsystem.themes.cardMultiColor
 
 
 @Composable
@@ -43,8 +41,9 @@ fun DashboardScreen(
     createWagerButton: () -> Unit
 ) {
 
-    Column(modifier = Modifier.fillMaxSize()){
+    Column(modifier = Modifier.fillMaxSize().background(cardMultiColor)){
         MainToolBar(
+
             showTopBar = true,
         )
 
@@ -61,7 +60,6 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .nestedScroll(scrollHandler)
                 .verticalScroll(scrollState)
-                .background(white)
         ) {
             SpendableCardUI()
             Spacer(modifier = Modifier.height(24.dp))
@@ -69,7 +67,7 @@ fun DashboardScreen(
 
             Text(
                 "WAGERS",
-                style = Typography.titleLarge.copy(fontSize = 16.sp, color = colorBlack),
+                style = Typography.titleLarge.copy(fontSize = 16.sp),
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
             )
 
@@ -78,13 +76,13 @@ fun DashboardScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(surfaceBrandLight)
+                    .background(cardMultiColor)
             ) {
                 Column(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 20.dp)
-                        .background(surfaceBrandLight)
+                        .background(cardMultiColor)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.image_ads),
@@ -97,14 +95,13 @@ fun DashboardScreen(
 
                     Text(
                         "Start wagering with your peers",
-                        style = Typography.titleLarge.copy(fontSize = 16.sp, color = colorBlack),
+                        style = Typography.titleLarge.copy(fontSize = 16.sp),
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
 
                     Text(
                         "Setup a bet with a friend and you winning asap.",
-                        style = Typography.labelMedium.copy(fontSize = 16.sp),
-                        color = colorBlack
+                        style = Typography.labelMedium.copy(fontSize = 16.sp)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))

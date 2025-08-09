@@ -14,7 +14,8 @@ import com.project.middleman.core.source.domain.challenge.usecase.CreateChalleng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.project.middleman.core.source.data.model.ParticipantProgress
+import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.source.data.model.Participant
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -45,7 +46,8 @@ class CreateChallengeViewModel @Inject constructor(
             return
         }
 
-        val creator = ParticipantProgress(
+        Log.d("BetStatus", BetStatus.OPEN.name)
+        val creator = Participant(
             status = "Creator",
             joinedAt = System.currentTimeMillis(),
             amount = stake,
@@ -61,14 +63,13 @@ class CreateChallengeViewModel @Inject constructor(
             title = title,
             participant = mapOf(user.uid to creator),
             category = category,
-            status = "open",
+            status = BetStatus.OPEN.name,
             visibility = visibility,
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,
             payoutAmount = stake * 2,
             description = description
         )
-
         viewModelScope.launch {
             createChallengeResponse = RequestState.Loading
             createChallengeResponse = try {
@@ -86,8 +87,6 @@ class CreateChallengeViewModel @Inject constructor(
     }
 
 }
-
-
 
 //    private fun participants(userId: String): Map<String, ParticipantProgress> {
 //        val participants = mapOf<String, ParticipantProgress>(

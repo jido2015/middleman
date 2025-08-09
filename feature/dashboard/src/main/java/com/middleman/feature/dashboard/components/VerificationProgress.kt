@@ -3,7 +3,6 @@ package com.middleman.feature.dashboard.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,8 +28,8 @@ import com.middleman.composables.progressbar.ProgressBarUI
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
-import com.project.middleman.designsystem.themes.colorBlack
-import com.project.middleman.designsystem.themes.surface
+import com.project.middleman.designsystem.themes.proceedArrowColor
+import com.project.middleman.designsystem.themes.verificationColor
 import com.project.middleman.designsystem.themes.white
 
 @Composable
@@ -43,7 +41,7 @@ fun VerificationProgress(
         ConstraintLayout(Modifier.fillMaxWidth().
         padding(horizontal = 20.dp, vertical = 4.dp).clip(
             RoundedCornerShape(10.dp)
-        ).background(surface)
+        ).background(verificationColor)
         ) {
 
             val (title, progressBar, proceedBtn) = createRefs()
@@ -54,8 +52,7 @@ fun VerificationProgress(
                 modifier = Modifier.padding(10.dp).constrainAs(title) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
-                },
-                color = colorBlack)
+                })
 
             Card(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp)
@@ -94,8 +91,7 @@ fun VerificationProgress(
 
             ){
                 Text("Verify and withdraw earnings",
-                    style = Typography.bodySmall.copy(fontSize = 12.sp),
-                    color = colorBlack)
+                    style = Typography.bodySmall.copy(fontSize = 12.sp))
 
                 ProceedButton(
                     proceedClicked = onProceedClicked,
@@ -105,7 +101,7 @@ fun VerificationProgress(
                     text = "Proceed",
                     paddingValues = PaddingValues(0.dp),
                     size = 16.dp,
-                    color = Color.Black)
+                    color = proceedArrowColor)
             }
         }
 

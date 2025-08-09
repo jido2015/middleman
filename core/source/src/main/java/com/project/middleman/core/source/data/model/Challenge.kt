@@ -5,9 +5,11 @@ data class Challenge(
     val payoutAmount: Double = 0.0,
     val title: String = "",
     val category: String = "",
-    val participant: Map<String, ParticipantProgress> = emptyMap(),
-    val visibility: Boolean = true, // or "invite-only or public"
-    val status: String = "open", // open, pending, closed.
+    val participant: Map<String, Participant> = emptyMap(),
+    val visibility: Boolean = true, // or "private or public"
+
+    val status: String = "", // open, pending, on-going closed.
+
     // Open means the challenge is open for participants to join.
     // Pending means the a participant has requested to join the challenge.
     // Closed means the challenge has been taken and no participants can join it again.
@@ -17,7 +19,7 @@ data class Challenge(
     val description: String = ""
 )
 
-data class ParticipantProgress(
+data class Participant(
     val status: String = "", // Creator, Participant
     val userId: String = "",
     val displayName: String = "",

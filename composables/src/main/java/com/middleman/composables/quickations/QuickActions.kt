@@ -28,6 +28,7 @@ import com.project.middleman.designsystem.themes.*
 fun QuickActions(
     containerColor: Color = colorAccent,
     modifier: Modifier,
+    btnTextColor: Color = white,
     btnText: String = "Join Wager",
     onButtonClick: () -> Unit = {},
     shouldActionBtnVisible: Boolean = false,
@@ -42,6 +43,7 @@ fun QuickActions(
 
         if (shouldActionBtnVisible){
             CustomButton(
+                textColor = btnTextColor,
                 enableButton = enableButton,
                 containerColor = containerColor,
                 text = btnText,

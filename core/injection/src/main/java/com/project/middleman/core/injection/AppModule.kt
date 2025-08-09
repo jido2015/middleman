@@ -10,13 +10,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.repository.authentication.AuthRepositoryImpl
-import com.project.middleman.core.source.data.repository.challenge.ChallengeRepositoryImpl
-import com.project.middleman.core.source.data.repository.challenge.FetchChallengesRepositoryImpl
 import com.project.middleman.core.source.data.repository.profile.ProfileRepositoryImpl
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
-import com.project.middleman.core.source.domain.challenge.repository.ChallengeRepository
-import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,20 +59,6 @@ class AppModule {
         auth = auth,
         db = db
     )
-
-    @Provides
-    fun provideChallengeRepository(
-        auth: FirebaseAuth,
-        db: FirebaseFirestore
-    ): ChallengeRepository = ChallengeRepositoryImpl(
-        db = db, firebaseAuth = auth)
-
-    @Provides
-    fun provideFetchChallengesRepository(
-        auth: FirebaseAuth,
-        db: FirebaseFirestore
-    ): FetchChallengesRepository = FetchChallengesRepositoryImpl(
-        db = db)
 
     @Provides
     fun provideDispatchers(): DispatchProvider = object : DispatchProvider {

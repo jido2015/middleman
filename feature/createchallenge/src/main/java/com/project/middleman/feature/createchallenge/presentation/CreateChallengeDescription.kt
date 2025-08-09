@@ -99,8 +99,9 @@ fun CreateChallengeDescription(
                 }
             },
             placeholder = "Describe and state your terms",
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
+            singleLine = false,
+            maxLines = 3
         )
 
         Text(

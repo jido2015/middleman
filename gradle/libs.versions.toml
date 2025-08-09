@@ -41,9 +41,11 @@ kotlinTest = "2.1.0"
 runner = "1.5.2"
 core = "1.5.0"
 playServicesWallet = "19.4.0"
+gson = "2.13.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }

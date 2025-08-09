@@ -97,7 +97,7 @@ fun ChallengeCard(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = if (challenge.visibility == true) "Public" else "Invite-Only",
+                    text = if (challenge.visibility) "Public" else "Invite-Only",
                     style = Typography.labelSmall.copy(fontSize = 12.sp),
                     color = Color.Gray
                 )
@@ -137,7 +137,7 @@ fun ChallengeCard(
 
         Text(
             text = challenge.title,
-            style = Typography.labelSmall.copy(fontSize = 14.sp),
+            style = Typography.labelSmall.copy(fontSize = 15.sp),
             fontWeight = FontWeight.Bold,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
