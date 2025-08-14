@@ -12,13 +12,12 @@ data class UserProfile(
     var email: String?,
     var firstName: String?,
     var lastName: String?,
+    var dob: String?,
     var phoneNumber: String?,
     var photoUrl: String,
     var createdAt: FieldValue? = null
-){
-    constructor() : this("","", "", "", "", "", "", null)
+)
 
-}
 
 @IgnoreExtraProperties
 data class UserDTO(
@@ -27,11 +26,12 @@ data class UserDTO(
     var email: String?="",
     var firstName: String? ="",
     var lastName: String? ="",
+    var dob: String? ="",
     var phoneNumber: String?="",
     var photoUrl: String? ="",
     var createdAt: Timestamp? = Timestamp.now(),
 ){
-    constructor() : this("","", "", "", null)
+    constructor() : this("","", "", "", "",null)
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -40,6 +40,7 @@ data class UserDTO(
             "email" to email,
             "photoUrl" to photoUrl,
             "createdAt" to createdAt,
+            "dob" to dob,
             "firstName" to firstName,
             "lastName" to lastName,
             "phoneNumber" to phoneNumber

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.project.middleman.core.injection"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -67,4 +67,8 @@ dependencies {
     implementation (libs.play.services.auth)
     implementation(libs.google.identity.library)
     implementation(project(":core:source"))
+    implementation(libs.roomdb)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.room.testing)
 }

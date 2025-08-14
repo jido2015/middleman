@@ -7,7 +7,7 @@ plugins {
 }
 android {
     namespace = "com.middleman.feature.notification"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

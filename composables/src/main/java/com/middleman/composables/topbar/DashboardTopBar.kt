@@ -105,7 +105,10 @@ fun MainToolBar(
                     )
                     Icon(
                         painter = painterResource(R.drawable.notification_icon),
-                        modifier = Modifier
+                        modifier = Modifier.clickable(enabled = true, onClick = {
+
+                        })
+
                             .size(25.dp),
                         contentDescription = "notification icon",
                     )

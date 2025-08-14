@@ -28,9 +28,11 @@ import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewM
 @Composable
 fun ChallengeListScreen(
     onCardChallengeClick: (Challenge) -> Unit,
-    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel()
+    openChallengeViewModel: OpenChallengeViewModel = hiltViewModel(),
+    auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
     var challenges by remember { mutableStateOf(emptyList<Challenge>()) }
+
 
     UpdateChallengeWrapper(
         onErrorMessage = { message ->

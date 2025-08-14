@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.button.CustomButton
+import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorBlack

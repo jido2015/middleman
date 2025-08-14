@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Grey
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
+import kotlin.text.replace
 
 @Composable
 fun BorderlessTextField(
@@ -52,6 +54,60 @@ fun BorderlessTextField(
             decorationBox = { innerTextField ->
                 Box(modifier = Modifier.fillMaxWidth()) {
                     if (text.isEmpty()) {
+                        Text(
+                            text = placeholder,
+                            style = inputTextStyle.copy(color = Color.Gray)
+                        )
+                    }
+                    innerTextField()
+                }
+            },
+            keyboardOptions = keyboardOptions,
+            keyboardActions = KeyboardActions(
+                onAny = { onImeAction() }
+            ),
+            maxLines = maxLines,
+            singleLine = singleLine,
+        )
+    }
+}
+
+
+@Composable
+fun BorderlessTextField2(
+    modifier: Modifier = Modifier,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onImeAction: () -> Unit = {},
+    singleLine: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE
+) {
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor = Color.Green,
+        backgroundColor = Grey
+    )
+
+    val inputTextStyle = Typography.bodySmall.copy(
+        fontSize = 20.sp,
+        color = Color.Black,
+        lineHeight = 24.sp
+    )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+        BasicTextField(
+            modifier = modifier.testTag("borderlessTextField"),
+            value = value, // now takes TextFieldValue
+            onValueChange = { newValue ->
+                // Remove any accidental '@' and pass the cleaned value to caller
+                onValueChange(newValue)
+            },
+            textStyle = inputTextStyle,
+            cursorBrush = SolidColor(colorAccent),
+            decorationBox = { innerTextField ->
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    if (value.text.isEmpty()) {
                         Text(
                             text = placeholder,
                             style = inputTextStyle.copy(color = Color.Gray)

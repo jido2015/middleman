@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.project.middleman.feature.authentication"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -92,5 +92,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":designsystem"))
     implementation(project(":composables"))
+
 
 }

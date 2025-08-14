@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.feature.authentication.AuthViewModel
+import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 
 @Composable
 fun SignInWithGoogle(
@@ -17,6 +17,8 @@ fun SignInWithGoogle(
             Log.d("LoadingState", "SignInWithGoogle: Loading")
         }
         is RequestState.Success -> signInWithGoogleResponse.data?.let { signedIn ->
+            Log.d("SignInWithGoogle", "Success: $signedIn")
+
             LaunchedEffect(signedIn) {
                 navigateToHomeScreen(signedIn)
             }

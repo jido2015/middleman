@@ -39,7 +39,7 @@ fun ParticipantActionButton(
             ActionButton(
                 onClick = { /* Add logic to conclude wager */ },
                 btnText = "Conclude wager",
-                containerColor = colorGreen,
+                containerColor = colorAccent,
                 enableButton = true
             )
         }

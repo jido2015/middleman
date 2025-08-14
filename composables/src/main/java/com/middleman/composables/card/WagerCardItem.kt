@@ -139,7 +139,7 @@ fun ChallengeCard(
 
         Text(
             text = challenge.title,
-            style = Typography.labelSmall.copy(fontSize = 15.sp),
+            style = Typography.labelSmall.copy(fontSize = 17.sp),
             fontWeight = FontWeight.Bold,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1

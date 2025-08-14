@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.project.middleman.core.source"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -48,6 +48,12 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
+}
+
 dependencies {
     ksp(libs.hilt.ksp)
     implementation(libs.hilt.android)
@@ -65,4 +71,8 @@ dependencies {
     implementation (libs.play.services.auth)
     implementation(libs.google.identity.library)
     implementation(libs.gson)
+    implementation(libs.roomdb)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.room.testing)
 }

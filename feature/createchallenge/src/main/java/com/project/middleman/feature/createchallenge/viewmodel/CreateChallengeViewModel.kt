@@ -15,7 +15,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.source.data.local.UserLocalDataSource
+import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Participant
+import com.project.middleman.core.source.data.model.UserDTO
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -23,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateChallengeViewModel @Inject constructor(
     private val repo: CreateChallengeUseCase,
-    private val auth: FirebaseAuth
+    local: UserLocalDataSource,
 ) : ViewModel() {
 
     var title by mutableStateOf("")
@@ -39,29 +45,30 @@ class CreateChallengeViewModel @Inject constructor(
     /**
      * Creates a new challenge with the current user as creator.
      */
-    fun createChallenge() {
-        val user = auth.currentUser
-        if (user == null) {
-            createChallengeResponse = RequestState.Error(IllegalStateException("User is not authenticated."))
-            return
-        }
 
+    val currentUser: StateFlow<UserEntity?> =
+        local.observeCurrentUser()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    fun createChallenge() {
         Log.d("BetStatus", BetStatus.OPEN.name)
         val creator = Participant(
             status = "Creator",
             joinedAt = System.currentTimeMillis(),
             amount = stake,
-            displayName = user.displayName ?: "",
-            photoUrl = user.photoUrl?.toString() ?: "",
-            userId = user.uid,
+            displayName = currentUser.value?.displayName ?: "",
+            photoUrl = currentUser.value?.photoUrl ?: "",
+            userId = currentUser.value?.uid ?: "",
             won = false,
             winAmount = 0.0
         )
 
+        val userAuth = currentUser.value?.uid ?: ""
+
         val challenge = Challenge(
             id = UUID.randomUUID().toString(),
             title = title,
-            participant = mapOf(user.uid to creator),
+            participant = mapOf(userAuth to creator),
             category = category,
             status = BetStatus.OPEN.name,
             visibility = visibility,

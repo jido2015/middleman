@@ -1,5 +1,6 @@
 package com.middleman.composables.topbar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ fun NavigationTopBarWithProgressBar(
     title: String = "Create Wager"
 ) {
 
+
     if (showNavigationTopBarSheet) {
 
     Column(
@@ -55,7 +57,12 @@ fun NavigationTopBarWithProgressBar(
                     .size(36.dp) // Size of the entire circle
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.arrow_left),
+                    painter = painterResource(
+                        when(progress == 0.25f) {
+                            true -> R.drawable.cancel
+                            false -> R.drawable.arrow_left
+                        }
+                    ),
                     contentDescription = "Close",
                     tint = colorBlack,
                     modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
@@ -75,7 +82,9 @@ fun NavigationTopBarWithProgressBar(
                     .size(36.dp) // Size of the entire circle
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.help),
+                    painter = painterResource(
+                        R.drawable.help
+                        ),
                     contentDescription = "Help",
                     tint = colorBlack,
                     modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
@@ -83,6 +92,8 @@ fun NavigationTopBarWithProgressBar(
             }
         }
 
+
+        Log.d("progress", "${progress}")
         ProgressBarUI(
             progress,
             modifier = Modifier

@@ -1,5 +1,9 @@
 package com.project.middleman.navigation
 
+import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.project.middleman.feature.authentication.AuthViewModel
+import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
@@ -28,17 +32,18 @@ private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     return if (isAuthenticated) {
         NavigationRoute.DashboardScreen
     } else {
-        NavigationRoute.AuthenticationScreen
+        AuthNavigationRoute.AccountSetupScreen
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
+   val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
 
     // Separate NavControllers for auth and feature flows
     val authNavController = rememberNavController()
@@ -46,7 +51,10 @@ fun AppNavigation(
     
     val navBackStackEntry by featureNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val appStateViewModel: AppStateViewModel = hiltViewModel()
+
+
+    val activity = LocalActivity.current as ComponentActivity
+    val appStateViewModel: AppStateViewModel = hiltViewModel(activity)
 
     // Derived state
     val startDestinationName by remember {
@@ -89,6 +97,7 @@ fun AppNavigation(
                 AuthNavigationHost(
                     authViewModel = authViewModel,
                     navController = authNavController,
+                    appStateViewModel = appStateViewModel,
                     startDestinationName = startDestinationName.route,
                 )
             }

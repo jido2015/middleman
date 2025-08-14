@@ -166,10 +166,10 @@ fun FeatureNavigationHost(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        featureNavigation(navController = navController,
+        featureNavigation(
+            navController = navController,
             appStateViewModel = appStateViewModel,
             createViewModel = createViewModel, // Use the passed ViewModel
-            modifier = modifier, 
             onScrollDown = { onScrollDown() }, 
             onScrollUp = { onScrollUp() }
         )

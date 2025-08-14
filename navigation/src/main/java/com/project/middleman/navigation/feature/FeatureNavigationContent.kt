@@ -20,14 +20,12 @@ import com.project.middleman.navigation.viewmodel.AppStateViewModel
 
 
 fun NavGraphBuilder.featureNavigation(
-    modifier: Modifier,
     navController: NavHostController,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,
     appStateViewModel: AppStateViewModel,
     createViewModel: CreateChallengeViewModel,
 ) {
-
 
     // Create Title for Challenge Routes
     composable(route = NavigationRoute.CreateChallengeTitleScreen.route) {
@@ -72,16 +70,17 @@ fun NavGraphBuilder.featureNavigation(
     composable(route = NavigationRoute.ChallengeSummaryScreen.route) {
         appStateViewModel.setNavigationCurrentProgress(4f)
         appStateViewModel.setNavigationTitle("Review Your Wager")
-        ChallengeSummaryScreen(
-            viewModel = createViewModel,
-            createWagerButton = {
-                navController.navigate(NavigationRoute.ChallengeTabScreen.route) {
-                    popUpTo(0) // Clear all back stack
-                    launchSingleTop = true // Avoid re-creating if already on that screen
-                }
 
-            }
-        )
+            ChallengeSummaryScreen(
+                viewModel = createViewModel,
+                createWagerButton = {
+                    navController.navigate(NavigationRoute.ChallengeTabScreen.route) {
+                        popUpTo(0) // Clear all back stack
+                        launchSingleTop = true // Avoid re-creating if already on that screen
+                    }
+
+                }
+            )
     }
 
     composable(route = NavigationRoute.DashboardScreen.route) {
@@ -125,8 +124,7 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationTopBarVisibility(false)
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             val challenge = appStateViewModel.challenge
             if (challenge != null) {

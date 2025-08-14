@@ -1,18 +1,13 @@
 package com.project.middleman.feature.openchallenges.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.usecase.ProfileUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.FetchChallengesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class OpenChallengeViewModel @Inject constructor(
     private val fetchChallengesUseCase: FetchChallengesUseCase,
-    private val firebaseAuth: FirebaseAuth,
-    private val dispatchProvider: DispatchProvider,
-    private val getUserProfileUseCase: ProfileUseCase
 ): ViewModel() {
 
     private val _challenges = MutableStateFlow<RequestState<List<Challenge>>>(RequestState.Loading)
@@ -46,12 +38,6 @@ class OpenChallengeViewModel @Inject constructor(
         loadingState.value = loading
     }
 
-
-    fun getCurrentUser(): FirebaseUser? {
-        val user = firebaseAuth.currentUser
-        return user
-    }
-
     fun startListeningToChallengeUpdate(challenge: Challenge) {
         _challenges.update { currentState ->
             if (currentState is RequestState.Success) {
@@ -67,6 +53,7 @@ class OpenChallengeViewModel @Inject constructor(
 
 
     fun fetchChallenges() {
+
         viewModelScope.launch {
             _challenges.value = RequestState.Loading
             fetchChallengesUseCase.invoke()

@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.project.middleman.feature.openchallenges"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

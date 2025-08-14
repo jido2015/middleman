@@ -2,9 +2,13 @@ package com.project.middleman.core.source.data.repository.profile
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.UserDTO
+import com.project.middleman.core.source.data.model.UserProfile
+import com.project.middleman.core.source.domain.authentication.repository.AddUserProfileResponse
 import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
 import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
 import com.project.middleman.core.source.domain.authentication.repository.SignOutResponse
@@ -27,10 +31,10 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserProfile(userIduid: String): GetUserProfileResponse {
+    override suspend fun getUserProfile(userId: String): GetUserProfileResponse {
         return try {
             val user = auth.currentUser?.let { firebaseUser ->
-                val snapshot = db.collection("users").document(userIduid).get().await()
+                val snapshot = db.collection("users").document(userId).get().await()
                 if (snapshot.exists()) {
                     Log.d("getUserProfile", "${snapshot.data}")
                     snapshot.toObject(UserDTO::class.java)
@@ -48,6 +52,18 @@ class ProfileRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Log.d("ProfileRepository", "getUserObject: Error")
+            RequestState.Error(e)
+        }
+    }
+
+    override suspend fun addUserProfile(user: UserProfile): AddUserProfileResponse {
+
+        return try {
+            auth.currentUser?.apply {
+                db.collection("users").document(uid).set(user).await()
+            }
+            RequestState.Success(true)
+        } catch (e: Exception) {
             RequestState.Error(e)
         }
     }

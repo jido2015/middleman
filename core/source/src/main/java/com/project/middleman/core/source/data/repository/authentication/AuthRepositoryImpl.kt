@@ -7,11 +7,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.exceptions.NoCredentialException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.data.model.UserProfile
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.SignInWithGoogleResponse
@@ -26,7 +22,6 @@ import javax.inject.Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val activityContext: Context,
     private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore,
 ) : AuthRepository {
 
     private val _isUserAuthenticatedInFirebase = MutableStateFlow(auth.currentUser != null)
@@ -39,6 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun credentialManagerWithGoogle(): AuthCredentialResponse {
         return try {
+
             val credentialManager = CredentialManager.create(activityContext)
 
             val request = GetCredentialRequest.Builder()
@@ -72,33 +68,10 @@ class AuthRepositoryImpl @Inject constructor(
             val authResult = auth.signInWithCredential(googleCredential).await()
 
             Log.d("signInWithGoogleUser", "${authResult.user}")
-            addUserToFirestore()
             RequestState.Success(true)
         } catch (e: Exception) {
             Log.d("signInWithGoogleError", "${e.message}")
             RequestState.Error(e)
         }
-    }
-
-
-    private suspend fun addUserToFirestore() {
-        auth.currentUser?.apply {
-            val user = toUser()
-            db.collection("users").document(uid).set(user).await()
-            Log.d("userAdded", "User Added to Firestore")
-        }
-    }
-
-    private fun FirebaseUser.toUser(): UserProfile {
-        return UserProfile(
-            uid = uid,
-            firstName = displayName?.split(" ")?.firstOrNull(),
-            lastName = displayName?.split(" ")?.lastOrNull(),
-            phoneNumber = phoneNumber,
-            displayName = displayName.toString(),
-            email = email.toString(),
-            photoUrl = photoUrl.toString(),
-            createdAt = FieldValue.serverTimestamp(),
-        )
     }
 }

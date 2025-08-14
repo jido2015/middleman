@@ -122,8 +122,7 @@ class ChallengeDetailsViewModel @Inject constructor(
     fun acceptParticipantRequest(challengeId: String, participantId: String) {
         viewModelScope.launch {
             _acceptParticipantState.value = RequestState.Loading
-            val result =
-                acceptParticipantUseCase(BetStatus.ACTIVE.name, challengeId, participantId)
+            val result = acceptParticipantUseCase(BetStatus.ACTIVE.name, challengeId, participantId)
             _acceptParticipantState.value = result
         }
     }
