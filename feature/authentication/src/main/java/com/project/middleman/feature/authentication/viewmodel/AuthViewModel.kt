@@ -14,7 +14,6 @@ import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.mapper.toEntity
 import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.domain.authentication.repository.AddUserProfileResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
 import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
@@ -62,10 +61,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    init {
-        firebaseAuth.addAuthStateListener(authStateListener)
-    }
-
     override fun onCleared() {
         super.onCleared()
         firebaseAuth.removeAuthStateListener(authStateListener)
@@ -74,12 +69,29 @@ class AuthViewModel @Inject constructor(
 
     private val _credentialManagerSignInResponse = MutableStateFlow<AuthCredentialResponse>(RequestState.Loading)
     val credentialManagerSignInResponse: StateFlow<AuthCredentialResponse> = _credentialManagerSignInResponse
+    
+    private val _signInWithGoogleResponse = MutableStateFlow<SignInWithGoogleResponse>(RequestState.Loading)
+    val signInWithGoogleResponse: StateFlow<SignInWithGoogleResponse> = _signInWithGoogleResponse
 
-    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(
-        RequestState.Success(false)
-    )
-        private set
-
+    init {
+        Log.d("AuthViewModel", "=== AuthViewModel constructor called ===")
+        Log.d("AuthViewModel", "AuthViewModel created with repo: $repo")
+        
+        // Add state observer for debugging
+        viewModelScope.launch {
+            _credentialManagerSignInResponse.collect { state ->
+                Log.d("AuthViewModel", "StateFlow changed to: $state")
+            }
+        }
+        
+        // Add another observer to track when the StateFlow is collected
+        viewModelScope.launch {
+            Log.d("AuthViewModel", "Starting to observe credentialManagerSignInResponse StateFlow")
+            _credentialManagerSignInResponse.collect { state ->
+                Log.d("AuthViewModel", "Direct StateFlow observer received: $state")
+            }
+        }
+    }
 
     fun syncUserFromFirebase(remote: UserDTO) = viewModelScope.launch {
         local.upsert(remote.toEntity())
@@ -88,16 +100,35 @@ class AuthViewModel @Inject constructor(
 
     fun credentialManagerSignIn() =
         viewModelScope.launch {
+            Log.d("AuthViewModel", "Starting credentialManagerSignIn")
             withContext(dispatchProvider.io) {
                 _credentialManagerSignInResponse.value = RequestState.Loading
-                _credentialManagerSignInResponse.value = repo.credentialManagerWithGoogle()
+                Log.d("AuthViewModel", "Set loading state, calling repo.credentialManagerWithGoogle()")
+                val response = repo.credentialManagerWithGoogle()
+                Log.d("AuthViewModel", "Received response from repo: $response")
+                _credentialManagerSignInResponse.value = response
+                Log.d("AuthViewModel", "Updated StateFlow with response: ${_credentialManagerSignInResponse.value}")
             }
         }
 
+    // Debug function to test state changes
+    fun debugCredentialManagerState() {
+        Log.d("AuthViewModel", "Current credentialManagerSignInResponse: ${_credentialManagerSignInResponse.value}")
+    }
+
     fun signInWithGoogle(googleCredential: AuthCredential) = viewModelScope.launch {
         Log.d("signInWithGoogle","Checking Firebase Login")
-        signInWithGoogleResponse = RequestState.Loading
-        signInWithGoogleResponse = repo.firebaseSignInWithGoogle(googleCredential)
+        _signInWithGoogleResponse.value = RequestState.Loading
+        _signInWithGoogleResponse.value = repo.firebaseSignInWithGoogle(googleCredential)
+    }
+
+    // Add function to reset states
+    fun resetCredentialManagerState() {
+        _credentialManagerSignInResponse.value = RequestState.Loading
+    }
+
+    fun resetSignInWithGoogleState() {
+        _signInWithGoogleResponse.value = RequestState.Loading
     }
 
     fun getUserProfile() {

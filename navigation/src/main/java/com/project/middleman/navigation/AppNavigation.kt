@@ -27,6 +27,7 @@ import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.navigation.auth.AuthNavigationHost
 import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.navigation.viewmodel.AppStateViewModel
+import android.util.Log
 
 private fun getStartDestination(isAuthenticated: Boolean): NavigationRoute {
     return if (isAuthenticated) {
@@ -43,7 +44,10 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
+   Log.d("AppNavigation", "=== AppNavigation START ===")
+   
    val isAuthenticated by authViewModel.isUserAuthenticated.collectAsState()
+   Log.d("AppNavigation", "isAuthenticated: $isAuthenticated")
 
     // Separate NavControllers for auth and feature flows
     val authNavController = rememberNavController()
@@ -51,6 +55,7 @@ fun AppNavigation(
     
     val navBackStackEntry by featureNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    Log.d("AppNavigation", "currentRoute: $currentRoute")
 
 
     val activity = LocalActivity.current as ComponentActivity
@@ -62,9 +67,11 @@ fun AppNavigation(
             getStartDestination(isAuthenticated)
         }
     }
+    Log.d("AppNavigation", "startDestinationName: $startDestinationName")
 
     // Handle authentication state changes
     LaunchedEffect(isAuthenticated) {
+        Log.d("AppNavigation", "LaunchedEffect triggered with isAuthenticated: $isAuthenticated")
         if (isAuthenticated) {
             // When user becomes authenticated, navigate to dashboard
             featureNavController.navigate(NavigationRoute.DashboardScreen.route) {
@@ -87,6 +94,7 @@ fun AppNavigation(
             )
         ) {
             if (isAuthenticated) {
+                Log.d("AppNavigation", "User is authenticated, showing FeatureContentLayout")
                 FeatureContentLayout(
                     navController = featureNavController,
                     currentRoute = currentRoute,
@@ -94,6 +102,7 @@ fun AppNavigation(
                     modifier = modifier
                 )
             } else {
+                Log.d("AppNavigation", "User is NOT authenticated, showing AuthNavigationHost")
                 AuthNavigationHost(
                     authViewModel = authViewModel,
                     navController = authNavController,
@@ -103,4 +112,6 @@ fun AppNavigation(
             }
         }
     }
+    
+    Log.d("AppNavigation", "=== AppNavigation END ===")
 }

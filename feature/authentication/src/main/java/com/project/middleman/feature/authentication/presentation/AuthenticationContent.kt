@@ -1,6 +1,7 @@
 package com.project.middleman.feature.authentication.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -38,11 +39,14 @@ fun AuthenticationContent(
     loadingState: MutableState<Boolean>,
     onButtonClicked: () -> Unit
 ) {
+    Log.d("AuthenticationContent", "=== AuthenticationContent START ===")
+    
     // Animate on first appearance
     var imageVisible by remember { mutableStateOf(false) }
 
     // Trigger animation once when the composable enters composition
     LaunchedEffect(Unit) {
+        Log.d("AuthenticationContent", "LaunchedEffect triggered - setting imageVisible to true")
         imageVisible = true
     }
 
@@ -57,6 +61,8 @@ fun AuthenticationContent(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            //Log.d( "loadingState", loadingState.value.toString() + "")
             AnimatedVisibility(
                 visible = imageVisible && !loadingState.value, // show on enter and when not loading
                 enter = fadeIn() + scaleIn(),
@@ -84,10 +90,15 @@ fun AuthenticationContent(
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 100.dp),
-            onClick = { onButtonClicked() },
+            onClick = { 
+                Log.d("AuthenticationContent", "Button clicked - calling onButtonClicked")
+                onButtonClicked() 
+            },
             text = "Setup With Google Account"
         )
     }
+    
+    Log.d("AuthenticationContent", "=== AuthenticationContent END ===")
 }
 
 
@@ -95,5 +106,5 @@ fun AuthenticationContent(
 @Preview(showBackground = true)
 @Composable
 fun GettingStartedPreview() {
-    AuthenticationContent(loadingState = mutableStateOf(true), onButtonClicked = {})
+    AuthenticationContent(loadingState = mutableStateOf(false), onButtonClicked = {})
 }

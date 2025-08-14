@@ -27,7 +27,7 @@ fun GetUserProfileWrapper(
             RequestState.Loading -> viewModel.loadingState.value = true
             is RequestState.Success -> (response as RequestState.Success<UserDTO>).data?.let {
                 onSuccess()
-                viewModel.isUserAuthenticated
+                viewModel.userIsAuthenticated()
                 viewModel.syncUserFromFirebase(it)
             }
         }

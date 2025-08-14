@@ -18,23 +18,38 @@ fun AuthenticationScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     gotoProfileSetup: () -> Unit
 ){
+    Log.d("LoginScreen", "=== AuthenticationScreen START ===")
+    Log.d("LoginScreen", "AuthenticationScreen recomposed")
+    
+    // Add a side effect to track when this screen is created
+    LaunchedEffect(Unit) {
+        Log.d("LoginScreen", "AuthenticationScreen LaunchedEffect(Unit) - screen is active")
+    }
+    
+    // Add DisposableEffect to track screen lifecycle
+    DisposableEffect(Unit) {
+        Log.d("LoginScreen", "AuthenticationScreen DisposableEffect - screen created")
+        onDispose {
+            Log.d("LoginScreen", "AuthenticationScreen DisposableEffect - screen disposed")
+        }
+    }
+    
     AuthenticationContent(
         loadingState = viewModel.loadingState,
         onButtonClicked = {
+            Log.d("LoginScreen", "Button clicked, starting credential manager sign in")
             viewModel.setLoading(true)
+            viewModel.resetCredentialManagerState() // Reset state before starting
             viewModel.credentialManagerSignIn()
         })
 
 
     fun launch(googleCredentials: AuthCredential) {
+        Log.d("LoginScreen", "Launch function called with credential: ${googleCredentials.provider}")
         try {
-            Log.d("credentialsData", "launch")
-
-            viewModel.setLoading(false)
             viewModel.signInWithGoogle(googleCredentials)
         } catch (it: ApiException) {
             Log.d("credentialsData", it.toString())
-
             viewModel.setLoading(false)
             print(it)
         }
@@ -44,6 +59,7 @@ fun AuthenticationScreen(
     GetUserProfileWrapper(
         viewModel = viewModel,
         onSuccess = {
+            Log.d("LoginScreen", "GetUserProfileWrapper onSuccess called")
             viewModel.setLoading(false)
         },
         onErrorMessage = {
@@ -53,10 +69,16 @@ fun AuthenticationScreen(
         }
     )
 
-
+    Log.d("LoginScreen", "About to call OnCredentialLoginResult")
+    
+    // Add a SideEffect to track when this composable is called
+    SideEffect {
+        Log.d("LoginScreen", "SideEffect: About to call OnCredentialLoginResult composable")
+    }
+    
     OnCredentialLoginResult(
         onError = {
-            Log.d("credentialsData", it.toString())
+            Log.d("credentialsData", it)
             viewModel.setLoading(false)
         },
         launch = {
@@ -71,5 +93,7 @@ fun AuthenticationScreen(
             }
         }
     )
+    
+    Log.d("LoginScreen", "=== AuthenticationScreen END ===")
 }
 

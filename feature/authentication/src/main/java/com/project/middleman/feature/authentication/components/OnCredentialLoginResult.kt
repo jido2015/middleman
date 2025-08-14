@@ -16,28 +16,45 @@ fun OnCredentialLoginResult(
     launch: (result: AuthCredential) -> Unit,
     onError: (message: String) -> Unit
 ) {
-
+    // Properly observe the StateFlow
     val credManagerSignInResponse by viewModel.credentialManagerSignInResponse.collectAsState()
-
+    
+    Log.d("CredentialManager", "OnCredentialLoginResult recomposed with state: $credManagerSignInResponse")
+    
+    // Add LaunchedEffect to monitor state changes
     LaunchedEffect(credManagerSignInResponse) {
-        when(credManagerSignInResponse) {
-            is RequestState.Loading -> {}
-            is RequestState.Success -> {
-                Log.d("CredentialManagerSignSignIn","Success state: ${(credManagerSignInResponse as RequestState.Success<AuthCredential>).data}")
-                (credManagerSignInResponse as RequestState.Success<AuthCredential>).data?.let {
-                    Log.d("CredentialManagerSignSignIn","Success:")
-                    launch(it)
+        Log.d("CredentialManager", "LaunchedEffect triggered with state: $credManagerSignInResponse")
+    }
+    
+    when(credManagerSignInResponse) {
+        is RequestState.Loading -> {
+            Log.d("CredentialManager", "Loading state")
+        }
+        is RequestState.Success -> {
+            Log.d("CredentialManager", "Success state: ${(credManagerSignInResponse as RequestState.Success<AuthCredential>).data}")
+            (credManagerSignInResponse as RequestState.Success<AuthCredential>).data?.let { credential ->
+                LaunchedEffect(credential) {
+                    Log.d("CredentialManager", "Launching with credential: ${credential.provider}")
+                    launch(credential)
+                    // Reset state after launching
+                    viewModel.resetCredentialManagerState()
                 }
-
+            } ?: run {
+                Log.d("CredentialManager", "Success but no credential data")
+                // Reset state if no data
+                LaunchedEffect(Unit) {
+                    viewModel.resetCredentialManagerState()
+                }
             }
-            is RequestState.Error -> {
-                Log.d("CredentialManagerSignSignIn","Success:")
-
-                Log.d("CredentialManagerSignSignIn", (credManagerSignInResponse as RequestState.Error).error.message.toString())
+        }
+        is RequestState.Error -> {
+            Log.d("CredentialManager", "Error state: ${(credManagerSignInResponse as RequestState.Error).error.message}")
+            LaunchedEffect(Unit) {
                 onError((credManagerSignInResponse as RequestState.Error).error.message.toString())
                 viewModel.setLoading(false)
+                // Reset state after error
+                viewModel.resetCredentialManagerState()
             }
         }
     }
-
 }

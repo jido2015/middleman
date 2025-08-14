@@ -40,6 +40,8 @@ fun AuthNavigationHost(
     startDestinationName: String,
     navController: NavHostController,
 ) {
+    Log.d("Navigation", "=== AuthNavigationHost START ===")
+    Log.d("Navigation", "startDestinationName: $startDestinationName")
 
     val showNavigationTopBarSheet by appStateViewModel.showNavigationTopBarSheet.collectAsState()
     val navigationCurrentProgress by appStateViewModel.navigationCurrentProgress.collectAsState()
@@ -55,11 +57,13 @@ fun AuthNavigationHost(
             showNavigationTopBarSheet = showNavigationTopBarSheet,
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
 
+        Log.d("Navigation", "About to create NavHost")
         NavHost(
             navController = navController,
             startDestination = startDestinationName,
             modifier = Modifier.fillMaxSize()
         ) {
+            Log.d("Navigation", "NavHost created, about to call authenticationNavigation")
 
             authenticationNavigation(
                 createProfileViewModel = createProfileViewModel,
@@ -69,7 +73,8 @@ fun AuthNavigationHost(
             )
         }
     }
-
+    
+    Log.d("Navigation", "=== AuthNavigationHost END ===")
 }
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.authenticationNavigation(
@@ -78,15 +83,21 @@ fun NavGraphBuilder.authenticationNavigation(
     navController: NavHostController,
     authViewModel: AuthViewModel
 ) {
+    Log.d("Navigation", "=== authenticationNavigation START ===")
+    
     composable(route = AuthNavigationRoute.AccountSetupScreen.route) {
+        Log.d("Navigation", "=== AccountSetupScreen composable START ===")
         // Ensure visibility is set before the screen is shown
         appStateViewModel.setNavigationTopBarVisibility(false)
 
-            AuthenticationScreen(
-                viewModel = authViewModel,
-                gotoProfileSetup = {
-                    navController.navigate(AuthNavigationRoute.DateOfBirthScreen.route)
-                })
+        Log.d("Navigation", "About to call AuthenticationScreen")
+        AuthenticationScreen(
+            viewModel = authViewModel,
+            gotoProfileSetup = {
+                Log.d("Navigation", "gotoProfileSetup called")
+                navController.navigate(AuthNavigationRoute.DateOfBirthScreen.route)
+            })
+        Log.d("Navigation", "=== AccountSetupScreen composable END ===")
     }
 
     composable(route = AuthNavigationRoute.DateOfBirthScreen.route) {
@@ -151,4 +162,5 @@ fun NavGraphBuilder.authenticationNavigation(
         )
     }
 
+    Log.d("Navigation", "=== authenticationNavigation END ===")
 }

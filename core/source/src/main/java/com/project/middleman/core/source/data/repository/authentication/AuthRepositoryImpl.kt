@@ -34,28 +34,38 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun credentialManagerWithGoogle(): AuthCredentialResponse {
         return try {
-
+            Log.d("CredentialManager", "Starting credential manager sign in")
+            
             val credentialManager = CredentialManager.create(activityContext)
+            Log.d("CredentialManager", "CredentialManager created")
 
             val request = GetCredentialRequest.Builder()
                 .addCredentialOption(getSignInWithGoogleOption())
                 .build()
-
+            Log.d("CredentialManager", "GetCredentialRequest built")
 
             val result = credentialManager.getCredential(
                 request = request,
                 context = activityContext,
             )
+            Log.d("CredentialManager", "Credential result received: ${result.credential}")
 
             val credential = getAuthCredentialFromResult(result)
+            Log.d("CredentialManager", "AuthCredential extracted: ${credential?.provider}")
 
-            RequestState.Success(credential)
+            if (credential != null) {
+                Log.d("CredentialManager", "Returning Success with credential")
+                RequestState.Success(credential)
+            } else {
+                Log.e("CredentialManager", "Failed to extract AuthCredential from result")
+                RequestState.Error(Throwable("Failed to extract authentication credential"))
+            }
         } catch (e: NoCredentialException) {
-            Log.d("signInWithGoogleError-1", "$e")
-            RequestState.Error(Throwable("No credentials available"))
+            Log.e("CredentialManager", "NoCredentialException: ${e.message}", e)
+            RequestState.Error(Throwable("No credentials available: ${e.message}"))
         } catch (e: Exception) {
-            Log.d("signInWithGoogleError-2", "$e")
-            RequestState.Error(Throwable("Unable to get credential"))
+            Log.e("CredentialManager", "Exception in credentialManagerWithGoogle: ${e.message}", e)
+            RequestState.Error(Throwable("Unable to get credential: ${e.message}"))
         }
     }
 
