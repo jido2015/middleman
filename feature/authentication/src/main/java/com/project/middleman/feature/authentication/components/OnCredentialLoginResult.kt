@@ -16,45 +16,17 @@ fun OnCredentialLoginResult(
     launch: (result: AuthCredential) -> Unit,
     onError: (message: String) -> Unit
 ) {
-    // Properly observe the StateFlow
-    val credManagerSignInResponse by viewModel.credentialManagerSignInResponse.collectAsState()
-    
-    Log.d("CredentialManager", "OnCredentialLoginResult recomposed with state: $credManagerSignInResponse")
-    
-    // Add LaunchedEffect to monitor state changes
-    LaunchedEffect(credManagerSignInResponse) {
-        Log.d("CredentialManager", "LaunchedEffect triggered with state: $credManagerSignInResponse")
-    }
-    
-    when(credManagerSignInResponse) {
+    when(val credManagerSignInResponse = viewModel.credentialManagerSignInResponse) {
         is RequestState.Loading -> {
-            Log.d("CredentialManager", "Loading state")
         }
-        is RequestState.Success -> {
-            Log.d("CredentialManager", "Success state: ${(credManagerSignInResponse as RequestState.Success<AuthCredential>).data}")
-            (credManagerSignInResponse as RequestState.Success<AuthCredential>).data?.let { credential ->
-                LaunchedEffect(credential) {
-                    Log.d("CredentialManager", "Launching with credential: ${credential.provider}")
-                    launch(credential)
-                    // Reset state after launching
-                    viewModel.resetCredentialManagerState()
-                }
-            } ?: run {
-                Log.d("CredentialManager", "Success but no credential data")
-                // Reset state if no data
-                LaunchedEffect(Unit) {
-                    viewModel.resetCredentialManagerState()
-                }
+        is RequestState.Success -> credManagerSignInResponse.data?.let {
+            Log.d("ManagerSign", it.toString())
+            LaunchedEffect(it) {
+                launch(it)
             }
         }
-        is RequestState.Error -> {
-            Log.d("CredentialManager", "Error state: ${(credManagerSignInResponse as RequestState.Error).error.message}")
-            LaunchedEffect(Unit) {
-                onError((credManagerSignInResponse as RequestState.Error).error.message.toString())
-                viewModel.setLoading(false)
-                // Reset state after error
-                viewModel.resetCredentialManagerState()
-            }
+        is RequestState.Error -> LaunchedEffect(Unit) {
+            onError(credManagerSignInResponse.error.message.toString())
         }
     }
 }

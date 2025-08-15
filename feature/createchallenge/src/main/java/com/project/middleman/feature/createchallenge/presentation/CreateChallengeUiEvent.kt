@@ -21,7 +21,9 @@ fun OnCreateChallengeEvent(
             }
         }
         is RequestState.Error -> LaunchedEffect(Unit) {
-         // Exception(onCreateChallengeResponse.error.message)
+
+            Log.d("onCreateChallengeResponse", "${onCreateChallengeResponse.error}")
+            // Exception(onCreateChallengeResponse.error.message)
            // viewModel.setLoading(false)
         }
     }

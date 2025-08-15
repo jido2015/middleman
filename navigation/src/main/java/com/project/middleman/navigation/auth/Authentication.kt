@@ -2,6 +2,8 @@ package com.project.middleman.navigation.auth
 
 import android.os.Build
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,7 +23,6 @@ import androidx.navigation.compose.composable
 import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.project.middleman.designsystem.themes.white
 import com.project.middleman.feature.authentication.presentation.PhoneNumberScreen
-import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.presentation.AuthenticationScreen
 import com.project.middleman.feature.authentication.presentation.DateOfBirthScreen
 import com.project.middleman.feature.authentication.presentation.DisplayNameScreen
@@ -29,19 +30,18 @@ import com.project.middleman.feature.authentication.presentation.FullNameScreen
 import com.project.middleman.feature.authentication.presentation.PhoneVerificationScreen
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import com.project.middleman.navigation.AuthNavigationRoute
-import com.project.middleman.navigation.viewmodel.AppStateViewModel
+import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AuthNavigationHost(
-    authViewModel: AuthViewModel,
-    appStateViewModel: AppStateViewModel,
     startDestinationName: String,
     navController: NavHostController,
 ) {
-    Log.d("Navigation", "=== AuthNavigationHost START ===")
-    Log.d("Navigation", "startDestinationName: $startDestinationName")
+
+    val activity = LocalActivity.current as ComponentActivity
+    val appStateViewModel: AppStateViewModel = hiltViewModel(activity)
 
     val showNavigationTopBarSheet by appStateViewModel.showNavigationTopBarSheet.collectAsState()
     val navigationCurrentProgress by appStateViewModel.navigationCurrentProgress.collectAsState()
@@ -68,8 +68,7 @@ fun AuthNavigationHost(
             authenticationNavigation(
                 createProfileViewModel = createProfileViewModel,
                 appStateViewModel = appStateViewModel,
-                navController = navController,
-                authViewModel = authViewModel
+                navController = navController
             )
         }
     }
@@ -80,24 +79,20 @@ fun AuthNavigationHost(
 fun NavGraphBuilder.authenticationNavigation(
     createProfileViewModel: CreateProfileViewModel,
     appStateViewModel: AppStateViewModel,
-    navController: NavHostController,
-    authViewModel: AuthViewModel
+    navController: NavHostController
 ) {
     Log.d("Navigation", "=== authenticationNavigation START ===")
     
     composable(route = AuthNavigationRoute.AccountSetupScreen.route) {
-        Log.d("Navigation", "=== AccountSetupScreen composable START ===")
         // Ensure visibility is set before the screen is shown
         appStateViewModel.setNavigationTopBarVisibility(false)
 
-        Log.d("Navigation", "About to call AuthenticationScreen")
         AuthenticationScreen(
-            viewModel = authViewModel,
+            appStateViewModel = appStateViewModel,
             gotoProfileSetup = {
                 Log.d("Navigation", "gotoProfileSetup called")
                 navController.navigate(AuthNavigationRoute.DateOfBirthScreen.route)
             })
-        Log.d("Navigation", "=== AccountSetupScreen composable END ===")
     }
 
     composable(route = AuthNavigationRoute.DateOfBirthScreen.route) {
@@ -154,10 +149,9 @@ fun NavGraphBuilder.authenticationNavigation(
         appStateViewModel.setNavigationCurrentProgress(5f)
         // Ensure visibility is set before the screen is shown
         DisplayNameScreen(
+            appStateViewModel = appStateViewModel,
             viewModel = createProfileViewModel,
-            authViewModel = authViewModel,
             onSaveChallenge = {
-                Log.d("onLoginComplete", "Refreshing auth state2")
             }
         )
     }

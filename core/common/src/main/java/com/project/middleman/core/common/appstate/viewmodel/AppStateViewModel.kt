@@ -1,11 +1,11 @@
-package com.project.middleman.navigation.viewmodel
+package com.project.middleman.core.common.appstate.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.project.middleman.core.source.data.model.Challenge
-import com.project.middleman.core.source.data.model.UserDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +18,11 @@ class AppStateViewModel @Inject constructor(
 
     private val _showCreateWagerSheet = MutableStateFlow(false)
     val showCreateWagerSheet: StateFlow<Boolean> = _showCreateWagerSheet
+
+
+
+    private val _isUserAuthenticated = MutableStateFlow(false)
+    val isUserAuthenticated: StateFlow<Boolean> = _isUserAuthenticated
 
 
     private val _showBottomTabSheet = MutableStateFlow(false)
@@ -58,5 +63,10 @@ class AppStateViewModel @Inject constructor(
 
     fun setNavigationTitle(title: String) {
         _navigationTitle.value = title
+    }
+
+    fun proceedWithNavigation(boolean: Boolean) {
+        Log.d("onLoginComplete", "Refreshing auth state")
+        _isUserAuthenticated.value = boolean
     }
 }

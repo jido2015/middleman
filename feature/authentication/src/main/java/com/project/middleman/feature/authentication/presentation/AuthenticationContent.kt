@@ -40,6 +40,7 @@ fun AuthenticationContent(
     onButtonClicked: () -> Unit
 ) {
     Log.d("AuthenticationContent", "=== AuthenticationContent START ===")
+    Log.d("AuthenticationContent", "Loading state: ${loadingState.value}")
     
     // Animate on first appearance
     var imageVisible by remember { mutableStateOf(false) }
@@ -62,7 +63,7 @@ fun AuthenticationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            //Log.d( "loadingState", loadingState.value.toString() + "")
+            Log.d("AuthenticationContent", "Image visibility: imageVisible=${imageVisible}, loadingState=${loadingState.value}")
             AnimatedVisibility(
                 visible = imageVisible && !loadingState.value, // show on enter and when not loading
                 enter = fadeIn() + scaleIn(),
@@ -100,7 +101,6 @@ fun AuthenticationContent(
     
     Log.d("AuthenticationContent", "=== AuthenticationContent END ===")
 }
-
 
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)

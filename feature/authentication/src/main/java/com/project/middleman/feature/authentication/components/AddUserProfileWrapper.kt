@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 

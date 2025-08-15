@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -45,4 +47,7 @@ dependencies {
     implementation(project(":core:source"))
     implementation(libs.kotlin.coroutine)
     implementation(libs.material3)
+    ksp(libs.hilt.ksp)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation)
 }

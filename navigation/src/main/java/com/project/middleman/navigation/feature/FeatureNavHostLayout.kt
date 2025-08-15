@@ -29,12 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
-import com.project.middleman.designsystem.themes.SetStatusBarStyle
 import com.project.middleman.designsystem.themes.white
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
-import com.project.middleman.navigation.viewmodel.AppStateViewModel
+import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 
 @Composable
 fun FeatureContentLayout(

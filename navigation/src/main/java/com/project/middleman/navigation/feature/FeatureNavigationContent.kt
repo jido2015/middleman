@@ -16,7 +16,7 @@ import com.project.middleman.feature.createchallenge.presentation.CreateChalleng
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.feature.openchallenges.presentation.ChallengesScreen
 import com.project.middleman.navigation.NavigationRoute
-import com.project.middleman.navigation.viewmodel.AppStateViewModel
+import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 
 
 fun NavGraphBuilder.featureNavigation(

@@ -20,15 +20,15 @@ fun GetUserProfileWrapper(
     LaunchedEffect(response) {
         when (response) {
             is RequestState.Error -> {
-                viewModel.loadingState.value = false
                 val error = (response as RequestState.Error).error
                 onErrorMessage(error.message.toString())
             }
-            RequestState.Loading -> viewModel.loadingState.value = true
+            RequestState.Loading -> {
+            }
             is RequestState.Success -> (response as RequestState.Success<UserDTO>).data?.let {
                 onSuccess()
-                viewModel.userIsAuthenticated()
                 viewModel.syncUserFromFirebase(it)
+                viewModel.onLoginComplete()
             }
         }
     }

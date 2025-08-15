@@ -50,7 +50,9 @@ class CreateChallengeViewModel @Inject constructor(
         local.observeCurrentUser()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
+
     fun createChallenge() {
+        Log.d("CreateChallengeViewModel", "${currentUser.value}")
         Log.d("BetStatus", BetStatus.OPEN.name)
         val creator = Participant(
             status = "Creator",

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val repo: AuthRepository,
@@ -35,17 +35,24 @@ class AuthViewModel @Inject constructor(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val dispatchProvider: DispatchProvider,
     private val firebaseAuth: FirebaseAuth
-): ViewModel() {
+) : ViewModel() {
 
     var loadingState = mutableStateOf(false)
-    fun setLoading(loading: Boolean){
+    fun setLoading(loading: Boolean) {
         loadingState.value = loading
     }
+
+
+    var credentialManagerSignInResponse by mutableStateOf<AuthCredentialResponse>(RequestState.Success(null))
+        private set
+    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(RequestState.Success(false))
+        private set
+
+
 
     val currentUser: StateFlow<UserEntity?> =
         local.observeCurrentUser()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
-
 
     private val _getUserProfile = MutableStateFlow<GetUserProfileResponse>(RequestState.Loading)
     val getUserProfileState: StateFlow<GetUserProfileResponse> = _getUserProfile
@@ -54,11 +61,30 @@ class AuthViewModel @Inject constructor(
     val isUserAuthenticated: StateFlow<Boolean> = _isUserAuthenticated
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        if(currentUser.value != null) {
-            _isUserAuthenticated.value = firebaseAuth.currentUser != null
-            Log.d("AuthCheck", "User: ${auth.currentUser?.uid}")
+        val isAuthenticated = auth.currentUser != null
+        Log.d("AuthListener", "Auth state changed - isAuthenticated: $isAuthenticated")
 
+        if (isAuthenticated) {
+            if (currentUser.value != null) {
+                _isUserAuthenticated.value = true
+            } else {
+                getUserProfile()
+            }
+        } else {
+            _isUserAuthenticated.value = false
         }
+    }
+
+    init {
+        // ✅ Immediate state set from Firebase before waiting for listener
+        _isUserAuthenticated.value = firebaseAuth.currentUser != null
+
+        // If authenticated but no local user, try loading from backend
+        if (_isUserAuthenticated.value && currentUser.value == null) {
+            getUserProfile()
+        }
+
+        firebaseAuth.addAuthStateListener(authStateListener)
     }
 
     override fun onCleared() {
@@ -66,80 +92,45 @@ class AuthViewModel @Inject constructor(
         firebaseAuth.removeAuthStateListener(authStateListener)
     }
 
-
-    private val _credentialManagerSignInResponse = MutableStateFlow<AuthCredentialResponse>(RequestState.Loading)
-    val credentialManagerSignInResponse: StateFlow<AuthCredentialResponse> = _credentialManagerSignInResponse
-    
-    private val _signInWithGoogleResponse = MutableStateFlow<SignInWithGoogleResponse>(RequestState.Loading)
-    val signInWithGoogleResponse: StateFlow<SignInWithGoogleResponse> = _signInWithGoogleResponse
-
-    init {
-        Log.d("AuthViewModel", "=== AuthViewModel constructor called ===")
-        Log.d("AuthViewModel", "AuthViewModel created with repo: $repo")
-        
-        // Add state observer for debugging
-        viewModelScope.launch {
-            _credentialManagerSignInResponse.collect { state ->
-                Log.d("AuthViewModel", "StateFlow changed to: $state")
-            }
-        }
-        
-        // Add another observer to track when the StateFlow is collected
-        viewModelScope.launch {
-            Log.d("AuthViewModel", "Starting to observe credentialManagerSignInResponse StateFlow")
-            _credentialManagerSignInResponse.collect { state ->
-                Log.d("AuthViewModel", "Direct StateFlow observer received: $state")
-            }
-        }
-    }
-
     fun syncUserFromFirebase(remote: UserDTO) = viewModelScope.launch {
-        local.upsert(remote.toEntity())
-        // <- mapper used here
+        try {
+            local.upsert(remote.toEntity())
+            Log.d("syncUser", "User saved successfully!")
+        } catch (e: Exception) {
+            Log.e("syncUser", "Failed to save user", e)
+        }
     }
 
-    fun credentialManagerSignIn() =
-        viewModelScope.launch {
-            Log.d("AuthViewModel", "Starting credentialManagerSignIn")
-            withContext(dispatchProvider.io) {
-                _credentialManagerSignInResponse.value = RequestState.Loading
-                Log.d("AuthViewModel", "Set loading state, calling repo.credentialManagerWithGoogle()")
-                val response = repo.credentialManagerWithGoogle()
-                Log.d("AuthViewModel", "Received response from repo: $response")
-                _credentialManagerSignInResponse.value = response
-                Log.d("AuthViewModel", "Updated StateFlow with response: ${_credentialManagerSignInResponse.value}")
-            }
+    fun credentialManagerSignIn() = viewModelScope.launch {
+        withContext(dispatchProvider.io) {
+            credentialManagerSignInResponse = RequestState.Loading
+            credentialManagerSignInResponse = repo.credentialManagerWithGoogle()
         }
-
-    // Debug function to test state changes
-    fun debugCredentialManagerState() {
-        Log.d("AuthViewModel", "Current credentialManagerSignInResponse: ${_credentialManagerSignInResponse.value}")
     }
 
     fun signInWithGoogle(googleCredential: AuthCredential) = viewModelScope.launch {
-        Log.d("signInWithGoogle","Checking Firebase Login")
-        _signInWithGoogleResponse.value = RequestState.Loading
-        _signInWithGoogleResponse.value = repo.firebaseSignInWithGoogle(googleCredential)
-    }
-
-    // Add function to reset states
-    fun resetCredentialManagerState() {
-        _credentialManagerSignInResponse.value = RequestState.Loading
-    }
-
-    fun resetSignInWithGoogleState() {
-        _signInWithGoogleResponse.value = RequestState.Loading
+        signInWithGoogleResponse = RequestState.Loading
+        signInWithGoogleResponse = repo.firebaseSignInWithGoogle(googleCredential)
     }
 
     fun getUserProfile() {
         viewModelScope.launch {
             _getUserProfile.value = RequestState.Loading
-            val result = getUserProfileUseCase.invoke(firebaseAuth.currentUser?.uid ?: "")
-            _getUserProfile.value = result
+            val uid = firebaseAuth.currentUser?.uid ?: ""
+            if (uid.isNotEmpty()) {
+                _getUserProfile.value = getUserProfileUseCase.invoke(uid)
+            } else {
+                _getUserProfile.value = RequestState.Error(Exception("User is not authenticated"))
+            }
         }
     }
 
-    fun userIsAuthenticated() {
+    fun onUSerOpenApp(){
+        Log.d("onLoginComplete", "${firebaseAuth.currentUser}")
         _isUserAuthenticated.value = firebaseAuth.currentUser != null
     }
+    fun onLoginComplete() {
+        _isUserAuthenticated.value = firebaseAuth.currentUser != null
+    }
+
 }

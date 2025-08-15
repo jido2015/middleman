@@ -19,6 +19,25 @@ data class UserProfile(
 )
 
 
+fun UserProfile.toDTO(): UserDTO {
+    val timestamp = when (createdAt) {
+        else -> Timestamp.now()
+    }
+    return UserDTO(
+        uid = uid ?: "",
+        displayName = displayName ?: "",
+        email = email ?: "",
+        firstName = firstName ?: "",
+        lastName = lastName ?: "",
+        dob = dob ?: "",
+        phoneNumber = phoneNumber ?: "",
+        photoUrl = photoUrl,
+        createdAt = timestamp
+    )
+}
+
+
+
 @IgnoreExtraProperties
 data class UserDTO(
     var uid: String?="",
@@ -32,18 +51,4 @@ data class UserDTO(
     var createdAt: Timestamp? = Timestamp.now(),
 ){
     constructor() : this("","", "", "", "",null)
-    @Exclude
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
-            "uid" to uid,
-            "displayName" to displayName,
-            "email" to email,
-            "photoUrl" to photoUrl,
-            "createdAt" to createdAt,
-            "dob" to dob,
-            "firstName" to firstName,
-            "lastName" to lastName,
-            "phoneNumber" to phoneNumber
-        )
-    }
 }

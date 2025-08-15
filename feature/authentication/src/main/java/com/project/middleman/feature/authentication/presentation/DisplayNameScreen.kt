@@ -1,13 +1,11 @@
 package com.project.middleman.feature.authentication.presentation
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,28 +19,24 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.button.CustomButton
-import com.middleman.composables.textfield.BorderlessTextField
 import com.middleman.composables.textfield.DisplayNameBorderlessTextField
-import com.project.middleman.core.source.data.model.UserDTO
+import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.feature.authentication.components.AddUserProfileWrapper
-import com.project.middleman.feature.authentication.components.GetUserProfileWrapper
-import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import kotlinx.coroutines.delay
 
 
 @Composable
 fun DisplayNameScreen(
-    authViewModel: AuthViewModel,
+    appStateViewModel: AppStateViewModel,
     viewModel: CreateProfileViewModel = hiltViewModel(),
     onSaveChallenge: () -> Unit,
 ){
@@ -58,6 +52,7 @@ fun DisplayNameScreen(
     val message = "Please fill all fields correctly."
     val toast = Toast.makeText(context, message, duration)
 
+
     // Character limit
     val maxCharacters = 20
     val currentCharCount = displayName.length
@@ -65,25 +60,13 @@ fun DisplayNameScreen(
     AddUserProfileWrapper(
         viewModel = viewModel,
         onSuccess = {
+            appStateViewModel.proceedWithNavigation(true)
             onSaveChallenge()
         },
         onErrorMessage = {
             toast.show()
         }
     )
-
-
-    GetUserProfileWrapper(
-        viewModel = authViewModel,
-        onSuccess = {
-            viewModel.setLoading(false)
-        },
-        onErrorMessage = {
-            Log.d("credentialsData", it)
-            viewModel.setLoading(false)
-        }
-    )
-
 
     ConstraintLayout(
         modifier = Modifier
@@ -165,16 +148,5 @@ fun DisplayNameScreen(
             delay(200)
             focusRequester.requestFocus()
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DisplayNameScreenScreenPreview() {
-    MaterialTheme {
-        DisplayNameScreen(
-            authViewModel = hiltViewModel(),
-            onSaveChallenge = {}
-        )
     }
 }
