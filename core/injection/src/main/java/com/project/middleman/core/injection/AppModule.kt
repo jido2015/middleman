@@ -12,7 +12,7 @@ import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.repository.authentication.AuthRepositoryImpl
 import com.project.middleman.core.source.data.repository.profile.ProfileRepositoryImpl
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
-import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
+import com.project.middleman.core.source.domain.profile.repository.ProfileRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

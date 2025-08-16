@@ -61,7 +61,7 @@ fun DisplayNameScreen(
             onSaveChallenge()
         },
         onErrorMessage = {
-            toast.show()
+            Toast.makeText(context, it, duration).show()
         }
     )
 

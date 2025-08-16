@@ -14,8 +14,8 @@ import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.core.source.data.model.UserProfile
 import com.project.middleman.core.source.data.model.toDTO
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.domain.authentication.repository.AddUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.usecase.AddUserProfileUseCase
+import com.project.middleman.core.source.domain.profile.repository.AddUserProfileResponse
+import com.project.middleman.core.source.domain.profile.usecase.AddUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +29,6 @@ class CreateProfileViewModel @Inject constructor(
     private val local: UserLocalDataSource
     ) : ViewModel() {
     var loadingState = mutableStateOf(false)
-
     private val _addUserProfile = MutableStateFlow<AddUserProfileResponse>(RequestState.Loading)
     val addUserProfile: StateFlow<RequestState<Boolean>> = _addUserProfile
     var fullName by mutableStateOf("")

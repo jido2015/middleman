@@ -2,16 +2,15 @@ package com.project.middleman.core.source.data.repository.profile
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.core.source.data.model.UserProfile
-import com.project.middleman.core.source.domain.authentication.repository.AddUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
-import com.project.middleman.core.source.domain.authentication.repository.SignOutResponse
+import com.project.middleman.core.source.domain.profile.repository.AddUserProfileResponse
+import com.project.middleman.core.source.domain.profile.repository.CheckDisplayNameResponse
+import com.project.middleman.core.source.domain.profile.repository.GetUserProfileResponse
+import com.project.middleman.core.source.domain.profile.repository.ProfileRepository
+import com.project.middleman.core.source.domain.profile.repository.SignOutResponse
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,15 +55,38 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun addUserProfile(user: UserProfile): AddUserProfileResponse {
+        val uid = user.uid ?: return RequestState.Error(Exception("Missing UID"))
+        val displayName = user.displayName ?: return RequestState.Error(Exception("Missing displayName"))
 
         return try {
-            auth.currentUser?.apply {
-                db.collection("users").document(uid).set(user).await()
-            }
-            RequestState.Success(true)
+            // References
+            val usernameRef = db.collection("displayName").document(displayName)
+            val userRef = db.collection("users").document(uid)
+
+            // Transaction: claim username & save user profile
+            val success = db.runTransaction<Boolean> { txn ->
+                val snapshot = txn.get(usernameRef)
+
+                if (snapshot.exists()) {
+                    false // username taken
+                } else {
+                    // Claim username
+                    txn.set(usernameRef, mapOf("uid" to uid))
+                    // Save full user profile
+                    txn.set(userRef, user)
+                    true
+                }
+            }.await()
+
+            if (success) RequestState.Success(true)
+            else RequestState.Error(Exception("Display name already taken"))
+
         } catch (e: Exception) {
             RequestState.Error(e)
         }
     }
+
+
 }

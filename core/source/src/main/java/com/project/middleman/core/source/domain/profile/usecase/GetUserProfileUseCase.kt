@@ -1,10 +1,11 @@
-package com.project.middleman.core.source.domain.authentication.usecase
+package com.project.middleman.core.source.domain.profile.usecase
 
 import com.project.middleman.core.source.data.model.UserProfile
-import com.project.middleman.core.source.domain.authentication.repository.AddUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
-import com.project.middleman.core.source.domain.authentication.repository.ProfileRepository
-import com.project.middleman.core.source.domain.authentication.repository.SignOutResponse
+import com.project.middleman.core.source.domain.profile.repository.AddUserProfileResponse
+import com.project.middleman.core.source.domain.profile.repository.CheckDisplayNameResponse
+import com.project.middleman.core.source.domain.profile.repository.GetUserProfileResponse
+import com.project.middleman.core.source.domain.profile.repository.ProfileRepository
+import com.project.middleman.core.source.domain.profile.repository.SignOutResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 

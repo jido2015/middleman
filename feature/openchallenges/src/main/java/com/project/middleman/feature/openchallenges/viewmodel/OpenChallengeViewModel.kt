@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.sealedclass.RequestState
-import com.project.middleman.core.source.domain.authentication.repository.GetUserProfileResponse
+import com.project.middleman.core.source.domain.profile.repository.GetUserProfileResponse
 import com.project.middleman.core.source.domain.challenge.usecase.FetchChallengesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
