@@ -1,5 +1,6 @@
 package com.middleman.feature.dashboard.presentation
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -23,14 +26,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.middleman.composables.button.CustomButton
 import com.middleman.composables.topbar.MainToolBar
 import com.middleman.feature.dashboard.R
 import com.middleman.feature.dashboard.components.SpendableCardUI
 import com.middleman.feature.dashboard.components.VerificationProgress
 import com.middleman.feature.dashboard.components.handleScrollDirection
+import com.project.middleman.core.source.data.local.UserLocalDataSource
+import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.cardMultiColor
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 
 @Composable
@@ -38,8 +49,8 @@ fun DashboardScreen(
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,
     onProceedClicked: () -> Unit,
-    createWagerButton: () -> Unit
-) {
+    createWagerButton: () -> Unit,
+    ) {
 
     Column(modifier = Modifier.fillMaxSize().background(cardMultiColor)){
         MainToolBar(

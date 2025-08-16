@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
-import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.feature.authentication.components.GetUserProfileWrapper
 import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.components.OnCredentialLoginResult
@@ -15,21 +14,18 @@ import com.project.middleman.feature.authentication.components.SignInWithGoogle
 @Composable
 fun AuthenticationScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    appStateViewModel: AppStateViewModel,
-    gotoProfileSetup: () -> Unit
+    gotoProfileSetup: () -> Unit,
+    proceedToDashBoard: () -> Unit
 ){
-    val isAuthenticated by viewModel.isUserAuthenticated.collectAsState()
-
-    viewModel.onUSerOpenApp()
-    LaunchedEffect(isAuthenticated) {
-        appStateViewModel.proceedWithNavigation(isAuthenticated)
-    }
 
     AuthenticationContent(
         loadingState = viewModel.loadingState,
         onButtonClicked = {
             viewModel.credentialManagerSignIn()
-        })
+        },
+        viewModel = viewModel,
+        proceedToDashBoard = proceedToDashBoard,
+    )
 
     fun launch(googleCredentials: AuthCredential) {
         try {
@@ -39,16 +35,15 @@ fun AuthenticationScreen(
         }
     }
 
-
     GetUserProfileWrapper(
         viewModel = viewModel,
         onSuccess = {
+            proceedToDashBoard()
         },
         onErrorMessage = {
             gotoProfileSetup()
         }
     )
-
     
     OnCredentialLoginResult(
         onError = {

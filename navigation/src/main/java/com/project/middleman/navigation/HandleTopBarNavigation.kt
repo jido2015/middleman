@@ -18,6 +18,7 @@ internal fun HandleTabNavigation(
             Tab.Explore -> NavigationRoute.ChallengeTabScreen.route
         }
 
+
         if (currentRoute != targetRoute) {
             navController.navigate(targetRoute) {
                 launchSingleTop = true

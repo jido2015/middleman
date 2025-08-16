@@ -1,5 +1,7 @@
 package com.project.middleman.navigation.feature
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,9 +36,13 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
+import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
+import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeatureContentLayout(
+    authViewModel: AuthViewModel,
     navController: NavHostController,
     currentRoute: String?,
     appStateViewModel: AppStateViewModel,
@@ -50,6 +56,7 @@ fun FeatureContentLayout(
     val showNavigationTopBarSheet by appStateViewModel.showNavigationTopBarSheet.collectAsState()
     val navigationCurrentProgress by appStateViewModel.navigationCurrentProgress.collectAsState()
     val navigationTitle by appStateViewModel.navigationTitle.collectAsState()
+    val createProfileViewModel: CreateProfileViewModel = hiltViewModel()
 
     // 🧠 State to control AnimatedNotificationBar
     var isNotificationVisible by remember { mutableStateOf(false) }
@@ -75,17 +82,16 @@ fun FeatureContentLayout(
 
 
     // ✅ Handle tab navigation
-    HandleTabNavigation(selectedTab, currentRoute, navController)
+
+    if(showBottomBarSheet){
+        HandleTabNavigation(selectedTab, currentRoute, navController)
+    }
 
     //
     Box(modifier = Modifier.fillMaxSize().background(if (showNotificationBarSheet){
-        Color.Black
-    } else {
-        Color.Transparent
-    })) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
+        Color.Black } else { Color.Transparent })) {
+
+        Column(modifier = Modifier.fillMaxSize()
         ) {
 
             // ✅ Notification Top Modal Sheet controlled by scroll
@@ -117,22 +123,31 @@ fun FeatureContentLayout(
                         modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
 
                     // ✅ Pass real scroll callbacks
-                    FeatureNavigationHost(
+
+
+                    NavHost(
                         navController = navController,
-                        appStateViewModel = appStateViewModel,
-                        createViewModel = createViewModel, // Pass the ViewModel from parent
-                        modifier = modifier,
-                        onScrollDown = {
-                            if (isNotificationVisible) {
-                                isNotificationVisible = false
-                                isRotated = false
-                            }
+                        startDestination = currentRoute!!,
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        featureNavigation(
+                            authViewModel = authViewModel,
+                            navController = navController,
+                            appStateViewModel = appStateViewModel,
+                            createChallengeViewModel = createViewModel, // Pass the ViewModel from parent
+                            onScrollDown = {
+                                if (isNotificationVisible) {
+                                    isNotificationVisible = false
+                                    isRotated = false
+                                }
+                            },
+                            onScrollUp = {
 
-                        },
-                        onScrollUp = {
+                            },
+                            createProfileViewModel = createProfileViewModel
+                        )
+                    }
 
-                        }
-                    )
                 }
             }
         }
@@ -149,28 +164,3 @@ fun FeatureContentLayout(
     }
 }
 
-
-@Composable
-fun FeatureNavigationHost(
-    navController: NavHostController,
-    appStateViewModel: AppStateViewModel,
-    createViewModel: CreateChallengeViewModel, // Accept ViewModel as parameter
-    modifier: Modifier,
-    onScrollDown: () -> Unit,
-    onScrollUp: () -> Unit
-) {
-    NavHost(
-        navController = navController,
-        startDestination = NavigationRoute.DashboardScreen.route,
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        featureNavigation(
-            navController = navController,
-            appStateViewModel = appStateViewModel,
-            createViewModel = createViewModel, // Use the passed ViewModel
-            onScrollDown = { onScrollDown() }, 
-            onScrollUp = { onScrollUp() }
-        )
-    }
-}

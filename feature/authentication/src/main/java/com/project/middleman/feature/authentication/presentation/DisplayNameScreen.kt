@@ -26,17 +26,14 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.button.CustomButton
 import com.middleman.composables.textfield.DisplayNameBorderlessTextField
-import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.feature.authentication.components.AddUserProfileWrapper
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun DisplayNameScreen(
-    appStateViewModel: AppStateViewModel,
     viewModel: CreateProfileViewModel = hiltViewModel(),
     onSaveChallenge: () -> Unit,
 ){
@@ -57,10 +54,10 @@ fun DisplayNameScreen(
     val maxCharacters = 20
     val currentCharCount = displayName.length
 
+
     AddUserProfileWrapper(
         viewModel = viewModel,
         onSuccess = {
-            appStateViewModel.proceedWithNavigation(true)
             onSaveChallenge()
         },
         onErrorMessage = {

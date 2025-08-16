@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.project.middleman.core.source.data.DispatchProvider
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.mapper.toEntity
 import com.project.middleman.core.source.data.model.UserDTO
+import com.project.middleman.core.source.data.sealedclass.AuthState
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.domain.authentication.repository.AuthCredentialResponse
 import com.project.middleman.core.source.domain.authentication.repository.AuthRepository
@@ -42,12 +42,10 @@ class AuthViewModel @Inject constructor(
         loadingState.value = loading
     }
 
-
     var credentialManagerSignInResponse by mutableStateOf<AuthCredentialResponse>(RequestState.Success(null))
         private set
     var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(RequestState.Success(false))
         private set
-
 
 
     val currentUser: StateFlow<UserEntity?> =
@@ -56,35 +54,21 @@ class AuthViewModel @Inject constructor(
 
     private val _getUserProfile = MutableStateFlow<GetUserProfileResponse>(RequestState.Loading)
     val getUserProfileState: StateFlow<GetUserProfileResponse> = _getUserProfile
+    private val _isUserAuthenticated = MutableStateFlow<AuthState>(AuthState.Loading)
+    val isUserAuthenticated: StateFlow<AuthState> = _isUserAuthenticated
 
-    private val _isUserAuthenticated = MutableStateFlow(false)
-    val isUserAuthenticated: StateFlow<Boolean> = _isUserAuthenticated
 
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-        val isAuthenticated = auth.currentUser != null
-        Log.d("AuthListener", "Auth state changed - isAuthenticated: $isAuthenticated")
 
-        if (isAuthenticated) {
-            if (currentUser.value != null) {
-                _isUserAuthenticated.value = true
-            } else {
-                getUserProfile()
-            }
-        } else {
-            _isUserAuthenticated.value = false
-        }
+        val user = repo.isUserAuthenticatedInFirebase
+        Log.d("YauthStateListener", "Usessr: ${user.value}")
+        _isUserAuthenticated.value = if (user.value) AuthState.Authenticated else AuthState.Unauthenticated
     }
 
+
     init {
-        // ✅ Immediate state set from Firebase before waiting for listener
-        _isUserAuthenticated.value = firebaseAuth.currentUser != null
-
-        // If authenticated but no local user, try loading from backend
-        if (_isUserAuthenticated.value && currentUser.value == null) {
-            getUserProfile()
-        }
-
         firebaseAuth.addAuthStateListener(authStateListener)
+        // Don't set _authState.value immediately — let the listener handle it
     }
 
     override fun onCleared() {
@@ -125,12 +109,8 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun onUSerOpenApp(){
-        Log.d("onLoginComplete", "${firebaseAuth.currentUser}")
-        _isUserAuthenticated.value = firebaseAuth.currentUser != null
-    }
     fun onLoginComplete() {
-        _isUserAuthenticated.value = firebaseAuth.currentUser != null
+        Log.d("onLoginComplete", "Refreshing auth state")
+        repo.refreshAuthState()
     }
-
 }

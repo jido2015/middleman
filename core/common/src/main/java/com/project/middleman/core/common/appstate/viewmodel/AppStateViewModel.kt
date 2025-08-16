@@ -19,12 +19,6 @@ class AppStateViewModel @Inject constructor(
     private val _showCreateWagerSheet = MutableStateFlow(false)
     val showCreateWagerSheet: StateFlow<Boolean> = _showCreateWagerSheet
 
-
-
-    private val _isUserAuthenticated = MutableStateFlow(false)
-    val isUserAuthenticated: StateFlow<Boolean> = _isUserAuthenticated
-
-
     private val _showBottomTabSheet = MutableStateFlow(false)
     val showBottomTabSheet: StateFlow<Boolean> = _showBottomTabSheet
 
@@ -65,8 +59,4 @@ class AppStateViewModel @Inject constructor(
         _navigationTitle.value = title
     }
 
-    fun proceedWithNavigation(boolean: Boolean) {
-        Log.d("onLoginComplete", "Refreshing auth state")
-        _isUserAuthenticated.value = boolean
-    }
 }

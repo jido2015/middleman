@@ -10,44 +10,66 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.middleman.composables.R
 import com.middleman.composables.button.CustomButton
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.designsystem.themes.white
+import com.project.middleman.feature.authentication.components.IsUserAuthenticated
+import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 
 @Composable
 fun AuthenticationContent(
     loadingState: MutableState<Boolean>,
-    onButtonClicked: () -> Unit
+    onButtonClicked: () -> Unit,
+    viewModel: AuthViewModel,
+    proceedToDashBoard: () -> Unit,
 ) {
-    Log.d("AuthenticationContent", "=== AuthenticationContent START ===")
-    Log.d("AuthenticationContent", "Loading state: ${loadingState.value}")
-    
+    var enableButton by remember { mutableStateOf(false) }
+
+
+    val localDB by viewModel.currentUser.collectAsState( initial = null)
+
+    IsUserAuthenticated(
+        authenticated = { isAuthenticated ->
+            if ( localDB!= null) {
+                Log.d("LocalAuthentication", "$localDB")
+                proceedToDashBoard()
+            } else{
+                viewModel.getUserProfile()
+            }
+        },
+        gotoProfileSetup = {
+            Log.d("LocalAuthentication2", "$localDB")
+            enableButton = true
+        },
+        viewModel = viewModel)
+
+
+
     // Animate on first appearance
     var imageVisible by remember { mutableStateOf(false) }
 
     // Trigger animation once when the composable enters composition
     LaunchedEffect(Unit) {
-        Log.d("AuthenticationContent", "LaunchedEffect triggered - setting imageVisible to true")
         imageVisible = true
     }
 
@@ -63,7 +85,6 @@ fun AuthenticationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Log.d("AuthenticationContent", "Image visibility: imageVisible=${imageVisible}, loadingState=${loadingState.value}")
             AnimatedVisibility(
                 visible = imageVisible && !loadingState.value, // show on enter and when not loading
                 enter = fadeIn() + scaleIn(),
@@ -85,26 +106,33 @@ fun AuthenticationContent(
             )
         }
 
-        // Button pinned at the bottom
-        CustomButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 100.dp),
-            onClick = { 
-                Log.d("AuthenticationContent", "Button clicked - calling onButtonClicked")
-                onButtonClicked() 
-            },
-            text = "Setup With Google Account"
-        )
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            visible = enableButton, // show button when the condition is met
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut()
+        ){
+            CustomButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 100.dp),
+                onClick = {
+                    onButtonClicked()
+                },
+                text = "Setup With Google Account"
+            )
+        }
     }
     
-    Log.d("AuthenticationContent", "=== AuthenticationContent END ===")
 }
 
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun GettingStartedPreview() {
-    AuthenticationContent(loadingState = mutableStateOf(false), onButtonClicked = {})
+    AuthenticationContent(
+        loadingState = mutableStateOf(false), onButtonClicked = {},
+        viewModel = hiltViewModel(),
+        proceedToDashBoard = {}
+    )
 }

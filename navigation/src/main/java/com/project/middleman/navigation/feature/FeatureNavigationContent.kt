@@ -1,6 +1,8 @@
 package com.project.middleman.navigation.feature
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
@@ -17,15 +19,28 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 import com.project.middleman.feature.openchallenges.presentation.ChallengesScreen
 import com.project.middleman.navigation.NavigationRoute
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
+import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
+import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
+import com.project.middleman.navigation.auth.authenticationNavigation
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.featureNavigation(
+    authViewModel: AuthViewModel,
     navController: NavHostController,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,
     appStateViewModel: AppStateViewModel,
-    createViewModel: CreateChallengeViewModel,
+    createChallengeViewModel: CreateChallengeViewModel,
+    createProfileViewModel: CreateProfileViewModel
 ) {
+
+    authenticationNavigation(
+        authViewModel = authViewModel,
+        createProfileViewModel = createProfileViewModel,
+        appStateViewModel = appStateViewModel,
+        navController = navController
+    )
 
     // Create Title for Challenge Routes
     composable(route = NavigationRoute.CreateChallengeTitleScreen.route) {
@@ -34,7 +49,7 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationCurrentProgress(1f)
         appStateViewModel.setNavigationTitle("Create Wager")
         CreateChallengeTitleScreen(
-            viewModel = createViewModel,
+            viewModel = createChallengeViewModel,
             onSaveChallenge = {
                 navController.navigate(NavigationRoute.DescriptionScreen.route)
             }
@@ -47,7 +62,7 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationCurrentProgress(2f)
         appStateViewModel.setNavigationTitle("Description")
         CreateChallengeDescription(
-            viewModel = createViewModel,
+            viewModel = createChallengeViewModel,
             onSaveChallenge = {
                 navController.navigate(NavigationRoute.InputAmountScreen.route)
             }
@@ -59,7 +74,7 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationCurrentProgress(3f)
         appStateViewModel.setNavigationTitle("Stake Amount")
         InputAmountScreen(
-            viewModel = createViewModel,
+            viewModel = createChallengeViewModel,
             onCreateChallenge = {
                 navController.navigate(NavigationRoute.ChallengeSummaryScreen.route)
             }
@@ -72,7 +87,7 @@ fun NavGraphBuilder.featureNavigation(
         appStateViewModel.setNavigationTitle("Review Your Wager")
 
             ChallengeSummaryScreen(
-                viewModel = createViewModel,
+                viewModel = createChallengeViewModel,
                 createWagerButton = {
                     navController.navigate(NavigationRoute.ChallengeTabScreen.route) {
                         popUpTo(0) // Clear all back stack
