@@ -41,24 +41,15 @@ fun AuthenticationContent(
     loadingState: MutableState<Boolean>,
     onButtonClicked: () -> Unit,
     viewModel: AuthViewModel,
-    proceedToDashBoard: () -> Unit,
 ) {
     var enableButton by remember { mutableStateOf(false) }
 
-
-    val localDB by viewModel.currentUser.collectAsState( initial = null)
-
     IsUserAuthenticated(
         authenticated = { isAuthenticated ->
-            if ( localDB!= null) {
-                Log.d("LocalAuthentication", "$localDB")
-                proceedToDashBoard()
-            } else{
-                viewModel.getUserProfile()
-            }
+            Log.d("GettingUserProfile", "Get User Profile")
+            viewModel.getUserProfile()
         },
         gotoProfileSetup = {
-            Log.d("LocalAuthentication2", "$localDB")
             enableButton = true
         },
         viewModel = viewModel)
@@ -132,7 +123,6 @@ fun AuthenticationContent(
 fun GettingStartedPreview() {
     AuthenticationContent(
         loadingState = mutableStateOf(false), onButtonClicked = {},
-        viewModel = hiltViewModel(),
-        proceedToDashBoard = {}
+        viewModel = hiltViewModel()
     )
 }

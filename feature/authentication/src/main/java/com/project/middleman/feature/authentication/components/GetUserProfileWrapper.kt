@@ -8,7 +8,6 @@ import com.project.middleman.core.source.data.model.UserDTO
 import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 
-
 @Composable
 fun GetUserProfileWrapper(
     viewModel: AuthViewModel,

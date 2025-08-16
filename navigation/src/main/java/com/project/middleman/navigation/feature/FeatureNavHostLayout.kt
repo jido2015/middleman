@@ -46,7 +46,6 @@ fun FeatureContentLayout(
     navController: NavHostController,
     currentRoute: String?,
     appStateViewModel: AppStateViewModel,
-    modifier: Modifier = Modifier
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
@@ -97,7 +96,6 @@ fun FeatureContentLayout(
             // ✅ Notification Top Modal Sheet controlled by scroll
             AnimatedNotificationBar(
                 isNotificationBarSheet = showNotificationBarSheet,
-                modifier = modifier,
                 isMessageVisible = isNotificationVisible,
                 isRotated = isRotated,
                 onToggle = {

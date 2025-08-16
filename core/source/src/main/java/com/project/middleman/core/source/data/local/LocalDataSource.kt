@@ -7,4 +7,6 @@ interface UserLocalDataSource {
     suspend fun upsert(user: UserEntity)
     fun observeCurrentUser(): Flow<UserEntity?>
     suspend fun clear()
+
+    suspend fun getCurrentUserOnce(): UserEntity?
 }

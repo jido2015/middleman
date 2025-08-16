@@ -10,4 +10,5 @@ class UserLocalDataSourceImpl @Inject constructor(
     override suspend fun upsert(user: UserEntity) = userDao.upsertUser(user)
     override fun observeCurrentUser() = userDao.observeUser()
     override suspend fun clear() = userDao.clear()
+    override suspend fun getCurrentUserOnce() = userDao.getCurrentUserOnce()
 }

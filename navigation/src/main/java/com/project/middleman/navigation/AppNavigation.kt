@@ -1,6 +1,7 @@
 package com.project.middleman.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.RequiresApi
@@ -13,20 +14,30 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.project.middleman.navigation.feature.FeatureContentLayout
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
+import com.project.middleman.core.source.data.sealedclass.AuthState
 import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier,
+    viewModel: AuthViewModel
 ) {
+    val isAuthenticated by viewModel.isUserAuthenticated.collectAsState()
 
+    if (isAuthenticated is AuthState.Authenticated) {
+
+        Log.d("IsUserAuthenticated", "Yes")
+    }else{
+        Log.d("IsUserAuthenticated", "No")
+    }
 
     val activity = LocalActivity.current as ComponentActivity
     val appStateViewModel: AppStateViewModel = hiltViewModel(activity)
@@ -52,7 +63,6 @@ fun AppNavigation(
                     navController = featureNavController,
                     currentRoute = AuthNavigationRoute.AccountSetupScreen.route,
                     appStateViewModel = appStateViewModel,
-                    modifier = modifier
                 )
 
         }

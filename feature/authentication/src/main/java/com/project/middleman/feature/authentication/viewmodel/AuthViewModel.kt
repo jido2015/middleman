@@ -24,6 +24,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -47,11 +49,6 @@ class AuthViewModel @Inject constructor(
     var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(RequestState.Success(false))
         private set
 
-
-    val currentUser: StateFlow<UserEntity?> =
-        local.observeCurrentUser()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
-
     private val _getUserProfile = MutableStateFlow<GetUserProfileResponse>(RequestState.Loading)
     val getUserProfileState: StateFlow<GetUserProfileResponse> = _getUserProfile
     private val _isUserAuthenticated = MutableStateFlow<AuthState>(AuthState.Loading)
@@ -61,7 +58,6 @@ class AuthViewModel @Inject constructor(
     private val authStateListener = FirebaseAuth.AuthStateListener { auth ->
 
         val user = repo.isUserAuthenticatedInFirebase
-        Log.d("YauthStateListener", "Usessr: ${user.value}")
         _isUserAuthenticated.value = if (user.value) AuthState.Authenticated else AuthState.Unauthenticated
     }
 
@@ -79,7 +75,8 @@ class AuthViewModel @Inject constructor(
     fun syncUserFromFirebase(remote: UserDTO) = viewModelScope.launch {
         try {
             local.upsert(remote.toEntity())
-            Log.d("syncUser", "User saved successfully!")
+            Log.d("syncUser", "User saved successfully: $remote")
+
         } catch (e: Exception) {
             Log.e("syncUser", "Failed to save user", e)
         }

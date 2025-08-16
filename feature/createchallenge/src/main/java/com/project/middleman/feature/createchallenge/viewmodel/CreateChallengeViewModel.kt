@@ -21,6 +21,8 @@ import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.core.source.data.model.UserDTO
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -32,6 +34,7 @@ class CreateChallengeViewModel @Inject constructor(
     local: UserLocalDataSource,
 ) : ViewModel() {
 
+    var localUser by mutableStateOf<UserEntity?>(null)
     var title by mutableStateOf("")
     var category by mutableStateOf("")
     var selectedTimeInMillis by mutableLongStateOf(0)
@@ -39,38 +42,47 @@ class CreateChallengeViewModel @Inject constructor(
     var visibility by mutableStateOf(false)
     var description by mutableStateOf("")
 
-    // Represents the state of the create challenge operation
     var createChallengeResponse by mutableStateOf<CreateChallengeResponse>(RequestState.Success(null))
         private set
-    /**
-     * Creates a new challenge with the current user as creator.
-     */
 
-    val currentUser: StateFlow<UserEntity?> =
-        local.observeCurrentUser()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
+    init {
+        viewModelScope.launch {
+            local.observeCurrentUser()
+                .filterNotNull()
+                .first() // suspend until first non-null user
+                .let { user ->
+                    localUser = user
+                    Log.d("syncUser", "First real user observed2: $user")
+                    // trigger one-time logic here
+                }
+        }
+    }
 
     fun createChallenge() {
-        Log.d("CreateChallengeViewModel", "${currentUser.value}")
-        Log.d("BetStatus", BetStatus.OPEN.name)
+        if (localUser == null) {
+            Log.w("CreateChallengeViewModel", "No user found in DB, cannot create challenge")
+            createChallengeResponse = RequestState.Error(IllegalStateException("User not found"))
+            return
+        }
+
+        Log.d("CreateChallengeViewModel", "Creating challenge for user: ${localUser?.uid}")
+
         val creator = Participant(
             status = "Creator",
             joinedAt = System.currentTimeMillis(),
             amount = stake,
-            displayName = currentUser.value?.displayName ?: "",
-            photoUrl = currentUser.value?.photoUrl ?: "",
-            userId = currentUser.value?.uid ?: "",
+            displayName = localUser?.displayName!!,
+            photoUrl = localUser?.photoUrl!!,
+            userId = localUser?.uid!!,
             won = false,
             winAmount = 0.0
         )
 
-        val userAuth = currentUser.value?.uid ?: ""
-
         val challenge = Challenge(
             id = UUID.randomUUID().toString(),
             title = title,
-            participant = mapOf(userAuth to creator),
+            participant = mapOf(localUser?.uid!! to creator),
             category = category,
             status = BetStatus.OPEN.name,
             visibility = visibility,
@@ -79,28 +91,14 @@ class CreateChallengeViewModel @Inject constructor(
             payoutAmount = stake * 2,
             description = description
         )
+
         viewModelScope.launch {
             createChallengeResponse = RequestState.Loading
             createChallengeResponse = try {
                 repo.invoke(challenge)
             } catch (e: Exception) {
-                // Catch any unexpected exceptions and update the UI state
                 RequestState.Error(e)
             }
-
         }
     }
-
-    init {
-        Log.d("CreateChallengeViewModel", "ViewModel created")
-    }
-
 }
-
-//    private fun participants(userId: String): Map<String, ParticipantProgress> {
-//        val participants = mapOf<String, ParticipantProgress>(
-//            userId to ParticipantProgress()
-//        )
-//
-//        return participants
-//    }

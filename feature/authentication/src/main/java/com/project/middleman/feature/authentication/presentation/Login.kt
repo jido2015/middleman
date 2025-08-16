@@ -24,7 +24,6 @@ fun AuthenticationScreen(
             viewModel.credentialManagerSignIn()
         },
         viewModel = viewModel,
-        proceedToDashBoard = proceedToDashBoard,
     )
 
     fun launch(googleCredentials: AuthCredential) {
