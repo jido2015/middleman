@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,13 +24,13 @@ import com.project.middleman.designsystem.themes.white
 
 @Composable
 fun ChallengeActionButtons(
+    showAcceptSummary: () -> Unit,
     modifier: Modifier,
     actionMessage: String,
     challengeDetailsViewModel: ChallengeDetailsViewModel,
     creatorId: String?,
     challenge: Challenge,
     participant: Participant?,
-    onAcceptChallenge: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -68,7 +69,10 @@ fun ChallengeActionButtons(
             participant?.userId -> {
                 Log.d("Whois", "Participant Message Reached")
 
-                ParticipantActionButton(challenge, challengeDetailsViewModel, participant)
+                ParticipantActionButton(
+                    challenge,
+                    challengeDetailsViewModel,
+                    participant,)
             }
 
             else -> {
@@ -76,9 +80,8 @@ fun ChallengeActionButtons(
                 Log.d("Whois", "Viewer Message Reached")
 
                 ViewersActionButton(
-                    challengeDetailsViewModel = challengeDetailsViewModel,
+                    showAcceptSummary = showAcceptSummary,
                     challenge = challenge,
-                    onAcceptChallenge = onAcceptChallenge
                 )
             }
         }

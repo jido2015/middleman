@@ -66,7 +66,7 @@ class CreateChallengeViewModel @Inject constructor(
             return
         }
 
-        Log.d("CreateChallengeViewModel", "Creating challenge for user: ${localUser?.uid}")
+        Log.d("CreateLocal", "Creating challenge for user: $localUser")
 
         val creator = Participant(
             status = "Creator",

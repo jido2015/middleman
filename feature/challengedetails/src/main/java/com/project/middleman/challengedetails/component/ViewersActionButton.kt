@@ -3,6 +3,7 @@ package com.project.middleman.challengedetails.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -41,16 +42,15 @@ fun ActionButton(
 
 @Composable
 fun ViewersActionButton(
+    showAcceptSummary: () -> Unit,
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
-    onAcceptChallenge: () -> Unit,
     challenge: Challenge
 ) {
     when (challenge.status) {
         BetStatus.OPEN.name -> {
             ActionButton(
                 onClick = {
-                    challengeDetailsViewModel.onChallengeAccepted(challenge)
-                    onAcceptChallenge()
+                    showAcceptSummary()
                 },
                 btnText = "Join Wager",
                 containerColor = colorAccent,

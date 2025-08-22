@@ -1,5 +1,6 @@
 package com.project.middleman.feature.authentication.components
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ fun GetUserProfileWrapper(
         when (response) {
             is RequestState.Error -> {
                 val error = (response as RequestState.Error).error
+                Log.d("GetUserProfileWrapper", error.message.toString())
                 onErrorMessage(error.message.toString())
             }
             RequestState.Loading -> {

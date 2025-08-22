@@ -11,11 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +33,7 @@ import com.middleman.composables.topbar.MainNavigationTopBar
 import com.project.middleman.challengedetails.component.AddParticipantView
 import com.project.middleman.challengedetails.component.ChallengeActionButtons
 import com.project.middleman.challengedetails.component.InvitationComposeCard
+import com.project.middleman.challengedetails.component.SummaryRequestInfo
 import com.project.middleman.challengedetails.component.participantActionMessage
 import com.project.middleman.challengedetails.component.creatorActionMessage
 import com.project.middleman.challengedetails.component.viewersActionMessage
@@ -41,14 +48,17 @@ import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.white
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeDetailsScreen(
     onBackClicked: () -> Unit,
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
-    onAcceptChallenge: () -> Unit,
-    challengeDetails:
-    Challenge = Challenge()
+    challengeDetails: Challenge = Challenge()
+
 ) {
+    val showSheet by challengeDetailsViewModel.showSheet.collectAsState()
+    val sheetState = rememberModalBottomSheetState()
+
 
     var challenge by remember { mutableStateOf(challengeDetails) }
     var actionMessage by remember { mutableStateOf("") }
@@ -210,6 +220,9 @@ fun ChallengeDetailsScreen(
 
         // Bottom action buttons pinned
         ChallengeActionButtons(
+            showAcceptSummary = {
+                challengeDetailsViewModel.openSheet()
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp),
@@ -218,18 +231,20 @@ fun ChallengeDetailsScreen(
             creatorId = creator?.userId,
             challenge = challenge,
             participant = participant,
-            onAcceptChallenge = onAcceptChallenge
         )
     }
-}
 
+    SummaryRequestInfo(
+        showSheet = showSheet,
+        challengeDetailsViewModel = challengeDetailsViewModel,
+        sheetState = sheetState,
+        challenge = challenge)
+}
 
 @Composable
 @Preview(showBackground = true)
-fun ChallengeDetailsPreview(){
+fun ChallengeDetailsPreview() {
     ChallengeDetailsScreen(
-        onAcceptChallenge = {},
-        challengeDetails = Challenge(),
         onBackClicked = {}
     )
 }

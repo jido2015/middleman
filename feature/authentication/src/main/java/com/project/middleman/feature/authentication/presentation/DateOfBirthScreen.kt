@@ -75,7 +75,7 @@ fun DateOfBirthScreen(
         val (constraintTitle, subtitle, textFieldTitle, charCount, button) = createRefs()
 
         Text(
-            "What's your birthday",
+            "When were you born?",
             style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
             modifier = Modifier.constrainAs(constraintTitle) {
                 top.linkTo(parent.top, margin = 16.dp)
@@ -124,16 +124,6 @@ fun DateOfBirthScreen(
                 imeAction = ImeAction.Done
             ),
             onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
-        )
-
-
-        Text(
-            "$currentCharCount/$maxCharacters characters",
-            style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(charCount) {
-                top.linkTo(textFieldTitle.bottom, margin = 8.dp)
-                start.linkTo(parent.start)
-            }
         )
 
 

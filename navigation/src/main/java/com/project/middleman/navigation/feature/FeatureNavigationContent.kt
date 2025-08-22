@@ -146,7 +146,6 @@ fun NavGraphBuilder.featureNavigation(
 
                 ChallengeDetailsScreen(
                     challengeDetails = challenge,
-                    onAcceptChallenge = {},
                     onBackClicked = {
                         navController.popBackStack()
                     }

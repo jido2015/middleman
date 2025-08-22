@@ -31,7 +31,7 @@ class AppStateViewModel @Inject constructor(
     private val _navigationCurrentProgress = MutableStateFlow(0f)
     val navigationCurrentProgress: StateFlow<Float> = _navigationCurrentProgress
 
-    private val _navigationTitle = MutableStateFlow("")
+    private val _navigationTitle = MutableStateFlow("Personalise your account")
     val navigationTitle: StateFlow<String> = _navigationTitle
 
 

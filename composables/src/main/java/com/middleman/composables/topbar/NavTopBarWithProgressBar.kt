@@ -24,6 +24,7 @@ import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.designsystem.themes.surface
 import com.middleman.composables.R
 import com.project.middleman.designsystem.themes.Typography
+import kotlin.system.exitProcess
 
 @Composable
 fun NavigationTopBarWithProgressBar(
@@ -51,14 +52,16 @@ fun NavigationTopBarWithProgressBar(
         ) {
 
             IconButton(
-                onClick = {handleBackPressed()},
+                onClick = {if (progress == 0.2f) {
+                    exitProcess(0)
+                } else handleBackPressed()},
                 modifier = Modifier
                     .background(color = surface, shape = RoundedCornerShape(15.dp))
                     .size(36.dp) // Size of the entire circle
             ) {
                 Icon(
                     painter = painterResource(
-                        when(progress == 0.25f) {
+                        when(progress == 0.2f) {
                             true -> R.drawable.cancel
                             false -> R.drawable.arrow_left
                         }

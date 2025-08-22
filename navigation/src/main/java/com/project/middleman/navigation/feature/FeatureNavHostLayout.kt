@@ -116,7 +116,7 @@ fun FeatureContentLayout(
                     NavigationTopBarWithProgressBar(
                         handleBackPressed = { navController.popBackStack() },
                         title = navigationTitle,
-                        progress = navigationCurrentProgress/4f,
+                        progress = navigationCurrentProgress/5f,
                         showNavigationTopBarSheet = showNavigationTopBarSheet,
                         modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
 

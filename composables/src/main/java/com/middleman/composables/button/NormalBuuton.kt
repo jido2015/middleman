@@ -22,11 +22,12 @@ fun CustomButton(
     onClick: () -> Unit,
     text: String,
     containerColor : Color = colorAccent,
-    borderColor : Color = lightColorAccent,
+    borderColor : Color = Color.Transparent,
     textColor : Color = white,
     enableButton: Boolean = true
 ) {
     Button(
+        border = BorderStroke(1.dp, borderColor),
         modifier = modifier
             .height(56.dp),
         enabled = enableButton,
