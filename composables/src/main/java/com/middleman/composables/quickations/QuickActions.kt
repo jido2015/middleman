@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -83,7 +84,7 @@ fun QuickActions(
             Text(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "1",
-                style = Typography.labelMedium.copy(fontSize = 12.sp)
+                style = Typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold)
             )
         }
 
@@ -102,8 +103,8 @@ fun QuickActions(
             )
             Text(
                 modifier = Modifier.padding(start = 10.dp),
-                text = "1",
-                style = Typography.labelMedium.copy(fontSize = 12.sp)
+                text = "100",
+                style = Typography.labelMedium.copy(fontSize = 12.sp,  fontWeight = FontWeight.Bold)
             )
         }
 

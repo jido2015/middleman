@@ -10,6 +10,7 @@ typealias AcceptChallengeResponse = Flow<RequestState<Challenge>>
 typealias DeleteChallengeResponse = RequestState<Challenge>
 typealias FetchChallengesResponse = Flow<RequestState<List<Challenge>>>
 typealias GetChallengeDetailsResponse = Flow<RequestState<Challenge>>
+typealias ConcludeChallengeResponse = Flow<RequestState<Challenge>>
 
 interface ChallengeRepository {
     suspend fun createChallenge(challenge: Challenge): CreateChallengeResponse
@@ -20,4 +21,8 @@ interface ChallengeRepository {
 interface FetchChallengesRepository {
     fun fetchChallenges():FetchChallengesResponse
     fun getChallengeDetails(challengeId: String): GetChallengeDetailsResponse
+}
+
+interface ConcludeChallengeRepository {
+    fun concludeChallenge(challenge: Challenge, betStatus: String): ConcludeChallengeResponse
 }

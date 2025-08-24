@@ -20,6 +20,7 @@ import com.project.middleman.core.source.domain.challenge.usecase.AcceptParticip
 import com.project.middleman.core.source.domain.challenge.usecase.FetchParticipantsUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.RemoveParticipantUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.AcceptChallengeUseCase
+import com.project.middleman.core.source.domain.challenge.usecase.ConcludeChallengeUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.GetChallengeDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,7 @@ class ChallengeDetailsViewModel @Inject constructor(
     private val acceptParticipantUseCase: AcceptParticipantUseCase,
     private val fetchParticipantsUseCase: FetchParticipantsUseCase,
     private val getChallengeDetailsUseCase: GetChallengeDetailsUseCase,
+    private val concludeChallengeUseCase: ConcludeChallengeUseCase,
     local: UserLocalDataSource,
     ): ViewModel() {
 
@@ -139,6 +141,18 @@ class ChallengeDetailsViewModel @Inject constructor(
             _deleteParticipantState.value = result
         }
     }
+
+    fun concludeChallenge(challenge: Challenge, status: String) {
+        val updatedChallenge = challenge.copy( status = status)
+        viewModelScope.launch {
+            _updateChallenge.value = RequestState.Loading
+            concludeChallengeUseCase.invoke(updatedChallenge, status).collect { state ->
+                _updateChallenge.value = state
+            }
+        }
+    }
+
+
 
     fun getUpdatedChallengeDetails(challengeId: String){
         viewModelScope.launch {

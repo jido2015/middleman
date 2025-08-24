@@ -92,7 +92,7 @@ fun InvitationComposeCard(
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(" ${participant?.displayName}")
+                        append("@${participant?.displayName}")
                     }
 
                     Log.d("ChallengeStatus", currentUser?.uid ?: "participant")
@@ -108,22 +108,23 @@ fun InvitationComposeCard(
                             creator?.userId -> {
                                 append(" You have a new request waiting for your approval.")
                             }
-                            else -> {
-                                append(" has requested to join challenge.")
-                            }
                         }
 
                         BetStatus.ACTIVE.name -> {
                             when (currentUser?.uid) {
                                 participant?.userId -> {
-                                    append(" Your request to join has been accepted.")
+                                    append(" Your request to join has been accepted. Challenge is now active.")
 
                                 }
                                 else -> {
-                                    append(" has joined this challenge.")
+                                    append(" has joined this challenge. Challenge is now active.")
 
                                 }
                             }
+                        }
+
+                        else -> {
+                            append(" has joined this challenge. Challenge is now active.")
                         }
                     }
                 },
@@ -151,8 +152,7 @@ fun InvitationComposeCard(
             ) {
 
                 if (currentUser?.uid == creator?.userId
-                    && challenge.status != BetStatus.ACTIVE.name
-                    && challenge.status != BetStatus.COMPLETED.name) {
+                    && challenge.status == BetStatus.PENDING.name) {
 
 
                     // Cancel Request button

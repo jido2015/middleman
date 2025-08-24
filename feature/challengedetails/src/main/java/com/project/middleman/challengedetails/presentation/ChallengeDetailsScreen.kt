@@ -36,6 +36,8 @@ import com.project.middleman.challengedetails.component.InvitationComposeCard
 import com.project.middleman.challengedetails.component.SummaryRequestInfo
 import com.project.middleman.challengedetails.component.participantActionMessage
 import com.project.middleman.challengedetails.component.creatorActionMessage
+import com.project.middleman.challengedetails.component.creatorActionWin
+import com.project.middleman.challengedetails.component.participantActionWin
 import com.project.middleman.challengedetails.component.viewersActionMessage
 import com.project.middleman.challengedetails.uistate_handler.AcceptParticipantWrapper
 import com.project.middleman.challengedetails.uistate_handler.ChallengeDetailsWrapper
@@ -62,6 +64,7 @@ fun ChallengeDetailsScreen(
 
     var challenge by remember { mutableStateOf(challengeDetails) }
     var actionMessage by remember { mutableStateOf("") }
+    var winMessage by remember { mutableStateOf("") }
 
     var participants by remember { mutableStateOf(emptyList<Participant>()) }
 
@@ -163,6 +166,19 @@ fun ChallengeDetailsScreen(
         }
     }
 
+    winMessage = when (currentUser?.uid) {
+        participant?.userId -> {
+            participantActionWin(challenge)
+        }
+        creator?.userId -> {
+            creatorActionWin(challenge)
+        }
+        else -> {
+            ""
+        }
+    }
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -226,6 +242,7 @@ fun ChallengeDetailsScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp),
+            winMessage = winMessage,
             actionMessage = actionMessage,
             challengeDetailsViewModel = challengeDetailsViewModel,
             creatorId = creator?.userId,

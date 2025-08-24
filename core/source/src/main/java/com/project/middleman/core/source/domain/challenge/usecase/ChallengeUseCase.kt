@@ -7,6 +7,7 @@ import com.project.middleman.core.source.domain.challenge.repository.CreateChall
 import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesRepository
 import com.project.middleman.core.source.domain.challenge.repository.FetchChallengesResponse
 import com.project.middleman.core.source.domain.challenge.repository.AcceptChallengeResponse
+import com.project.middleman.core.source.domain.challenge.repository.ConcludeChallengeRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,4 +37,12 @@ class FetchChallengesUseCase @Inject constructor(
 class GetChallengeDetailsUseCase @Inject constructor(
     private val fetchChallengesRepository: FetchChallengesRepository){
     operator fun invoke(challengeId: String) = fetchChallengesRepository.getChallengeDetails(challengeId)
-    }
+}
+
+@Singleton
+class ConcludeChallengeUseCase @Inject constructor(
+
+    private val concludeChallengeRepository: ConcludeChallengeRepository
+) {
+    operator fun invoke(challenge: Challenge, betStatus: String) = concludeChallengeRepository.concludeChallenge(challenge, betStatus)
+}

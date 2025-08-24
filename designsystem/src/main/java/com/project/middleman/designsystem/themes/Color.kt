@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 
 val white = Color(0xFFFFFFFF)
 val colorAccent = Color(0xFF7446E4)
+
+
 val deepColorAccent = Color(0xFF6334D8)
 val lightColorAccent = Color(0xFFAD8CFF)
 val lightVColorAccent = Color(0xFFE8DEF8)
@@ -20,6 +22,7 @@ val verificationDarkColor= Color(0xFF212121)
 val colorGreen = Color(0xFF34C759)
 val surfaceBrandLight = Color(0xFFFBF9FF)
 val surfaceBrandLighter = Color(0xFFE8DEF8)
+val red = Color(0xFFFF3B30)
 
 val cardMultiColor = white
 val verificationColor = surface

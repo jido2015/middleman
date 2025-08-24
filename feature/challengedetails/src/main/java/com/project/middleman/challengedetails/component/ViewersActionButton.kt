@@ -14,12 +14,13 @@ import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
+import com.project.middleman.designsystem.themes.deepColorAccent
 import com.project.middleman.designsystem.themes.lightVColorAccent
 import com.project.middleman.designsystem.themes.white
 import javax.annotation.meta.When
 
 @Composable
-fun ActionButton(
+fun  ActionButton(
     onClick: () -> Unit,
     btnText: String,
     containerColor: Color,
@@ -43,7 +44,6 @@ fun ActionButton(
 @Composable
 fun ViewersActionButton(
     showAcceptSummary: () -> Unit,
-    challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     challenge: Challenge
 ) {
     when (challenge.status) {
@@ -53,7 +53,7 @@ fun ViewersActionButton(
                     showAcceptSummary()
                 },
                 btnText = "Join Wager",
-                containerColor = colorAccent,
+                containerColor = deepColorAccent,
                 enableButton = true
             )
         }

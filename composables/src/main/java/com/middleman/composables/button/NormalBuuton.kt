@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
+import com.project.middleman.designsystem.themes.deepColorAccent
 import com.project.middleman.designsystem.themes.lightColorAccent
 import com.project.middleman.designsystem.themes.white
 
@@ -21,7 +22,7 @@ fun CustomButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String,
-    containerColor : Color = colorAccent,
+    containerColor : Color = deepColorAccent,
     borderColor : Color = Color.Transparent,
     textColor : Color = white,
     enableButton: Boolean = true
