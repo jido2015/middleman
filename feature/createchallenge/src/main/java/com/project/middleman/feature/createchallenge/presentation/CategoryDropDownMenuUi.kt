@@ -1,7 +1,9 @@
 package com.project.middleman.feature.createchallenge.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +33,7 @@ fun CustomDropdownMenu(
     modifier: Modifier = Modifier,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
-    options: List<String>
+    options: List<String> = emptyList()
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -42,15 +44,18 @@ fun CustomDropdownMenu(
     ) {
         // Custom anchor view (fixed)
         TextField(
+            modifier = Modifier
+                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
+                .fillMaxWidth(),
             textStyle =  Typography.bodyMedium.copy(fontSize = 16.sp),
             value = selectedOption,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Add category", color = colorAccent) },
+            label = { Text("Add category", color = colorAccent, modifier = Modifier.padding(top = 10.dp)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(100.dp),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -58,10 +63,7 @@ fun CustomDropdownMenu(
                 errorIndicatorColor = Color.Transparent,
                 focusedContainerColor = borderGrey,
                 unfocusedContainerColor = borderGrey
-            ),
-            modifier = Modifier
-                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
-                .fillMaxWidth()
+            )
         )
 
 
@@ -88,9 +90,5 @@ fun CustomDropdownMenu(
 @Preview(showBackground = true)
 @Composable
 fun SimpleDropdownMenuPreview(
-    modifier: Modifier = Modifier,
-    selectedOption: String = "Option A",
-    onOptionSelected: (String) -> Unit = {},
-    options: List<String> = listOf("Option A", "Option B", "Option C")
 ) {
 }

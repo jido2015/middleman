@@ -33,6 +33,7 @@ fun VisibilityCheckbox(
         } else {
             "Invite-Only – Only people with a direct invite can view or join this bet."
         }
+        Row {  }
         Text(text = labelText, style = Typography.labelSmall.copy(fontSize = 14.sp))
     }
 

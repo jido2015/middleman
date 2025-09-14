@@ -1,8 +1,10 @@
 package com.middleman.composables.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.ImageOptions
@@ -26,7 +29,8 @@ fun ProfileImage(
         imageModel = { imageUrl },
         modifier = modifier
             .size(35.dp)
-            .clip(CircleShape)
+            .clip(RoundedCornerShape(8.dp)) // <-- Clip the image to a circle
+            .background(Color.White)          // Optional: background behind clipped image
             .clickable { onClick() },
         imageOptions = ImageOptions(contentScale = ContentScale.Crop),
         loading = {
@@ -47,4 +51,5 @@ fun ProfileImage(
             )
         }
     )
+
 }

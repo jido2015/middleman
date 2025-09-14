@@ -90,18 +90,21 @@ class ParticipantRepositoryImpl @Inject constructor(
         return try {
             val challengeRef = db.collection("challenges").document(challengeId)
 
-           // challengeRef.update("status", betStatus).await()
-
-
             db.runTransaction { transaction ->
-                // You don't really need snapshot unless you want to check something first
-                val updates = mapOf<String, Any>(
-                    "status" to betStatus // ← Set the new status you want
-                )
+                // Get current snapshot
+                val snapshot = transaction.get(challengeRef)
 
-                transaction.update(challengeRef, updates)
+                // Fetch current payoutAmount (default to 0 if null)
+                val currentPayout = snapshot.getDouble("payoutAmount") ?: 0.0
 
-                null // Firestore requires a return value
+                // Multiply by 2
+                val newPayout = currentPayout * 2
+
+                // Update fields
+                transaction.update(challengeRef, mapOf(
+                    "status" to betStatus,
+                    "payoutAmount" to newPayout
+                ))
             }.await()
 
             RequestState.Success(true)

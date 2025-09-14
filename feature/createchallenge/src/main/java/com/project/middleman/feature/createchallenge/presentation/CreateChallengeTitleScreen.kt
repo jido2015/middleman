@@ -42,7 +42,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun CreateChallengeTitle(
     onSaveChallenge: () -> Unit,
-    viewModel: CreateChallengeViewModel,
+    viewModel: CreateChallengeViewModel? = null,
 ) {
     val context = LocalContext.current
     var challengeTitle by remember { mutableStateOf("") }
@@ -62,7 +62,7 @@ fun CreateChallengeTitle(
     val toast = Toast.makeText(context, message, duration)
 
     // Character limit
-    val maxCharacters = 50
+    val maxCharacters = 100
     val currentCharCount = challengeTitle.length
 
     ConstraintLayout(
@@ -152,10 +152,10 @@ fun CreateChallengeTitle(
                     && selectedCategory.isNotBlank() &&
                     selectedCategory != "Select a category for this wager"
                 ) {
-                    viewModel.title = challengeTitle
-                    viewModel.category = selectedCategory
-                    viewModel.visibility = isInviteOnly.value
-                    viewModel.selectedTimeInMillis = selectedTimeInMillis
+                    viewModel?.title = challengeTitle
+                    viewModel?.category = selectedCategory
+                    viewModel?.visibility = isInviteOnly.value
+                    viewModel?.selectedTimeInMillis = selectedTimeInMillis
                     onSaveChallenge()
                 } else {
                     toast.show()
@@ -193,8 +193,7 @@ fun CreateChallengeScreenPreview() {
         CreateChallengeTitle(
             onSaveChallenge = { ->
                 // For preview, we just print to log (won't actually be called here)
-            },
-            viewModel = hiltViewModel()
+            }
         )
     }
 }

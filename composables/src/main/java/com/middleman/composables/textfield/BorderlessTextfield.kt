@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Grey
@@ -30,17 +31,22 @@ fun BorderlessTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onImeAction: () -> Unit = {},
     singleLine: Boolean = true,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+
+    mainText: TextStyle = Typography.bodySmall.copy(
+        fontSize = 20.sp,
+        color = Color.Black,
+        lineHeight = 24.sp),
+
+    placeHolderText: TextStyle = Typography.bodySmall.copy(
+        fontSize = 20.sp,
+        color = Color.Gray,
+        lineHeight = 24.sp
+    )
 ) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = Color.Green,
         backgroundColor = Grey
-    )
-
-    val inputTextStyle = Typography.bodySmall.copy(
-        fontSize = 20.sp,
-        color = Color.Black,
-        lineHeight = 24.sp
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
@@ -49,14 +55,14 @@ fun BorderlessTextField(
                 .testTag("borderlessTextField"),
             value = text,
             onValueChange = onValueChange,
-            textStyle = inputTextStyle,
+            textStyle = mainText,
             cursorBrush = SolidColor(colorAccent),
             decorationBox = { innerTextField ->
                 Box(modifier = Modifier.fillMaxWidth()) {
                     if (text.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = inputTextStyle.copy(color = Color.Gray)
+                            style = placeHolderText
                         )
                     }
                     innerTextField()

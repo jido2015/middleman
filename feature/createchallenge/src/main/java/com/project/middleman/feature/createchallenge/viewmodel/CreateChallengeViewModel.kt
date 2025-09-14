@@ -13,17 +13,12 @@ import com.project.middleman.core.source.domain.challenge.repository.CreateChall
 import com.project.middleman.core.source.domain.challenge.usecase.CreateChallengeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Participant
-import com.project.middleman.core.source.data.model.UserDTO
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -88,7 +83,7 @@ class CreateChallengeViewModel @Inject constructor(
             visibility = visibility,
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,
-            payoutAmount = stake * 2,
+            payoutAmount = stake,
             description = description
         )
 

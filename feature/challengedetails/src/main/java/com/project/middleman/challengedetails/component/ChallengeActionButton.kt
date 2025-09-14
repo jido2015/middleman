@@ -26,12 +26,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.middleman.composables.R
+import com.middleman.composables.quickations.MultiActionButton
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.Typography
+import com.project.middleman.designsystem.themes.borderGrey
+import com.project.middleman.designsystem.themes.colorGreen
 import com.project.middleman.designsystem.themes.deepColorAccent
+import com.project.middleman.designsystem.themes.lightGrey
 import com.project.middleman.designsystem.themes.surfaceBrandLighter
 import com.project.middleman.designsystem.themes.white
 
@@ -51,6 +55,7 @@ fun ChallengeActionButtons(
 
     ) {
         HorizontalDivider(
+            color = borderGrey,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
@@ -68,6 +73,12 @@ fun ChallengeActionButtons(
             overflow = TextOverflow.Ellipsis
         )
         Spacer(modifier = Modifier.height(20.dp))
+
+
+        AddParticipantView(
+            creatorId,
+            challengeDetailsViewModel.localUser?.uid,
+            challenge)
 
 
         if (challengeDetailsViewModel.localUser?.uid == creatorId ||
@@ -134,5 +145,11 @@ fun ChallengeActionButtons(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        MultiActionButton()
+
+
     }
 }

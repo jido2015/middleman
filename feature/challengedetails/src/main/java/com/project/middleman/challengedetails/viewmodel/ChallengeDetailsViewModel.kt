@@ -44,6 +44,11 @@ class ChallengeDetailsViewModel @Inject constructor(
 
     private val _showSheet = MutableStateFlow(false)
     val showSheet: StateFlow<Boolean> = _showSheet
+
+
+    private val _showAddParticipantButton = MutableStateFlow(false)
+    val showAddParticipantButton: StateFlow<Boolean> = _showAddParticipantButton
+
     var localUser by mutableStateOf<UserEntity?>(null)
 
     // Represents the state of the update challenge operation
@@ -97,13 +102,12 @@ class ChallengeDetailsViewModel @Inject constructor(
         }
 
 
-
         val updatedChallenge = challenge.copy( status = BetStatus.PENDING.name)
 
         val participant = Participant(
             status = "Participant",
             joinedAt = System.currentTimeMillis(),
-            amount = updatedChallenge.payoutAmount / 2,
+            amount = updatedChallenge.payoutAmount,
             userId = localUser?.uid ?: "",
             displayName = localUser?.displayName ?: "",
             photoUrl = localUser?.photoUrl ?: "",
@@ -182,5 +186,9 @@ class ChallengeDetailsViewModel @Inject constructor(
 
     fun closeSheet() {
         _showSheet.value = false
+    }
+
+    fun showAddParticipantButton( boolean: Boolean) {
+        _showAddParticipantButton.value = boolean
     }
 }

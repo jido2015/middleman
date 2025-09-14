@@ -198,6 +198,7 @@ fun AnimatedNotificationBar(
                         )
 
                         ProceedButton(
+                            imageVector = painterResource(id = R.drawable.arrow_right),
                             proceedClicked = onProceedClicked,
                             modifier = Modifier
                                 .size(32.dp)

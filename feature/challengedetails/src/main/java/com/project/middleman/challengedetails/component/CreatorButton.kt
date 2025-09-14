@@ -1,62 +1,80 @@
 package com.project.middleman.challengedetails.component
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.borderGrey
+import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.designsystem.themes.deepColorAccent
+import com.project.middleman.designsystem.themes.lightGrey
 import com.project.middleman.designsystem.themes.red
+import com.project.middleman.designsystem.themes.white
 
 @Composable
 fun CreatorActionButton(
+
     challenge: Challenge,
     challengeDetailsViewModel: ChallengeDetailsViewModel
 ) {
     when (challenge.status) {
-        BetStatus.PENDING.name,  BetStatus.OPEN.name -> {
-            ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = "Cancel Wager",
-                containerColor = Color.Red,
-                enableButton = false
-            )
-        }
 
         BetStatus.ACTIVE.name -> {
             ActionButton(
-                onClick = { challengeDetailsViewModel.concludeChallenge(challenge,
+                secondButtonVisibility = true,
+                onSecondButtonClick = { challengeDetailsViewModel.concludeChallenge(challenge,
                     BetStatus.CREATOR_WINS.name) },
-                btnText = "Claim Win \uD83C\uDF89 \uD83D\uDCB0",
-                containerColor = deepColorAccent,
-                enableButton = true
+                btn2Text = "Claim win \uD83C\uDF89 \uD83D\uDCB0",
+                button2Color = deepColorAccent,
+                enableBtn2 = true,
+                onFirstButtonClick = {},// Declare tie
+                btn1Text = "Declare tie",
+                button1Color = white,
+                enableBtn1 = true,
+                firstButtonVisibility = true,
+                btnText1Color = colorBlack,
+                border1Color = lightGrey
             )
         }
 
         BetStatus.CREATOR_WINS.name -> {
+            Log.d("BetStatus", "CREATOR_WINS")
+
             ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = "Revert Claim",
-                containerColor = red,
-                enableButton = true
+                onSecondButtonClick = {
+                    challengeDetailsViewModel.concludeChallenge(challenge,
+                        BetStatus.ACTIVE.name)
+                },
+                btn2Text = "Revert Claim",
+                button2Color = red,
+                enableBtn2 = true
             )
         }
         BetStatus.PARTICIPANT_WINS.name -> {
-            ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = " Conclude Challenge \uD83D\uDE1E",
-                containerColor = red,
-                enableButton = true
+            Log.d("BetStatus", "PARTICIPANT_WINS")
+
+            // Reject or accept challenge
+            ActionButton( isButtonVisible = false )
+
+            RejectOrAcceptButton(
+                onRejectButtonClick = {
+                    // Dispute
+                },
+                onAcceptButtonClick = { challengeDetailsViewModel.concludeChallenge(
+                    challenge,
+                    BetStatus.COMPLETED.name
+                ) }
             )
         }
         BetStatus.COMPLETED.name -> {
             ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = "Challenge Closed",
-                containerColor = borderGrey,
-                enableButton = false
+                onSecondButtonClick = { /* Add logic to conclude wager */ },
+                btn2Text = "Challenge Closed",
+                button2Color = borderGrey,
+                enableBtn2 = false
             )
         }
 

@@ -19,12 +19,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.middleman.composables.button.ProceedButton
 import com.middleman.composables.progressbar.ProgressBarUI
+import com.middleman.feature.dashboard.R
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
@@ -92,8 +94,8 @@ fun VerificationProgress(
             ){
                 Text("Verify and withdraw earnings",
                     style = Typography.bodySmall.copy(fontSize = 12.sp))
-
                 ProceedButton(
+                    imageVector = painterResource(id = com.middleman.composables.R.drawable.arrow_right),
                     proceedClicked = onProceedClicked,
                     modifier = Modifier
                         .padding()

@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseUser
 import com.middleman.composables.card.ChallengeCard
-import com.middleman.composables.quickations.QuickActions
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.borderGrey
 
@@ -43,7 +42,7 @@ fun ChallengeCardItem(
         border = BorderStroke(0.5.dp, borderGrey),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
 
             ChallengeCard(
                 challenge = challenge,
@@ -52,13 +51,6 @@ fun ChallengeCardItem(
                 }
             )
 
-            if (userUid?.uid == challenge.participant.entries.find{
-                    it.value.status == "Creator"}?.value?.userId ) {
-
-                QuickActions(modifier = Modifier.padding(top = 12.dp))
-            }else {
-                QuickActions(modifier = Modifier.padding(top = 12.dp))
-            }
         }
     }
 

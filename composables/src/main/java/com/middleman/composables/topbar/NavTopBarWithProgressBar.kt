@@ -52,9 +52,10 @@ fun NavigationTopBarWithProgressBar(
         ) {
 
             IconButton(
-                onClick = {if (progress == 0.2f) {
-                    exitProcess(0)
-                } else handleBackPressed()},
+                onClick ={handleBackPressed()},
+//                    {if (progress == 0.2f) {
+//                    exitProcess(0)
+//                } else handleBackPressed()}
                 modifier = Modifier
                     .background(color = surface, shape = RoundedCornerShape(15.dp))
                     .size(36.dp) // Size of the entire circle

@@ -7,8 +7,11 @@ import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewMode
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
+import com.project.middleman.designsystem.themes.colorBlack
 import com.project.middleman.designsystem.themes.deepColorAccent
+import com.project.middleman.designsystem.themes.lightGrey
 import com.project.middleman.designsystem.themes.red
+import com.project.middleman.designsystem.themes.white
 
 
 @Composable
@@ -22,54 +25,74 @@ fun ParticipantActionButton(
     when (challenge.status) {
         BetStatus.PENDING.name -> {
             ActionButton(
-                onClick = {
+                onSecondButtonClick = {
                     challengeDetailsViewModel
                         .removeParticipant(challenge.id,
                             participant?.userId ?: ""
                         )
                 },
-                btnText = "Cancel Request",
-                containerColor = Color.Red,
-                enableButton = true
+                btn2Text = "Cancel Request",
+                button2Color = Color.Red,
+                enableBtn2 = true
 
             )
         }
 
         BetStatus.ACTIVE.name -> {
             ActionButton(
-                // Status move to COMPLETED
-                onClick = { challengeDetailsViewModel.concludeChallenge(challenge,
-                    BetStatus.PARTICIPANT_WINS.name
-                    ) },
-                btnText = "Claim Win \uD83C\uDF89 \uD83D\uDCB0",
-                containerColor = deepColorAccent,
-                enableButton = true
+                secondButtonVisibility = true,
+                onSecondButtonClick = { challengeDetailsViewModel.concludeChallenge(challenge,
+                    BetStatus.PARTICIPANT_WINS.name) },
+                btn2Text = "Claim win \uD83C\uDF89 \uD83D\uDCB0",
+                button2Color = deepColorAccent,
+                enableBtn2 = true,
+                onFirstButtonClick = {},// Declare tie
+                btn1Text = "Declare tie",
+                button1Color = white,
+                enableBtn1 = true,
+                firstButtonVisibility = true,
+                btnText1Color = colorBlack,
+                border1Color = lightGrey
             )
         }
 
         BetStatus.CREATOR_WINS.name -> {
-            ActionButton(
-                onClick = { /* Close challenge */ },
-                btnText = "Conclude Challenge \uD83D\uDE1E",
-                containerColor = deepColorAccent,
-                enableButton = true
+            Log.d("BetStatus", "CREATOR_WINS")
+
+            // Reject or accept challenge
+            ActionButton( isButtonVisible = false )
+
+            RejectOrAcceptButton(
+                onRejectButtonClick = {
+                    // Dispute
+                },
+                onAcceptButtonClick = { challengeDetailsViewModel.concludeChallenge(
+                    challenge,
+                    BetStatus.COMPLETED.name
+                ) }
             )
         }
         BetStatus.PARTICIPANT_WINS.name -> {
+            Log.d("BetStatus", "PARTICIPANT_WINS")
+
             ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = "Revert Claim",
-                containerColor = red,
-                enableButton = true
+                onSecondButtonClick = {
+                    // REVERT CLAIM
+                    challengeDetailsViewModel.concludeChallenge(challenge,
+                        BetStatus.ACTIVE.name)
+                },
+                btn2Text = "Revert Claim",
+                button2Color = red,
+                enableBtn2 = true
             )
         }
 
         BetStatus.COMPLETED.name -> {
             ActionButton(
-                onClick = { /* Add logic to conclude wager */ },
-                btnText = "Challenge Closed",
-                containerColor = deepColorAccent,
-                enableButton = false
+                onSecondButtonClick = { /* Add logic to conclude wager */ },
+                btn2Text = "Challenge Closed",
+                button2Color = deepColorAccent,
+                enableBtn2 = false
             )
         }
     }

@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,16 +19,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.MainNavigationTopBar
-import com.project.middleman.challengedetails.component.AddParticipantView
 import com.project.middleman.challengedetails.component.ChallengeActionButtons
 import com.project.middleman.challengedetails.component.InvitationComposeCard
 import com.project.middleman.challengedetails.component.SummaryRequestInfo
@@ -147,18 +144,13 @@ fun ChallengeDetailsScreen(
 
     val participant = challenge.participant.entries.find { it.value.status == "Participant" }?.value
 
-
-    LaunchedEffect(challenge) {
-        Log.d("ChallengeRecomposition", "Challenge updated: ${challenge.participant}")
-    }
-
     val currentUser = challengeDetailsViewModel.getCurrentUser()
 
     actionMessage = when (currentUser?.uid) {
         participant?.userId -> {
             participantActionMessage(challenge)
         }
-        currentUser?.uid -> {
+        creator?.userId -> {
             creatorActionMessage()
         }
         else -> {
@@ -179,76 +171,79 @@ fun ChallengeDetailsScreen(
     }
 
 
-
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Top bar (still outside scrollable area)
-        MainNavigationTopBar(
-            details = "Wager Overview",
-            handleBackPressed = { onBackClicked() },
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .zIndex(1f) // Keep it above the scroll content
-                .background(white) // Optional: match your theme background
-        )
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+            val (mainNav, lazyColumn, actions) = createRefs()
 
-        // Scrollable content
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = 70.dp, bottom = 100.dp) // Adjust top padding to leave space for the fixed top bar
-                .fillMaxSize()
-                .background(white)
-                .padding(horizontal = 12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        )  {
-            // Challenge card section
-            item {
-                ChallengeDetailUi(
+            // Top bar (still outside scrollable area)
+            MainNavigationTopBar(
+                details = "Wager Overview",
+                handleBackPressed = { onBackClicked() },
+                modifier = Modifier.constrainAs(mainNav){
+                    top.linkTo(parent.top)
+                }
+                    .zIndex(1f) // Keep it above the scroll content
+                    .background(white) // Optional: match your theme background
+            )
+
+            // Scrollable content
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().constrainAs(lazyColumn){
+                    top.linkTo(mainNav.bottom, margin = 20.dp)
+                }
+                    .background(white)
+                    .padding(horizontal = 12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            )  {
+                // Challenge card section
+                item {
+                    ChallengeDetailUi(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        challenge = challenge,
+                    )
+
+                    Spacer(modifier = Modifier.height(100.dp)) // Space before "Invitations"
+                }
+
+                // Invitations list
+                items(participants.filter { it.status == "Participant" }) { singleParticipant ->
+                    InvitationComposeCard(
+                        challengeDetailsViewModel,
+                        singleParticipant,
+                        challenge,
+                        creator = creator,
+                        currentUser = currentUser
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
+
+            // Bottom action buttons pinned
+
+            Box(
+                modifier = Modifier.fillMaxWidth().constrainAs(actions){
+                    bottom.linkTo(parent.bottom)
+                }
+            ){
+                ChallengeActionButtons(
+                    showAcceptSummary = {
+                        challengeDetailsViewModel.openSheet()
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp),
+                        .padding(bottom = 16.dp),
+                    winMessage = winMessage,
+                    actionMessage = actionMessage,
+                    challengeDetailsViewModel = challengeDetailsViewModel,
+                    creatorId = creator?.userId,
                     challenge = challenge,
+                    participant = participant,
                 )
-
-                Spacer(modifier = Modifier.height(100.dp)) // Space before "Invitations"
-            }
-
-            // Section add participant
-            item {
-                AddParticipantView(
-                    creator?.userId,
-                    currentUser?.uid,
-                            challenge)
-            }
-
-            // Invitations list
-            items(participants.filter { it.status == "Participant" }) { singleParticipant ->
-                InvitationComposeCard(
-                    challengeDetailsViewModel,
-                    singleParticipant,
-                    challenge,
-                    creator = creator,
-                    currentUser = currentUser
-                )
-                Spacer(modifier = Modifier.height(12.dp))
             }
         }
-
-        // Bottom action buttons pinned
-        ChallengeActionButtons(
-            showAcceptSummary = {
-                challengeDetailsViewModel.openSheet()
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp),
-            winMessage = winMessage,
-            actionMessage = actionMessage,
-            challengeDetailsViewModel = challengeDetailsViewModel,
-            creatorId = creator?.userId,
-            challenge = challenge,
-            participant = participant,
-        )
     }
 
     SummaryRequestInfo(
