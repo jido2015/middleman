@@ -30,13 +30,14 @@ import com.project.middleman.designsystem.themes.borderGrey
 
 @Composable
 fun ChallengeCardItem(
-    userUid: FirebaseUser?,
     challenge: Challenge = Challenge(),
     onChallengeClick: (Challenge) -> Unit
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = Modifier.clickable{
+            onChallengeClick(challenge)
+        }
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(0.5.dp, borderGrey),
@@ -46,9 +47,6 @@ fun ChallengeCardItem(
 
             ChallengeCard(
                 challenge = challenge,
-                onChallengeClick = { selectedChallenge ->
-                    onChallengeClick(selectedChallenge)
-                }
             )
 
         }

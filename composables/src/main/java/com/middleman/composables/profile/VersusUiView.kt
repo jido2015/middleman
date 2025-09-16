@@ -21,8 +21,7 @@ fun VSProfileUiView(
     creatorName: String? = "",
     participantName: String? = "",
     creatorPhoto: String? = "",
-    participantPhoto: String? = "",
-    onChallengeClick: () -> Unit
+    participantPhoto: String? = ""
 ) {
 
     Row(
@@ -30,7 +29,6 @@ fun VSProfileUiView(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onChallengeClick() }
     ) {
 
 
@@ -56,7 +54,6 @@ fun VSProfileUiViewPreview() {
         VSProfileUiView(
             creatorPhoto = "",
             participantPhoto = "",
-            onChallengeClick = {}
         )
     }
 }

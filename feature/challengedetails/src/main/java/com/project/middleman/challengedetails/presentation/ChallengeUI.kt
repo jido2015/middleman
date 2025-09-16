@@ -37,7 +37,6 @@ fun ChallengeDetailUi(
 
             ChallengeCard(
                 challenge = challenge,
-                onChallengeClick = { selectedChallenge -> }
             )
         }
     }

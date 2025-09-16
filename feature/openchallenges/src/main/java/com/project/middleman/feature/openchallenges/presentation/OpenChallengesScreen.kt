@@ -29,7 +29,6 @@ import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewM
 fun ChallengeListScreen(
     onCardChallengeClick: (Challenge) -> Unit,
     openChallengeViewModel: OpenChallengeViewModel = hiltViewModel(),
-    auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
     var challenges by remember { mutableStateOf(emptyList<Challenge>()) }
 
@@ -76,7 +75,6 @@ fun ChallengeListScreen(
         ) {
             items(challenges) { challenge ->
                 ChallengeCardItem(
-                    userUid = FirebaseAuth.getInstance().currentUser,
                     challenge = challenge,
                     onChallengeClick = {
 
@@ -85,7 +83,7 @@ fun ChallengeListScreen(
                         //Show dialog to accept challenge
                        // showDialog = true
                     })
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(50.dp))
             }
         }
     }

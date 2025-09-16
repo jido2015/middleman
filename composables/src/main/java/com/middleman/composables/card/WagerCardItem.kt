@@ -65,7 +65,6 @@ import com.project.middleman.designsystem.themes.white
 @Composable
 fun ChallengeCard(
     challenge: Challenge = Challenge(),
-    onChallengeClick: (Challenge) -> Unit
 ) {
 
     var isRotated by remember { mutableStateOf(false) }
@@ -104,7 +103,7 @@ fun ChallengeCard(
                         color = colorAccent,               // background color
                         shape = RoundedCornerShape(30.dp)   // optional rounded corners
                     )
-                    .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),                       // 👈 space between text & background
+                    .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),  // 👈 space between text & background
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -229,7 +228,6 @@ fun ChallengeCard(
                 .takeIf { challenge.status.isNotEmpty() && challenge.status != BetStatus.PENDING.name }
             ,
             creatorPhoto = creator?.photoUrl,
-            onChallengeClick = { onChallengeClick(challenge) }
         )
     }
 }
@@ -240,7 +238,6 @@ fun PreviewChallengeCard() {
 
     ChallengeCard(
         challenge = Challenge(),
-        onChallengeClick = {}
     )
 }
 
