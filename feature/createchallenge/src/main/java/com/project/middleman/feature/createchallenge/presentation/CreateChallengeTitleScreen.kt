@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -58,7 +59,7 @@ fun CreateChallengeTitle(
         "Gaming", "Politics",
         "Stocks", "Entertainment", "Crypto", "Others")
 
-    var message = "Please fill all fields correctly."
+    val message = "Please fill all fields correctly."
     val toast = Toast.makeText(context, message, duration)
 
     // Character limit

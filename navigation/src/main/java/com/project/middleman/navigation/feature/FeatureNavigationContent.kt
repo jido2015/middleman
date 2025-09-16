@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -26,6 +29,7 @@ import com.project.middleman.navigation.auth.authenticationNavigation
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.featureNavigation(
+    backStackEntry: NavBackStackEntry?,
     authViewModel: AuthViewModel,
     navController: NavHostController,
     onScrollDown: () -> Unit,
@@ -85,20 +89,24 @@ fun NavGraphBuilder.featureNavigation(
     composable(route = NavigationRoute.ChallengeSummaryScreen.route) {
         appStateViewModel.setNavigationCurrentProgress(4f)
         appStateViewModel.setNavigationTitle("Review Your Wager")
+        val showDialog = rememberSaveable(backStackEntry?.id) { mutableStateOf(false) }
+        val isChecked = rememberSaveable(backStackEntry?.id) { mutableStateOf(false) }
 
             ChallengeSummaryScreen(
+                showDialogState =showDialog,
+                isCheckedState = isChecked,
                 viewModel = createChallengeViewModel,
                 createWagerButton = {
                     navController.navigate(NavigationRoute.ChallengeTabScreen.route) {
-                        popUpTo(0) // Clear all back stack
-                        launchSingleTop = true // Avoid re-creating if already on that screen
+                        popUpTo(navController.graph.id) { inclusive = true } // remove all screens in this graph
+                        launchSingleTop = true
                     }
-
                 }
             )
     }
 
     composable(route = NavigationRoute.DashboardScreen.route) {
+
         appStateViewModel.setBottomBarVisibility(true)
         appStateViewModel.setNavigationTopBarVisibility(false)
 

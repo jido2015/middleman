@@ -17,6 +17,10 @@ import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Participant
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,6 +33,8 @@ class CreateChallengeViewModel @Inject constructor(
     local: UserLocalDataSource,
 ) : ViewModel() {
 
+    private val _showSheet = MutableStateFlow(false)
+    val showSheet: StateFlow<Boolean> = _showSheet
     var localUser by mutableStateOf<UserEntity?>(null)
     var title by mutableStateOf("")
     var category by mutableStateOf("")
@@ -37,9 +43,9 @@ class CreateChallengeViewModel @Inject constructor(
     var visibility by mutableStateOf(false)
     var description by mutableStateOf("")
 
-    var createChallengeResponse by mutableStateOf<CreateChallengeResponse>(RequestState.Success(null))
-        private set
 
+    private val _createChallengeResponse = MutableSharedFlow<String>()
+    val createChallengeResponse: SharedFlow<String> = _createChallengeResponse
 
     init {
         viewModelScope.launch {
@@ -57,7 +63,6 @@ class CreateChallengeViewModel @Inject constructor(
     fun createChallenge() {
         if (localUser == null) {
             Log.w("CreateChallengeViewModel", "No user found in DB, cannot create challenge")
-            createChallengeResponse = RequestState.Error(IllegalStateException("User not found"))
             return
         }
 
@@ -88,12 +93,24 @@ class CreateChallengeViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            createChallengeResponse = RequestState.Loading
-            createChallengeResponse = try {
-                repo.invoke(challenge)
+            try {
+              repo.invoke(challenge)
+                _createChallengeResponse.emit("created")
             } catch (e: Exception) {
-                RequestState.Error(e)
+                Log.e("CreateChallengeViewModel", "Error creating challenge", e)
+                _createChallengeResponse.emit("Error creating challenge")
             }
         }
     }
+
+
+    fun openSheet() {
+        _showSheet.value = true
+    }
+
+    fun closeSheet() {
+        _showSheet.value = false
+        Log.d("CreateChallengeViewModel", "Sheet closed")
+    }
+
 }

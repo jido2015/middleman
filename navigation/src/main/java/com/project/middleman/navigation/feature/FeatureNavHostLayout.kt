@@ -129,10 +129,9 @@ fun FeatureContentLayout(
                         modifier = Modifier.fillMaxSize()
                     ){
                         featureNavigation(
+                            backStackEntry = navBackStackEntry,
                             authViewModel = authViewModel,
                             navController = navController,
-                            appStateViewModel = appStateViewModel,
-                            createChallengeViewModel = createViewModel, // Pass the ViewModel from parent
                             onScrollDown = {
                                 if (isNotificationVisible) {
                                     isNotificationVisible = false
@@ -141,7 +140,9 @@ fun FeatureContentLayout(
                             },
                             onScrollUp = {
 
-                            },
+                            }, // Pass the ViewModel from parent
+                            appStateViewModel = appStateViewModel,
+                            createChallengeViewModel = createViewModel,
                             createProfileViewModel = createProfileViewModel
                         )
                     }

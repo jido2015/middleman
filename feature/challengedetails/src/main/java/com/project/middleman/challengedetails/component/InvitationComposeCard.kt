@@ -61,9 +61,9 @@ fun InvitationComposeCard(
     columnVisibility = challenge?.status == BetStatus.PENDING.name
             || challenge?.status == BetStatus.ACTIVE.name
 
-
     if (columnVisibility) {
 
+        Log.d("InvitationComposeCard", "columnVisibility: $columnVisibility")
         Column(
             modifier = Modifier
                 .background(white)
@@ -87,7 +87,7 @@ fun InvitationComposeCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.constrainAs(row1) {
-                        top.linkTo(name.bottom, margin = 4.dp)
+                        top.linkTo(name.bottom)
                         start.linkTo(photo.end, margin = 8.dp)
                     }
                 ) {
@@ -109,7 +109,7 @@ fun InvitationComposeCard(
                             end.linkTo(option.start, margin = 8.dp)
                             width = Dimension.fillToConstraints // 👈 This is key
                         }
-                        .padding(end = 4.dp, top = 5.dp),
+                        .padding(end = 4.dp),
 
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -176,7 +176,7 @@ fun InvitationComposeCard(
                             )
                         }
 
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
 
                         // Accept Request button
                         Box(

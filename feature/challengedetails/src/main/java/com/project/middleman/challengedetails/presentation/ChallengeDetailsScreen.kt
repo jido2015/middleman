@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,9 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.middleman.composables.progressbar.CircularProgressBar
 import com.middleman.composables.topbar.MainNavigationTopBar
+import com.project.middleman.challengedetails.component.AnimatedParticipantCard
 import com.project.middleman.challengedetails.component.ChallengeActionButtons
-import com.project.middleman.challengedetails.component.InvitationComposeCard
 import com.project.middleman.challengedetails.component.SummaryRequestInfo
 import com.project.middleman.challengedetails.component.participantActionMessage
 import com.project.middleman.challengedetails.component.creatorActionMessage
@@ -122,6 +124,7 @@ fun ChallengeDetailsScreen(
     challengeDetailsViewModel.setLoading(true)
     challengeDetailsViewModel.fetchParticipants(challenge.id)
 
+
     fun getParticipants(result: List<Participant>) {
         challengeDetailsViewModel.setLoading(false)
         participants = result
@@ -206,26 +209,36 @@ fun ChallengeDetailsScreen(
                         challenge = challenge,
                     )
 
-                    Spacer(modifier = Modifier.height(100.dp)) // Space before "Invitations"
+                    Spacer(modifier = Modifier.height(40.dp)) // Space before "Invitations"
                 }
 
                 // Invitations list
                 items(participants.filter { it.status == "Participant" }) { singleParticipant ->
-                    InvitationComposeCard(
+
+                    AnimatedParticipantCard(
                         challengeDetailsViewModel,
                         singleParticipant,
                         challenge,
                         creator = creator,
                         currentUser = currentUser
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(40.dp)) // Space before "Invitations"
+                }
+                item {
+                    CircularProgressBar(
+                        currentStake = challenge.payoutAmount,
+                        totalStake = if(challenge.status == BetStatus.OPEN.name ||
+                            challenge.status == BetStatus.PENDING.name) challenge.payoutAmount *2
+                        else challenge.payoutAmount,
+                    )
+                    Spacer(modifier = Modifier.height(500.dp)) // Space before "Invitations"
                 }
             }
 
             // Bottom action buttons pinned
 
             Box(
-                modifier = Modifier.fillMaxWidth().constrainAs(actions){
+                modifier = Modifier.fillMaxWidth().background(white).constrainAs(actions){
                     bottom.linkTo(parent.bottom)
                 }
             ){
@@ -252,6 +265,7 @@ fun ChallengeDetailsScreen(
         sheetState = sheetState,
         challenge = challenge)
 }
+
 
 @Composable
 @Preview(showBackground = true)

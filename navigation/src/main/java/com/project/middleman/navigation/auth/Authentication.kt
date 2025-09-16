@@ -37,7 +37,13 @@ fun NavGraphBuilder.authenticationNavigation(
                 navController.navigate(AuthNavigationRoute.DateOfBirthScreen.route)
             },
             proceedToDashBoard = {
-                navController.navigate(NavigationRoute.DashboardScreen.route)
+                navController.navigate(NavigationRoute.DashboardScreen.route){
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true // remove even the start destination
+                    }
+                    launchSingleTop = true
+                }
+
             }
         )
     }

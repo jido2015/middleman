@@ -12,19 +12,9 @@ fun OnCreateChallengeEvent(
     viewModel: CreateChallengeViewModel,
     launch: (result: String) -> Unit,
 ){
-    when(val onCreateChallengeResponse = viewModel.createChallengeResponse) {
-        is RequestState.Loading -> {}
-        is RequestState.Success -> onCreateChallengeResponse.data?.let {
-            Log.d("onCreateChallengeResponse", "Created")
-            LaunchedEffect(it) {
-                launch("Challenge Created")
-            }
-        }
-        is RequestState.Error -> LaunchedEffect(Unit) {
-
-            Log.d("onCreateChallengeResponse", "${onCreateChallengeResponse.error}")
-            // Exception(onCreateChallengeResponse.error.message)
-           // viewModel.setLoading(false)
+    LaunchedEffect(Unit) {
+        viewModel.createChallengeResponse.collect { result ->
+            launch(result) // triggered once per emission (success or error)
         }
     }
 }

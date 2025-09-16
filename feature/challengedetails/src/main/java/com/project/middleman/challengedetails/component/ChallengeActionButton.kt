@@ -51,7 +51,7 @@ fun ChallengeActionButtons(
     participant: Participant?,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.background(white)
 
     ) {
         HorizontalDivider(

@@ -16,6 +16,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,15 +48,17 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 
 @Composable
 fun ChallengeSummaryScreen(
+    showDialogState: MutableState<Boolean>,
+    isCheckedState: MutableState<Boolean>,
     viewModel: CreateChallengeViewModel,
     createWagerButton: () -> Unit = {}
 ){
     val scrollState = rememberScrollState()
-    var showDialog by remember { mutableStateOf(false) }
-    var isChecked by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    var isChecked by isCheckedState
 
+    val context = LocalContext.current
     val fee = calculateFee(viewModel.stake* 2)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -204,10 +210,9 @@ fun ChallengeSummaryScreen(
 
     // Your dialog
     PopDialog(
-        openBottomSheet = showDialog,
-        onDismissRequest = { showDialog = false },
+        viewModel = viewModel,
+        onDismissRequest = {  },
         onClickViewWager = {
-            showDialog = false
             createWagerButton()
             // Navigate to view wager screen or perform action
         },
@@ -217,22 +222,26 @@ fun ChallengeSummaryScreen(
         }
     )
 
-
-
     //    //Navigate to list of challenges
     fun launch(result: String) {
-        //
-        showDialog = true
-        Log.d("CreateChallengeScreen", "Challenge Created")
+        viewModel.openSheet()
+
+        if (result == "created"){
+            viewModel.openSheet()
+        }
     }
-//
-    OnCreateChallengeEvent(viewModel, launch = { launch(it) })
+
+    OnCreateChallengeEvent(viewModel, launch = {
+        launch(it) }
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ChallengeSummaryScreenPreview(){
     ChallengeSummaryScreen(
+        showDialogState = remember { mutableStateOf(false) },
+        isCheckedState = remember { mutableStateOf(false) },
         viewModel = hiltViewModel()
     )
 }
