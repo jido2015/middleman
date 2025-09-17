@@ -140,6 +140,30 @@ fun CreateChallengeTitle(
             end.linkTo(parent.end)
         })
 
+        if(selectedCategory == "Gaming"){
+            BorderlessTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .constrainAs(textFieldTitle) {
+                        top.linkTo(subtitle.bottom, margin = 28.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    },
+                text = challengeTitle,
+                onValueChange = { newText ->
+                    // Only allow input if it's within the character limit
+                    if (newText.length <= maxCharacters) {
+                        challengeTitle = newText
+                    }
+                },
+                placeholder = "First player to score a goal?",
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
+            )
+        }
+
 
         CustomButton(
             modifier = Modifier.fillMaxWidth()

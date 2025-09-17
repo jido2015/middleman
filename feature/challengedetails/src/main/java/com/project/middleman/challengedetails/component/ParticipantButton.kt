@@ -21,6 +21,8 @@ fun ParticipantActionButton(
     participant: Participant?
 ) {
 
+    val creatorId = challenge.participant.entries.find { it.value.status == "Creator" }?.value?.userId
+
     Log.d("ParticipantActionButton", "Status: ${challenge.status}")
     when (challenge.status) {
         BetStatus.PENDING.name -> {
@@ -66,9 +68,10 @@ fun ParticipantActionButton(
                 onRejectButtonClick = {
                     // Dispute
                 },
-                onAcceptButtonClick = { challengeDetailsViewModel.concludeChallenge(
+                onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
+                    winnerId = creatorId,
                     challenge,
-                    BetStatus.COMPLETED.name
+                    BetStatus.CLOSED.name
                 ) }
             )
         }
@@ -87,7 +90,7 @@ fun ParticipantActionButton(
             )
         }
 
-        BetStatus.COMPLETED.name -> {
+        BetStatus.CLOSED.name -> {
             ActionButton(
                 onSecondButtonClick = { /* Add logic to conclude wager */ },
                 btn2Text = "Challenge Closed",

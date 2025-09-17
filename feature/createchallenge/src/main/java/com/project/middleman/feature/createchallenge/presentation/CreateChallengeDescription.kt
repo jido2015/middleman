@@ -43,6 +43,7 @@ fun CreateChallengeDescription(
 ) {
     val context = LocalContext.current
     var challengeDescription by remember { mutableStateOf("") }
+    var usefulMessage by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -61,7 +62,7 @@ fun CreateChallengeDescription(
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button) = createRefs()
+        val (constraintTitle, subtitle, textFieldTitle, charCount, button, usefulInfo,tittleUseful) = createRefs()
 
         Text(
             "Wager Description",
@@ -101,17 +102,49 @@ fun CreateChallengeDescription(
             placeholder = "Describe and state your terms",
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
             singleLine = false,
-            maxLines = 3
+            maxLines = 5
         )
 
         Text(
             "$currentCharCount/$maxCharacters characters",
             style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
             modifier = Modifier.constrainAs(charCount) {
-                top.linkTo(textFieldTitle.bottom, margin = 8.dp)
+                top.linkTo(textFieldTitle.bottom, 10.dp)
                 start.linkTo(parent.start)
             }
         )
+
+
+        Text(
+            "Access Details",
+            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+            modifier = Modifier.constrainAs(tittleUseful) {
+                top.linkTo(charCount.bottom, margin = 40.dp)
+                start.linkTo(parent.start)
+            }
+        )
+        BorderlessTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(usefulInfo) {
+                    top.linkTo(tittleUseful.bottom,  margin = 10.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                },
+            text = usefulMessage,
+            onValueChange = { newText ->
+                // Only allow input if it's within the character limit
+                if (newText.length <= maxCharacters) {
+                    usefulMessage = newText
+                }
+            },
+            placeholder = "Shared privately with your participant.(e.g., code or link)",
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
+            singleLine = false,
+            maxLines = 3
+        )
+
 
 
         CustomButton(
@@ -125,6 +158,7 @@ fun CreateChallengeDescription(
                 if (challengeDescription.isNotBlank()
                 ) {
                     viewModel.description = challengeDescription
+                    viewModel.usefulMessage = usefulMessage
                     onSaveChallenge()
                 } else {
                     toast.show()

@@ -1,6 +1,5 @@
 package com.project.middleman.challengedetails.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,11 +58,9 @@ fun InvitationComposeCard(
     var columnVisibility by remember { mutableStateOf(false) }
 
     columnVisibility = challenge?.status == BetStatus.PENDING.name
-            || challenge?.status == BetStatus.ACTIVE.name
 
     if (columnVisibility) {
 
-        Log.d("InvitationComposeCard", "columnVisibility: $columnVisibility")
         Column(
             modifier = Modifier
                 .background(white)

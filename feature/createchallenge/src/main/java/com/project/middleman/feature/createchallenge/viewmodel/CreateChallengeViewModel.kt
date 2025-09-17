@@ -42,6 +42,7 @@ class CreateChallengeViewModel @Inject constructor(
     var stake by mutableDoubleStateOf(0.0)
     var visibility by mutableStateOf(false)
     var description by mutableStateOf("")
+    var usefulMessage by mutableStateOf("")
 
 
     private val _createChallengeResponse = MutableSharedFlow<String>()
@@ -89,7 +90,8 @@ class CreateChallengeViewModel @Inject constructor(
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,
             payoutAmount = stake,
-            description = description
+            description = description,
+            usefulMessage = usefulMessage,
         )
 
         viewModelScope.launch {

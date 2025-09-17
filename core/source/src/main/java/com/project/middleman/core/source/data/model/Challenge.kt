@@ -5,6 +5,7 @@ data class Challenge(
     val payoutAmount: Double = 0.0,
     val title: String = "",
     val category: String = "",
+    val usefulMessage: String = "",
     val participant: Map<String, Participant> = emptyMap(),
     val visibility: Boolean = true, // or "private or public"
 

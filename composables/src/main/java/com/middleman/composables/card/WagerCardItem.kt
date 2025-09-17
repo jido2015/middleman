@@ -45,11 +45,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.middleman.composables.R
 import com.middleman.composables.button.ProceedButton
+import com.middleman.composables.common.getChallengeColor
 import com.middleman.composables.dot.Dot
 import com.middleman.composables.dot.Options
 import com.middleman.composables.profile.VSProfileUiView
 import com.middleman.composables.profile.ProfileImage
 import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.getChallengeStatusName
 import com.project.middleman.core.common.toTimeAgo
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.Typography
@@ -91,7 +93,7 @@ fun ChallengeCard(
         ConstraintLayout(
             modifier = Modifier.fillMaxWidth()
         ) {
-            val ( amount, category, option) = createRefs()
+            val ( amount, option, status) = createRefs()
 
             Box(
                 modifier = Modifier.padding(top = 4.dp)
@@ -101,7 +103,7 @@ fun ChallengeCard(
                     }
                     .background(
                         color = colorAccent,               // background color
-                        shape = RoundedCornerShape(30.dp)   // optional rounded corners
+                        shape = RoundedCornerShape(6.dp)   // optional rounded corners
                     )
                     .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),  // 👈 space between text & background
                 contentAlignment = Alignment.Center,
@@ -114,9 +116,30 @@ fun ChallengeCard(
                 )
             }
 
+            Box(
+                modifier = Modifier.padding(top = 4.dp)
+                    .constrainAs(status) {
+                        top.linkTo(parent.top)
+                        start.linkTo(amount.end, margin = 5.dp)
+                    }
+                    .background(
+                        color = getChallengeColor(challenge.status),               // background color
+                        shape = RoundedCornerShape(6.dp)   // optional rounded corners
+                    )
+                    .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),  // 👈 space between text & background
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = getChallengeStatusName(challenge.status),
+                    style = Typography.labelSmall.copy(fontSize = 12.sp),
+                    fontWeight = FontWeight.Bold,
+                    color = white
+                )
+            }
+
             Row(
                 modifier = Modifier.constrainAs(option) {
-                    top.linkTo(category.bottom, margin = 4.dp)
+                    top.linkTo(parent.top, margin = 4.dp)
                     end.linkTo(parent.end)
                 },
                 verticalAlignment = Alignment.CenterVertically,
@@ -210,7 +233,7 @@ fun ChallengeCard(
                         text = challenge.description,
                         style = Typography.bodyMedium.copy(fontSize = 16.sp),
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 3
+                        maxLines = 5
                     )
                 }
             }

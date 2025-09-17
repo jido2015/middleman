@@ -1,1 +1,3 @@
-/build
+/build/
+/src/release/**/*.json
+/src/debug/**/*.json

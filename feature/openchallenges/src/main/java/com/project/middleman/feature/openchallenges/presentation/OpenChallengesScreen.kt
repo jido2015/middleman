@@ -79,9 +79,6 @@ fun ChallengeListScreen(
                     onChallengeClick = {
 
                         onCardChallengeClick(challenge)
-                       // updatedChallenge = it
-                        //Show dialog to accept challenge
-                       // showDialog = true
                     })
                 Spacer(modifier = Modifier.height(50.dp))
             }

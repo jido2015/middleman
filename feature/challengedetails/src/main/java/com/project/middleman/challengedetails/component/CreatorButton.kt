@@ -3,7 +3,6 @@ package com.project.middleman.challengedetails.component
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
@@ -20,6 +19,8 @@ fun CreatorActionButton(
     challenge: Challenge,
     challengeDetailsViewModel: ChallengeDetailsViewModel
 ) {
+    val participant = challenge.participant.entries.find { it.value.status == "Participant" }?.value
+
     when (challenge.status) {
 
         BetStatus.ACTIVE.name -> {
@@ -62,14 +63,16 @@ fun CreatorActionButton(
             RejectOrAcceptButton(
                 onRejectButtonClick = {
                     // Dispute
+                  //  Toast.makeText(@this, "Dispute", Toast.LENGTH_SHORT).show()
                 },
-                onAcceptButtonClick = { challengeDetailsViewModel.concludeChallenge(
-                    challenge,
-                    BetStatus.COMPLETED.name
+                onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
+                    winnerId = participant?.userId,
+                    challenge = challenge,
+                    status = BetStatus.CLOSED.name
                 ) }
             )
         }
-        BetStatus.COMPLETED.name -> {
+        BetStatus.CLOSED.name -> {
             ActionButton(
                 onSecondButtonClick = { /* Add logic to conclude wager */ },
                 btn2Text = "Challenge Closed",
