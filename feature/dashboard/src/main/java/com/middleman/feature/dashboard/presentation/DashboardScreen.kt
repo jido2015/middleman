@@ -52,6 +52,7 @@ fun DashboardScreen(
     createWagerButton: () -> Unit,
     ) {
 
+    Log.d("DashboardScreen", "DashboardScreen: Called twice")
     Column(modifier = Modifier.fillMaxSize().background(cardMultiColor)){
         MainToolBar(
 

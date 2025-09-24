@@ -3,15 +3,17 @@ package com.project.middleman.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.toRoute
 import com.middleman.composables.tab.Tab
 
 
 @Composable
 internal fun HandleTabNavigation(
     selectedTab: Tab,
-    currentRoute: String?,
-    navController: NavHostController
+    navController: NavHostController,
+    navBackStackEntry: NavBackStackEntry?
 ) {
     LaunchedEffect(selectedTab) {
         val targetRoute = when (selectedTab) {
@@ -21,8 +23,8 @@ internal fun HandleTabNavigation(
         }
 
 
-        if (currentRoute != targetRoute) {
-            Log.d("HandleTabNavigation", "Navigating to $targetRoute from $currentRoute")
+        if (navBackStackEntry?.destination?.route != targetRoute) {
+            Log.d("HandleTabNavigation", "Navigating to $targetRoute from ${navBackStackEntry?.id}")
             navController.navigate(targetRoute) {
                 launchSingleTop = true
                 restoreState = true

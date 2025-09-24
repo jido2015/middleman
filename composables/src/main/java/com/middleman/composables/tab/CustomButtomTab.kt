@@ -86,7 +86,7 @@ fun CustomBottomTab(
                  ) {
                      TabIcon(
                          tab = Tab.Home,
-                         selected = selectedTab == Tab.Home,
+                         selected = selectedTab == Tab.Home || selectedTab == Tab.DEFAULT,
                          onClick = { onTabSelected(Tab.Home)
                          }
                      )

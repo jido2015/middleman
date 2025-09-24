@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.middleman.composables.topbar.NavigationTopBarWithProgressBar
 import com.middleman.feature.dashboard.presentation.CreateBetModalSheet
 import com.project.middleman.designsystem.themes.white
@@ -38,6 +37,7 @@ import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -65,7 +65,10 @@ fun FeatureContentLayout(
     val createViewModel: CreateChallengeViewModel = hiltViewModel()
 
     // ✅ Update selected tab on navigation
-    UpdateSelectedTabOnNavigation(navBackStackEntry) { it }
+
+    UpdateSelectedTabOnNavigation(navBackStackEntry) { tab ->
+        selectedTab = tab
+    }
 
         // ✅ Create a modal bottom sheet
         CreateBetModalSheet(
@@ -79,11 +82,10 @@ fun FeatureContentLayout(
             onCreateFromExistingClicked = { /* handle existing bet */ }
         )
 
-
     // ✅ Handle tab navigation
 
     if(showBottomBarSheet){
-        HandleTabNavigation(selectedTab, currentRoute, navController)
+        HandleTabNavigation(selectedTab, navController,navBackStackEntry )
     }
 
     //
