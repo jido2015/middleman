@@ -2,10 +2,14 @@ package com.project.middleman.feature.createchallenge.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,81 +70,41 @@ fun CreateChallengeTitle(
     val maxCharacters = 100
     val currentCharCount = challengeTitle.length
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button, dropDown, checkbox) = createRefs()
-
-        Text(
-            "Wager Name",
-            style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(constraintTitle) {
-                top.linkTo(parent.top, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        Text(
-            "Name your wager in few words",
-            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(subtitle) {
-                top.linkTo(constraintTitle.bottom, margin = 12.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        BorderlessTextField(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .constrainAs(textFieldTitle) {
-                    top.linkTo(subtitle.bottom, margin = 28.dp)
+                .wrapContentHeight()
+        ) {
+            val (constraintTitle, subtitle, textFieldTitle, charCount, dropDown, checkbox, button) = createRefs()
+
+            // Title
+            Text(
+                "Wager Name",
+                style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(constraintTitle) {
+                    top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
-            text = challengeTitle,
-            onValueChange = { newText ->
-                // Only allow input if it's within the character limit
-                if (newText.length <= maxCharacters) {
-                    challengeTitle = newText
                 }
-            },
-            placeholder = "First player to score a goal?",
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
-        )
+            )
 
-        Text(
-            "$currentCharCount/$maxCharacters characters",
-            style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(charCount) {
-                top.linkTo(textFieldTitle.bottom, margin = 8.dp)
-                start.linkTo(parent.start)
-            }
-        )
+            // Subtitle
+            Text(
+                "Name your wager in few words",
+                style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(subtitle) {
+                    top.linkTo(constraintTitle.bottom, margin = 12.dp)
+                    start.linkTo(parent.start)
+                }
+            )
 
-        CustomDropdownMenu(
-            modifier = Modifier.fillMaxWidth().constrainAs(dropDown) {
-                top.linkTo(charCount.bottom, margin = 70.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            selectedOption = selectedCategory,
-            onOptionSelected = { selectedCategory = it },
-            options = category
-        )
-        VisibilityCheckbox(visibilityState = isInviteOnly,
-            modifier = Modifier.constrainAs(checkbox) {
-            top.linkTo(dropDown.bottom, margin = 20.dp)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-        })
-
-        if(selectedCategory == "Gaming"){
+            // Wager name input
             BorderlessTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,60 +117,92 @@ fun CreateChallengeTitle(
                     },
                 text = challengeTitle,
                 onValueChange = { newText ->
-                    // Only allow input if it's within the character limit
-                    if (newText.length <= maxCharacters) {
-                        challengeTitle = newText
-                    }
+                    if (newText.length <= maxCharacters) challengeTitle = newText
                 },
                 placeholder = "First player to score a goal?",
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                 onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
             )
-        }
 
+            // Character count
+            Text(
+                "$currentCharCount/$maxCharacters characters",
+                style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(charCount) {
+                    top.linkTo(textFieldTitle.bottom, margin = 8.dp)
+                    start.linkTo(parent.start)
+                }
+            )
 
-        CustomButton(
-            modifier = Modifier.fillMaxWidth()
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom)
+            // Category dropdown
+            CustomDropdownMenu(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(dropDown) {
+                        top.linkTo(charCount.bottom, margin = 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                selectedOption = selectedCategory,
+                onOptionSelected = { selectedCategory = it },
+                options = category
+            )
+
+            // Visibility checkbox
+            VisibilityCheckbox(
+                visibilityState = isInviteOnly,
+                modifier = Modifier.constrainAs(checkbox) {
+                    top.linkTo(dropDown.bottom, margin = 20.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                },
-            onClick = {
-                if (challengeTitle.isNotBlank()
-                    && selectedCategory.isNotBlank() &&
-                    selectedCategory != "Select a category for this wager"
-                ) {
-                    viewModel?.title = challengeTitle
-                    viewModel?.category = selectedCategory
-                    viewModel?.visibility = isInviteOnly.value
-                    viewModel?.selectedTimeInMillis = selectedTimeInMillis
-                    onSaveChallenge()
-                } else {
-                    toast.show()
                 }
+            )
 
-            },
-            text = "Continue",
+            // Optional Gaming field
+            if (selectedCategory == "Gaming") {
+                Text(
+                    "Gaming detail (optional)",
+                    style = Typography.labelSmall.copy(fontSize = 14.sp, color = colorBlack),
+                    modifier = Modifier.constrainAs(createRef()) {
+                        top.linkTo(checkbox.bottom, margin = 16.dp)
+                        start.linkTo(parent.start)
+                    }
+                )
+                // You can add another TextField here with a separate ref
+            }
 
-        )
+            // Continue button
+            CustomButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(button) {
+                        top.linkTo(checkbox.bottom, margin = 32.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo ( parent.end)
+                    },
+                onClick = {
+                    when {
+                        challengeTitle.isBlank() -> toast.show()
+                        selectedCategory.isBlank() ||
+                                selectedCategory == "Select a category for this wager" -> toast.show()
+                        else -> {
+                            viewModel?.title = challengeTitle
+                            viewModel?.category = selectedCategory
+                            viewModel?.visibility = isInviteOnly.value
+                            viewModel?.selectedTimeInMillis = selectedTimeInMillis
+                            onSaveChallenge()
+                        }
+                    }
+                },
+                text = "Continue",
+            )
 
-        // Request focus when the screen is displayed
-        LaunchedEffect(Unit) {
-            delay(200)
-            focusRequester.requestFocus()
+            // Focus on first field
+            LaunchedEffect(Unit) {
+                delay(200)
+                focusRequester.requestFocus()
+            }
         }
-    }
-
-
-    // Show time picker
-    if (showTIme) {
-        ComposeTimeInputDialogCustom(
-            onConfirm = { hour, minute ->
-                selectedTimeInMillis = getSelectedTimeInMillis(hour, minute)
-                showTIme = false
-            },
-            onDismiss = { showTIme = false })
     }
 
 }

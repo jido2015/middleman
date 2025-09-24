@@ -48,6 +48,7 @@ class ConcludeChallengeRepositoryImpl @Inject constructor(
 
                 // Update only the status
                 transaction.update(challengeRef, "status", betStatus)
+                transaction.update(challengeRef, "winnerDisplayName", challenge.winnerDisplayName)
 
                 null // Firestore requires a return value
             }.await()

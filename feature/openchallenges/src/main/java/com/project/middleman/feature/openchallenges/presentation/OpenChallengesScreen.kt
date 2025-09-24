@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.project.middleman.core.source.data.model.Challenge
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,8 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.project.middleman.feature.openchallenges.presentation.compoenents.ChallengeDialog
+import com.project.middleman.feature.openchallenges.presentation.challengeui.ActiveChallengeUi
+import com.project.middleman.feature.openchallenges.presentation.challengeui.CompletedChallengeUi
+import com.project.middleman.feature.openchallenges.presentation.challengeui.OpenChallengeUi
+import com.project.middleman.feature.openchallenges.presentation.compoenents.OpenChallengeTabPager
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.FetchChallengeResponseHandler
 import com.project.middleman.feature.openchallenges.presentation.uistate_handler.UpdateChallengeWrapper
 import com.project.middleman.feature.openchallenges.viewmodel.OpenChallengeViewModel
@@ -48,7 +48,6 @@ fun ChallengeListScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-
         openChallengeViewModel.setLoading(true)
         openChallengeViewModel.fetchChallenges()
 
@@ -65,27 +64,35 @@ fun ChallengeListScreen(
                 getChallenges(it)
             },
             onErrorMessage = {
-             //   Exception(it)
+                //   Exception(it)
             }
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            items(challenges) { challenge ->
-                ChallengeCardItem(
-                    challenge = challenge,
-                    onChallengeClick = {
 
-                        onCardChallengeClick(challenge)
-                    })
-                Spacer(modifier = Modifier.height(50.dp))
+        val pages = listOf<@Composable () -> Unit>(
+            {
+                OpenChallengeUi(
+                    challenges = challenges,
+                    onCardChallengeClick = onCardChallengeClick
+                )
+            },
+            {
+                ActiveChallengeUi(
+                    challenges = challenges,
+                    onCardChallengeClick = onCardChallengeClick
+                )
+            },
+            {
+                CompletedChallengeUi(
+                    challenges = challenges,
+                    onCardChallengeClick = onCardChallengeClick
+                )
             }
-        }
+        )
+
+        OpenChallengeTabPager(pages = pages)
+
     }
-
-
 }
 
 

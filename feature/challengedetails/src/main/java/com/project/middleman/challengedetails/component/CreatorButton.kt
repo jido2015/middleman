@@ -66,7 +66,7 @@ fun CreatorActionButton(
                   //  Toast.makeText(@this, "Dispute", Toast.LENGTH_SHORT).show()
                 },
                 onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
-                    winnerId = participant?.userId,
+                    winnerDisplayName = participant?.displayName,
                     challenge = challenge,
                     status = BetStatus.CLOSED.name
                 ) }

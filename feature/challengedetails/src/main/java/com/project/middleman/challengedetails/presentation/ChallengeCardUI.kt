@@ -18,13 +18,9 @@ import com.project.middleman.designsystem.themes.borderGrey
 
 
 @Composable
-fun ChallengeDetailUi(
+fun ChallengeCardUi(
     modifier: Modifier = Modifier,
     challenge: Challenge = Challenge()) {
-
-    val creator =  challenge.participant.entries.find {
-        it.value.status == "Creator"
-    }?.value
 
     Card(
         modifier = modifier
@@ -47,5 +43,5 @@ fun ChallengeDetailUi(
 @Composable
 @Preview(showBackground = true)
 fun ChallengeDetails(){
-    ChallengeDetailUi()
+    ChallengeCardUi()
 }

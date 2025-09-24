@@ -28,16 +28,7 @@ import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
-    viewModel: AuthViewModel
 ) {
-    val isAuthenticated by viewModel.isUserAuthenticated.collectAsState()
-
-    if (isAuthenticated is AuthState.Authenticated) {
-
-        Log.d("IsUserAuthenticated", "Yes")
-    }else{
-        Log.d("IsUserAuthenticated", "No")
-    }
 
     val activity = LocalActivity.current as ComponentActivity
     val appStateViewModel: AppStateViewModel = hiltViewModel(activity)

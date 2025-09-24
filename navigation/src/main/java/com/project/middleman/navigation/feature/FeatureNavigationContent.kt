@@ -19,11 +19,11 @@ import com.project.middleman.feature.createchallenge.presentation.InputAmountScr
 import com.project.middleman.feature.createchallenge.presentation.ChallengeSummaryScreen
 import com.project.middleman.feature.createchallenge.presentation.CreateChallengeDescription
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
-import com.project.middleman.feature.openchallenges.presentation.ChallengesScreen
 import com.project.middleman.navigation.NavigationRoute
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
 import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
+import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.auth.authenticationNavigation
 
 
@@ -40,7 +40,6 @@ fun NavGraphBuilder.featureNavigation(
 ) {
 
     authenticationNavigation(
-        authViewModel = authViewModel,
         createProfileViewModel = createProfileViewModel,
         appStateViewModel = appStateViewModel,
         navController = navController
@@ -133,7 +132,7 @@ fun NavGraphBuilder.featureNavigation(
         ) {
 
 
-            ChallengesScreen(
+            ChallengeListScreen(
                 onCardChallengeClick = { challenge ->
                     appStateViewModel.challenge = challenge
                     navController.navigate(NavigationRoute.ChallengeDetailsScreen.route)

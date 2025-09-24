@@ -49,7 +49,7 @@ fun OpenChallengeTabPager(pages: List<@Composable () -> Unit>, modifier: Modifie
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "All",
+                    text = "Open",
                     modifier = Modifier
                         .padding(end = 16.dp)
                         .clickable {
@@ -66,7 +66,7 @@ fun OpenChallengeTabPager(pages: List<@Composable () -> Unit>, modifier: Modifie
                     )
                 )
                 Text(
-                    text = "Active",
+                    text = "In-Progress",
                     modifier = Modifier
                         .padding(end = 16.dp)
                         .clickable {

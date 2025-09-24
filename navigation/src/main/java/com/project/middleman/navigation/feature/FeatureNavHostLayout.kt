@@ -48,7 +48,7 @@ fun FeatureContentLayout(
     appStateViewModel: AppStateViewModel,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var selectedTab by rememberSaveable { mutableStateOf(Tab.Home) }
+    var selectedTab by rememberSaveable { mutableStateOf(Tab.DEFAULT) }
     val showCreateWagerSheet by appStateViewModel.showCreateWagerSheet.collectAsState()
     val showBottomBarSheet by appStateViewModel.showBottomTabSheet.collectAsState()
     val showNotificationBarSheet by appStateViewModel.showNotificationBarSheet.collectAsState()

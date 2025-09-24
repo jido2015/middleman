@@ -3,11 +3,15 @@ package com.project.middleman.feature.createchallenge.presentation
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,107 +63,116 @@ fun InputAmountScreen(
 
     // Dollar amount limit
     val maxAmount = 5000.0
-
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, constraintStakeAmount, constraintTextBalance, button) = createRefs()
-
-        Text(
-            "Stake",
-            style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(constraintTitle) {
-                top.linkTo(parent.top, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        Text(
-            "Enter the amount you want to stake",
-            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(subtitle) {
-                top.linkTo(constraintTitle.bottom, margin = 12.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        Row(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(constraintStakeAmount) {
-                    top.linkTo(subtitle.bottom, margin = 28.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .wrapContentHeight()
         ) {
+            val (constraintTitle, subtitle, constraintStakeAmount, constraintTextBalance, button) = createRefs()
+
+            // Title
             Text(
-                modifier = Modifier.padding(bottom = 1.dp),
-                text = "$",
-                style = Typography.bodyLarge.copy(fontSize = 20.sp, color = colorBlack),
+                "Stake",
+                style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(constraintTitle) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    start.linkTo(parent.start)
+                }
             )
-            BorderlessTextField(
+
+            // Subtitle
+            Text(
+                "Enter the amount you want to stake",
+                style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(subtitle) {
+                    top.linkTo(constraintTitle.bottom, margin = 12.dp)
+                    start.linkTo(parent.start)
+                }
+            )
+
+            // Amount input row
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                text = amountToStake,
-                onValueChange = { newText ->
-                    // Only allow numeric input with decimal points and max 4 characters
-                    if ((newText.isEmpty() || newText.matches(Regex("^\\d*\\.?\\d{0,2}$"))) && newText.length <= 4) {
-                        amountToStake = newText
-                    }
-                },
-                placeholder = "00.00",
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
-            )
-        }
-
-        Text(
-            "Wallet balance: $1,000",
-            style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(constraintTextBalance) {
-                top.linkTo(constraintStakeAmount.bottom, margin = 8.dp)
-                start.linkTo(parent.start)
+                    .constrainAs(constraintStakeAmount) {
+                        top.linkTo(subtitle.bottom, margin = 28.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 1.dp),
+                    text = "$",
+                    style = Typography.bodyLarge.copy(fontSize = 20.sp, color = colorBlack),
+                )
+                BorderlessTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    text = amountToStake,
+                    onValueChange = { newText ->
+                        // Allow numeric input with up to 2 decimals, max 4 chars
+                        if ((newText.isEmpty() || newText.matches(Regex("^\\d*\\.?\\d{0,2}$"))) && newText.length <= 4) {
+                            amountToStake = newText
+                        }
+                    },
+                    placeholder = "00.00",
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
+                )
             }
-        )
 
-        CustomButton(
-            modifier = Modifier.fillMaxWidth()
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom)
+            // Wallet balance
+            Text(
+                "Wallet balance: $1,000",
+                style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(constraintTextBalance) {
+                    top.linkTo(constraintStakeAmount.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            onClick = {
-                if (amountToStake.isNotBlank()) {
+                }
+            )
+
+            // Button
+            CustomButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(button) {
+                        top.linkTo(constraintTextBalance.bottom, margin = 32.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                onClick = {
                     val amount = amountToStake.toDoubleOrNull()
-                    if (amount != null) {
-                        if (amount <= maxAmount) {
+                    when {
+                        amountToStake.isBlank() -> toast.show()
+                        amount == null -> toast.show()
+                        amount > maxAmount -> Toast.makeText(
+                            context,
+                            "Maximum stake amount is $${maxAmount.toInt()}",
+                            duration
+                        ).show()
+                        else -> {
                             viewModel.stake = amount
                             onCreateChallenge()
-                        } else {
-                            // Show error for amount exceeding $5000
-                            val errorToast = Toast.makeText(context, "Maximum stake amount is $${maxAmount.toInt()}", duration)
-                            errorToast.show()
                         }
-                    } else {
-                        toast.show()
                     }
-                } else {
-                    toast.show()
-                }
-            },
-            text = "Continue",
-        )
+                },
+                text = "Continue",
+            )
+        }
 
         // Request focus when the screen is displayed
         LaunchedEffect(Unit) {
@@ -167,6 +180,7 @@ fun InputAmountScreen(
             focusRequester.requestFocus()
         }
     }
+
 
 }
 

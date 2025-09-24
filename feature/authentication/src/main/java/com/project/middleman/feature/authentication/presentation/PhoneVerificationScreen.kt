@@ -2,10 +2,16 @@ package com.project.middleman.feature.authentication.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,95 +62,96 @@ fun PhoneVerificationScreen(
     val maxCharacters = 6
     val currentCharCount = sentCode.length
 
-    ConstraintLayout(
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button, textCountDown) = createRefs()
-
-        Text(
-            "Verify your mobile number",
-            style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(constraintTitle) {
-                top.linkTo(parent.top, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-        Text(
-            "Enter the 6 digit code sent to you at ${viewModel.phoneNumber}",
-            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(subtitle) {
-                top.linkTo(constraintTitle.bottom, margin = 12.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        BorderlessTextField(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .constrainAs(textFieldTitle) {
-                    top.linkTo(subtitle.bottom, margin = 28.dp)
+                .wrapContentHeight() // ✅ allow scrolling
+        ) {
+            val (constraintTitle, subtitle, textFieldTitle, charCount) = createRefs()
+
+            Text(
+                "Verify your mobile number",
+                style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(constraintTitle) {
+                    top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
-            text = sentCode,
-            onValueChange = { newText ->
-                // Only allow input if it's within the character limit
-                if (newText.length <= maxCharacters) {
-                    sentCode = newText
-                    sentCode = newText
                 }
-            },
-            placeholder = "e.g. ABC123",
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
-            singleLine = false,
-            maxLines = 3
-        )
+            )
 
-        Text(
-            "$currentCharCount/$maxCharacters characters",
-            style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(charCount) {
-                top.linkTo(textFieldTitle.bottom, margin = 8.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-
-        Text(
-            modifier = Modifier.constrainAs(textCountDown) {
-                bottom.linkTo(button.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                top.linkTo(charCount.top)
-            },
-            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
-            text ="Resend code in $countDown"
-        )
-
-        CustomButton(
-            modifier = Modifier.fillMaxWidth()
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom)
+            Text(
+                "Enter the 6 digit code sent to you at ${viewModel.phoneNumber}",
+                style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(subtitle) {
+                    top.linkTo(constraintTitle.bottom, margin = 12.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                }
+            )
+
+            BorderlessTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .constrainAs(textFieldTitle) {
+                        top.linkTo(subtitle.bottom, margin = 28.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    },
+                text = sentCode,
+                onValueChange = { newText ->
+                    if (newText.length <= maxCharacters) {
+                        sentCode = newText
+                    }
                 },
+                placeholder = "e.g. ABC123",
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
+                singleLine = false,
+                maxLines = 3
+            )
+
+            Text(
+                "$currentCharCount/$maxCharacters characters",
+                style = Typography.labelSmall.copy(fontSize = 12.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(charCount) {
+                    top.linkTo(textFieldTitle.bottom, margin = 8.dp)
+                    start.linkTo(parent.start)
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // countdown label
+        Text(
+            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+            text = "Resend code in $countDown",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // button
+        CustomButton(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
-                if (sentCode.isNotBlank()
-                ) {
+                if (sentCode.isNotBlank()) {
                     onSaveChallenge()
                 } else {
                     toast.show()
                 }
-
             },
-            text = "Next",
-
-            )
+            text = "Next"
+        )
 
         // Request focus when the screen is displayed
         LaunchedEffect(Unit) {
@@ -152,6 +159,7 @@ fun PhoneVerificationScreen(
             focusRequester.requestFocus()
         }
     }
+
 }
 
 @Preview(showBackground = true)

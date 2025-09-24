@@ -1,6 +1,8 @@
 package com.middleman.composables.profile
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -20,8 +22,9 @@ import com.project.middleman.designsystem.themes.colorAccent
 fun CreatorPhotoDisplay(
     modifier: Modifier = Modifier,
     creatorPhoto: String?, creatorName: String?) {
+
     ConstraintLayout(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         val (photo, name, profileType) = createRefs()
 
@@ -42,7 +45,7 @@ fun CreatorPhotoDisplay(
 
 
         Text(
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth()
                 .constrainAs(name) {
                     top.linkTo(parent.top, margin = 10.dp)
                     start.linkTo(photo.end, margin = 8.dp)

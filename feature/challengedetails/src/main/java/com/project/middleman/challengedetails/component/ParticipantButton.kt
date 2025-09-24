@@ -21,7 +21,7 @@ fun ParticipantActionButton(
     participant: Participant?
 ) {
 
-    val creatorId = challenge.participant.entries.find { it.value.status == "Creator" }?.value?.userId
+    val creatorId = challenge.participant.entries.find { it.value.status == "Creator" }?.value?.displayName
 
     Log.d("ParticipantActionButton", "Status: ${challenge.status}")
     when (challenge.status) {
@@ -69,7 +69,7 @@ fun ParticipantActionButton(
                     // Dispute
                 },
                 onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
-                    winnerId = creatorId,
+                    winnerDisplayName = creatorId,
                     challenge,
                     BetStatus.CLOSED.name
                 ) }

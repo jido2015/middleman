@@ -14,7 +14,7 @@ data class Challenge(
     // Open means the challenge is open for participants to join.
     // Pending means the a participant has requested to join the challenge.
     // Closed means the challenge has been taken and no participants can join it again.
-    val winnerId: String? = null,
+    val winnerDisplayName: String? = null,
     val createdAt: Long = 0L,
     val startDate: Long = 0L,
     val description: String = ""

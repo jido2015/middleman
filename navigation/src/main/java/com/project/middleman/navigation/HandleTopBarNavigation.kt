@@ -1,5 +1,6 @@
 package com.project.middleman.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -16,10 +17,12 @@ internal fun HandleTabNavigation(
         val targetRoute = when (selectedTab) {
             Tab.Home -> NavigationRoute.DashboardScreen.route
             Tab.Explore -> NavigationRoute.ChallengeTabScreen.route
+            Tab.DEFAULT -> return@LaunchedEffect
         }
 
 
         if (currentRoute != targetRoute) {
+            Log.d("HandleTabNavigation", "Navigating to $targetRoute from $currentRoute")
             navController.navigate(targetRoute) {
                 launchSingleTop = true
                 restoreState = true

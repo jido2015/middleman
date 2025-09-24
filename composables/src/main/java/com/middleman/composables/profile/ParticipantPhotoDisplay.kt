@@ -1,5 +1,6 @@
 package com.middleman.composables.profile
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +19,7 @@ fun ParticipantPhotoDisplay(
     modifier: Modifier = Modifier,
     creatorPhoto: String?, participantName: String?) {
     ConstraintLayout(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         val (photo, name, profileType) = createRefs()
 
@@ -33,7 +34,7 @@ fun ParticipantPhotoDisplay(
         )
 
         Text(
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth()
                 .constrainAs(name) {
                     top.linkTo(parent.top, margin = 10.dp)
                     end.linkTo(photo.start, margin = 8.dp) // left of photo

@@ -22,7 +22,6 @@ import kotlin.getValue
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel by viewModels<AuthViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary,
                 ) {
-                    AppNavigation(viewModel= viewModel)
+                    AppNavigation()
                 }
 
             }

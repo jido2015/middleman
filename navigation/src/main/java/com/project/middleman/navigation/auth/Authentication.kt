@@ -15,13 +15,11 @@ import com.project.middleman.feature.authentication.presentation.PhoneVerificati
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import com.project.middleman.navigation.AuthNavigationRoute
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
-import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.navigation.NavigationRoute
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.authenticationNavigation(
-    authViewModel: AuthViewModel,
     createProfileViewModel: CreateProfileViewModel,
     appStateViewModel: AppStateViewModel,
     navController: NavHostController

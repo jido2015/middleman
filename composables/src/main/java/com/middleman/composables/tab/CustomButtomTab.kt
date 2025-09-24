@@ -43,7 +43,7 @@ import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.white
 
 enum class Tab {
-    Home, Explore
+    Home, Explore, DEFAULT
 }
 
 @Composable

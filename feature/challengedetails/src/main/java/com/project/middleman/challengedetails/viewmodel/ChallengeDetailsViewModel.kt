@@ -157,8 +157,8 @@ class ChallengeDetailsViewModel @Inject constructor(
     }
 
 
-    fun concludeFinalChallenge(winnerId: String?, challenge: Challenge, status: String) {
-        val updatedChallenge = challenge.copy( status = status, winnerId = winnerId)
+    fun concludeFinalChallenge(winnerDisplayName: String?, challenge: Challenge, status: String) {
+        val updatedChallenge = challenge.copy( status = status, winnerDisplayName = winnerDisplayName)
         viewModelScope.launch {
             _updateChallenge.value = RequestState.Loading
             concludeChallengeUseCase.invoke(updatedChallenge, status).collect { state ->

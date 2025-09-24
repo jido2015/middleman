@@ -4,10 +4,16 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +55,7 @@ import kotlinx.coroutines.delay
 fun DateOfBirthScreen(
     viewModel: CreateProfileViewModel = hiltViewModel(),
     onSaveChallenge: () -> Unit
-){
+) {
     var dob by remember { mutableStateOf(TextFieldValue("")) }
 
     val context = LocalContext.current
@@ -65,75 +71,77 @@ fun DateOfBirthScreen(
     // Character limit
     val maxCharacters = 16
     val currentCharCount = dob.text.length
-
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(White)
             .padding(16.dp)
     ) {
-        val (constraintTitle, subtitle, textFieldTitle, charCount, button) = createRefs()
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight() // ✅ allow scrolling
+        ) {
+            val (constraintTitle, subtitle, textFieldTitle, button) = createRefs()
 
-        Text(
-            "When were you born?",
-            style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(constraintTitle) {
-                top.linkTo(parent.top, margin = 16.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-        Text(
-            "Just making sure you’re ready to play (18+ only).",
-            style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
-            modifier = Modifier.constrainAs(subtitle) {
-                top.linkTo(constraintTitle.bottom, margin = 12.dp)
-                start.linkTo(parent.start)
-            }
-        )
-
-
-        BorderlessTextField2(
-            modifier = Modifier.fillMaxWidth()
-                .focusRequester(focusRequester)
-                .constrainAs(textFieldTitle) {
-                    top.linkTo(subtitle.bottom, margin = 28.dp)
+            Text(
+                "When were you born?",
+                style = Typography.bodyLarge.copy(fontSize = 28.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(constraintTitle) {
+                    top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
-            value = dob,
-            onValueChange = { newValue ->
-                val oldText = dob.text
-                val formatted = formatDateOfBirth(newValue.text)
-
-                val newCursorPos = if (formatted.length > oldText.length) {
-                    formatted.length // move to end if adding
-                } else {
-                    newValue.selection.end // keep same if deleting
                 }
+            )
 
-                dob = TextFieldValue(
-                    text = formatted,
-                    selection = TextRange(newCursorPos)
-                )
-            },
-            placeholder = "MM/DD/YYYY",
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
-        )
+            Text(
+                "Just making sure you’re ready to play (18+ only).",
+                style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
+                modifier = Modifier.constrainAs(subtitle) {
+                    top.linkTo(constraintTitle.bottom, margin = 12.dp)
+                    start.linkTo(parent.start)
+                }
+            )
 
+            BorderlessTextField2(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .constrainAs(textFieldTitle) {
+                        top.linkTo(subtitle.bottom, margin = 28.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    },
+                value = dob,
+                onValueChange = { newValue ->
+                    val oldText = dob.text
+                    val formatted = formatDateOfBirth(newValue.text)
+
+                    val newCursorPos = if (formatted.length > oldText.length) {
+                        formatted.length // move to end if adding
+                    } else {
+                        newValue.selection.end // keep same if deleting
+                    }
+
+                    dob = TextFieldValue(
+                        text = formatted,
+                        selection = TextRange(newCursorPos)
+                    )
+                },
+                placeholder = "MM/DD/YYYY",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                onImeAction = { focusManager.moveFocus(FocusDirection.Down) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp)) // push button down a bit
 
         CustomButton(
-            modifier = Modifier.fillMaxWidth()
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (dob.text.isNotBlank() && isUser18OrOlder(dob.text)) {
                     viewModel.dob = dob.text
@@ -145,14 +153,12 @@ fun DateOfBirthScreen(
             text = "Next",
         )
 
-
         // Request focus when the screen is displayed
         LaunchedEffect(Unit) {
             delay(200)
             focusRequester.requestFocus()
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

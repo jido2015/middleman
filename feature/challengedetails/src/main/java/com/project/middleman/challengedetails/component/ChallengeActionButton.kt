@@ -66,13 +66,13 @@ fun ChallengeActionButtons(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 20.dp),
+                .padding(start = 12.dp, end = 12.dp, top = 5.dp),
             text = actionMessage,
             style = Typography.labelSmall.copy(fontSize = 12.sp),
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
 
         AddParticipantView(
@@ -110,7 +110,7 @@ fun ChallengeActionButtons(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
             }
 
@@ -145,8 +145,6 @@ fun ChallengeActionButtons(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(10.dp))
 
         MultiActionButton()
 

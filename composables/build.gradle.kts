@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.material3)
+    implementation(libs.airbnb.lottie)
     implementation(libs.material3.window.size)
     implementation(libs.material.accompanist.pager)
     implementation(libs.material.icons.extended)

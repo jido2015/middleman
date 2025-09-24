@@ -17,19 +17,25 @@ fun GetUserProfileWrapper(
 ) {
     val response by viewModel.getUserProfileState.collectAsState()
 
-    LaunchedEffect(response) {
-        when (response) {
-            is RequestState.Error -> {
-                val error = (response as RequestState.Error).error
-                Log.d("GetUserProfileWrapper", error.message.toString())
-                onErrorMessage(error.message.toString())
+    when (response) {
+        is RequestState.Error -> {
+            val error = (response as RequestState.Error).error
+            Log.d("GetUserProfileWrapper", error.message.orEmpty())
+            LaunchedEffect(error) {
+                onErrorMessage(error.message.orEmpty())
             }
-            RequestState.Loading -> {
+        }
+        is RequestState.Success -> {
+            val user = (response as RequestState.Success<UserDTO>).data
+            user?.let {
+                LaunchedEffect(it) {
+                    viewModel.syncUserFromFirebase(it)
+                    onSuccess()
+                }
             }
-            is RequestState.Success -> (response as RequestState.Success<UserDTO>).data?.let {
-                onSuccess()
-                viewModel.syncUserFromFirebase(it)
-            }
+        }
+        RequestState.Loading -> {
+            // You can show a loader here if needed
         }
     }
 }
