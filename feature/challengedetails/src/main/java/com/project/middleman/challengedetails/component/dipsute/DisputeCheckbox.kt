@@ -1,4 +1,4 @@
-package com.project.middleman.challengedetails.component
+package com.project.middleman.challengedetails.component.dipsute
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

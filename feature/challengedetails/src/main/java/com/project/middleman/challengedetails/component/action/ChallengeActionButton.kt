@@ -1,4 +1,4 @@
-package com.project.middleman.challengedetails.component
+package com.project.middleman.challengedetails.component.action
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -16,8 +16,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
@@ -29,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.middleman.composables.R
 import com.middleman.composables.quickations.MultiActionButton
+import com.project.middleman.challengedetails.component.AddParticipantView
+import com.project.middleman.challengedetails.component.dipsute.DisputeDialog
+import com.project.middleman.challengedetails.component.dipsute.DisputeScreenBottomSheet
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
 import com.project.middleman.core.source.data.model.Challenge
@@ -83,7 +84,8 @@ fun ChallengeActionButtons(
         AddParticipantView(
             creatorId,
             challengeDetailsViewModel.localUser?.uid,
-            challenge)
+            challenge
+        )
 
 
         if (challengeDetailsViewModel.localUser?.uid == creatorId ||
@@ -172,5 +174,5 @@ fun ChallengeActionButtons(
     DisputeScreenBottomSheet(
         sheetState = disputeSheetState,
         viewModel = challengeDetailsViewModel,
-        )
+    )
 }

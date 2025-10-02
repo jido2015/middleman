@@ -1,4 +1,4 @@
-package com.project.middleman.challengedetails.component
+package com.project.middleman.challengedetails.component.action
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

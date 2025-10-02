@@ -10,11 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.project.middleman.challengedetails.component.participantActionMessage
-import com.project.middleman.challengedetails.component.creatorActionMessage
-import com.project.middleman.challengedetails.component.creatorActionWin
-import com.project.middleman.challengedetails.component.participantActionWin
-import com.project.middleman.challengedetails.component.viewersActionMessage
+import com.project.middleman.challengedetails.component.action.participantActionMessage
+import com.project.middleman.challengedetails.component.action.creatorActionMessage
+import com.project.middleman.challengedetails.component.action.creatorActionWin
+import com.project.middleman.challengedetails.component.action.participantActionWin
+import com.project.middleman.challengedetails.component.action.viewersActionMessage
 import com.project.middleman.challengedetails.uistate_handler.AcceptParticipantWrapper
 import com.project.middleman.challengedetails.uistate_handler.ChallengeDetailsWrapper
 import com.project.middleman.challengedetails.uistate_handler.DeleteParticipantWrapper

@@ -1,4 +1,4 @@
-package com.project.middleman.challengedetails.component
+package com.project.middleman.challengedetails.component.dipsute
 
 import android.content.Context
 import android.net.Uri

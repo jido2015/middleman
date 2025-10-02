@@ -30,7 +30,7 @@ import com.middleman.composables.animation.WinnerCupAnimated
 import com.middleman.composables.progressbar.CircularProgressBar
 import com.middleman.composables.topbar.MainNavigationTopBar
 import com.project.middleman.challengedetails.component.AnimatedParticipantCard
-import com.project.middleman.challengedetails.component.ChallengeActionButtons
+import com.project.middleman.challengedetails.component.action.ChallengeActionButtons
 import com.project.middleman.challengedetails.component.SummaryRequestInfo
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
 import com.project.middleman.core.common.BetStatus
