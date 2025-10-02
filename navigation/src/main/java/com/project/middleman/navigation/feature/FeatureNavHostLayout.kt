@@ -35,14 +35,12 @@ import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeVi
 import com.project.middleman.navigation.HandleTabNavigation
 import com.project.middleman.navigation.UpdateSelectedTabOnNavigation
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
-import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FeatureContentLayout(
-    authViewModel: AuthViewModel,
     navController: NavHostController,
     currentRoute: String?,
     appStateViewModel: AppStateViewModel,
@@ -132,7 +130,6 @@ fun FeatureContentLayout(
                     ){
                         featureNavigation(
                             backStackEntry = navBackStackEntry,
-                            authViewModel = authViewModel,
                             navController = navController,
                             onScrollDown = {
                                 if (isNotificationVisible) {

@@ -54,9 +54,8 @@ fun ChallengeDetailUi(
     onBackClicked: () -> Unit
 ){
 
-    val showSheet by challengeDetailsViewModel.showSheet.collectAsState()
+    val showSheet by challengeDetailsViewModel.showSummarySheet.collectAsState()
     val sheetState = rememberModalBottomSheetState()
-
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -143,29 +142,24 @@ fun ChallengeDetailUi(
             // Bottom action buttons pinned
 
 
-            // Bottom action buttons pinned
-            if (challenge.winnerDisplayName.isNullOrEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().background(white).constrainAs(actions){
-                        bottom.linkTo(parent.bottom)
-                    }
-                ){
-                    ChallengeActionButtons(
-                        showAcceptSummary = {
-                            challengeDetailsViewModel.openSheet()
-                        },
-                        modifier = Modifier
-                            .padding(bottom = 16.dp),
-                        winMessage = winMessage,
-                        actionMessage = actionMessage,
-                        challengeDetailsViewModel = challengeDetailsViewModel,
-                        creatorId = creator?.userId,
-                        challenge = challenge,
-                        participant = participant,
-                    )
+            Box(
+                modifier = Modifier.fillMaxWidth().background(white).constrainAs(actions){
+                    bottom.linkTo(parent.bottom)
                 }
-            } else {
-                // Winner exists → handle winner here
+            ){
+                ChallengeActionButtons(
+                    showAcceptSummary = {
+                        challengeDetailsViewModel.openSummarySheet()
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp),
+                    winMessage = winMessage,
+                    actionMessage = actionMessage,
+                    challengeDetailsViewModel = challengeDetailsViewModel,
+                    creatorId = creator?.userId,
+                    challenge = challenge,
+                    participant = participant,
+                )
             }
 
         }
@@ -176,6 +170,8 @@ fun ChallengeDetailUi(
             }
         }
     }
+
+
 
     SummaryRequestInfo(
         showSheet = showSheet,

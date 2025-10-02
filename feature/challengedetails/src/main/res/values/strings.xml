@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dispute_meaning">If two users in a wager cannot agree on the outcome,
+        the matter must go through the dispute resolution process.
+        Both parties are required to submit verifiable evidence (JPEG, PDF, or video)
+        supporting their claims, as specified during wager creation.</string>
+</resources>

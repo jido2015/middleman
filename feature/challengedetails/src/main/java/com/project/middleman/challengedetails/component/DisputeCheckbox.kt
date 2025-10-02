@@ -1,7 +1,9 @@
-package com.project.middleman.feature.createchallenge.components
+package com.project.middleman.challengedetails.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -14,26 +16,24 @@ import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Typography
 
 @Composable
-fun VisibilityCheckbox(
+fun DisputeCheckbox(
     visibilityState: MutableState<Boolean>,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .clickable { visibilityState.value = !visibilityState.value }
     ) {
         Checkbox(
+            modifier = Modifier.size(24.dp),
             checked = visibilityState.value,
             onCheckedChange = { visibilityState.value = it }
         )
         Spacer(modifier = Modifier.width(8.dp))
-        val labelText = if (visibilityState.value) {
-            "Public – This bet will be visible to everyone in the app's open bets list."
-        } else {
-            "Invite-Only – Only people with a direct invite can view or join this bet."
-        }
-        Text(text = labelText, style = Typography.labelSmall.copy(fontSize = 14.sp))
+        Text(
+            text = "Don’t show next time",
+            style = Typography.labelSmall.copy(fontSize = 12.sp)
+        )
     }
-
 }

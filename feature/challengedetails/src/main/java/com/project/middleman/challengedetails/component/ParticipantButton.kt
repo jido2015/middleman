@@ -66,7 +66,7 @@ fun ParticipantActionButton(
 
             RejectOrAcceptButton(
                 onRejectButtonClick = {
-                    // Dispute
+                    challengeDetailsViewModel.openDisputeDialog()
                 },
                 onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
                     winnerDisplayName = creatorId,
@@ -80,7 +80,6 @@ fun ParticipantActionButton(
 
             ActionButton(
                 onSecondButtonClick = {
-                    // REVERT CLAIM
                     challengeDetailsViewModel.concludeChallenge(challenge,
                         BetStatus.ACTIVE.name)
                 },

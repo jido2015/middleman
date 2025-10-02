@@ -42,12 +42,15 @@ class ChallengeDetailsViewModel @Inject constructor(
     local: UserLocalDataSource,
     ): ViewModel() {
 
-    private val _showSheet = MutableStateFlow(false)
-    val showSheet: StateFlow<Boolean> = _showSheet
+    private val _showSummarySheet = MutableStateFlow(false)
+    val showSummarySheet: StateFlow<Boolean> = _showSummarySheet
 
+    private val _showDisputeDialog = MutableStateFlow(false)
+    val showDisputeDialog: StateFlow<Boolean> = _showDisputeDialog
 
-    private val _showAddParticipantButton = MutableStateFlow(false)
-    val showAddParticipantButton: StateFlow<Boolean> = _showAddParticipantButton
+    private val _showDisputeModalSheet = MutableStateFlow(false)
+    val showDisputeModalSheet: StateFlow<Boolean> = _showDisputeModalSheet
+
 
     var localUser by mutableStateOf<UserEntity?>(null)
 
@@ -191,15 +194,25 @@ class ChallengeDetailsViewModel @Inject constructor(
         _updateChallenge.value = RequestState.Success(challenge)
     }
 
-    fun openSheet() {
-        _showSheet.value = true
+    fun openSummarySheet() {
+        _showSummarySheet.value = true
     }
 
-    fun closeSheet() {
-        _showSheet.value = false
+    fun closeSummarySheet() {
+        _showSummarySheet.value = false
+    }
+    fun openDisputeDialog() {
+        _showDisputeDialog.value = true
+    }
+    fun closeDisputeDialog() {
+        _showDisputeDialog.value = false
     }
 
-    fun showAddParticipantButton( boolean: Boolean) {
-        _showAddParticipantButton.value = boolean
+    fun openDisputeModalSheet() {
+        _showDisputeModalSheet.value = true
     }
+    fun closeDisputeModalSheet() {
+        _showDisputeModalSheet.value = false
+    }
+
 }

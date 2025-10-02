@@ -62,6 +62,7 @@ fun CreatorActionButton(
 
             RejectOrAcceptButton(
                 onRejectButtonClick = {
+                    challengeDetailsViewModel.openDisputeDialog()
                     // Dispute
                   //  Toast.makeText(@this, "Dispute", Toast.LENGTH_SHORT).show()
                 },

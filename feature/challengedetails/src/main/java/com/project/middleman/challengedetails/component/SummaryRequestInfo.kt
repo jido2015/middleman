@@ -51,7 +51,7 @@ fun SummaryRequestInfo(
     if (showSheet) {
         ModalBottomSheet(
             containerColor = White,
-            onDismissRequest = { challengeDetailsViewModel?.closeSheet() },
+            onDismissRequest = { challengeDetailsViewModel?.closeSummarySheet() },
             sheetState = sheetState
         ) {
             Column(Modifier
@@ -142,7 +142,7 @@ fun SummaryRequestInfo(
                     onClick = {
                         challengeDetailsViewModel?.onChallengeAccepted(challenge)
                         scope.launch { sheetState.hide()
-                            challengeDetailsViewModel?.closeSheet()}
+                            challengeDetailsViewModel?.closeSummarySheet()}
                     },
                     text = "Join wager")
             }

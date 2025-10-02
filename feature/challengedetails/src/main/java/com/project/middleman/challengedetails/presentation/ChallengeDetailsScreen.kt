@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.project.middleman.challengedetails.component.participantActionMessage
 import com.project.middleman.challengedetails.component.creatorActionMessage
 import com.project.middleman.challengedetails.component.creatorActionWin
@@ -80,7 +80,6 @@ fun ChallengeDetailsScreen(
         actionMessage, winMessage,
         creator, participant,
         currentUser, onBackClicked)
-
 
     LaunchedEffect(key1 = challengeDetails.id) {
         challengeDetailsViewModel.getChallengeDetails(challengeDetails)

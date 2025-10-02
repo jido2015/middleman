@@ -21,7 +21,6 @@ import com.project.middleman.feature.createchallenge.presentation.CreateChalleng
 import com.project.middleman.feature.createchallenge.viewmodel.CreateChallengeViewModel
 import com.project.middleman.navigation.NavigationRoute
 import com.project.middleman.core.common.appstate.viewmodel.AppStateViewModel
-import com.project.middleman.feature.authentication.viewmodel.AuthViewModel
 import com.project.middleman.feature.authentication.viewmodel.CreateProfileViewModel
 import com.project.middleman.feature.openchallenges.presentation.ChallengeListScreen
 import com.project.middleman.navigation.auth.authenticationNavigation
@@ -30,7 +29,6 @@ import com.project.middleman.navigation.auth.authenticationNavigation
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.featureNavigation(
     backStackEntry: NavBackStackEntry?,
-    authViewModel: AuthViewModel,
     navController: NavHostController,
     onScrollDown: () -> Unit,
     onScrollUp: () -> Unit,

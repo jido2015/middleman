@@ -11,13 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,12 +35,11 @@ import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
-import com.project.middleman.designsystem.themes.colorGreen
 import com.project.middleman.designsystem.themes.deepColorAccent
-import com.project.middleman.designsystem.themes.lightGrey
 import com.project.middleman.designsystem.themes.surfaceBrandLighter
 import com.project.middleman.designsystem.themes.white
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeActionButtons(
     showAcceptSummary: () -> Unit,
@@ -50,6 +51,9 @@ fun ChallengeActionButtons(
     challenge: Challenge,
     participant: Participant?,
 ) {
+
+    val disputeSheetState = rememberModalBottomSheetState()
+
     Column(
         modifier = modifier.background(white)
 
@@ -62,17 +66,18 @@ fun ChallengeActionButtons(
                 .background(color = white)
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
 
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 5.dp),
+                .padding(start = 12.dp, end = 12.dp),
             text = actionMessage,
             style = Typography.labelSmall.copy(fontSize = 12.sp),
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
 
         AddParticipantView(
@@ -147,7 +152,25 @@ fun ChallengeActionButtons(
         }
 
         MultiActionButton()
-
-
     }
+
+    // Dispute Dialog
+    DisputeDialog(
+        onDismissRequest = {
+            challengeDetailsViewModel.closeDisputeDialog()
+        },
+        onDisputeScreen = {
+            challengeDetailsViewModel.closeDisputeDialog()
+            challengeDetailsViewModel.openDisputeModalSheet()
+
+            // Navigate to view wager screen or perform action
+        },
+        viewModel = challengeDetailsViewModel,
+
+        )
+
+    DisputeScreenBottomSheet(
+        sheetState = disputeSheetState,
+        viewModel = challengeDetailsViewModel,
+        )
 }

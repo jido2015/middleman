@@ -49,7 +49,6 @@ fun CreateChallengeDescription(
     var challengeDescription by remember { mutableStateOf("") }
     var usefulMessage by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
 
     val duration = Toast.LENGTH_SHORT
 
