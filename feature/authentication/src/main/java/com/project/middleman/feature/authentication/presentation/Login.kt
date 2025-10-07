@@ -3,7 +3,7 @@ package com.project.middleman.feature.authentication.presentation
 
 import android.util.Log
 import androidx.compose.runtime.*
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.project.middleman.feature.authentication.components.GetUserProfileWrapper

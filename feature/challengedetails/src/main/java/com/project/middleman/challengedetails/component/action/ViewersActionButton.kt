@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.deepColorAccent
@@ -59,7 +59,7 @@ fun ViewersActionButton(
     challenge: Challenge
 ) {
     when (challenge.status) {
-        BetStatus.OPEN.name -> {
+        ChallengeStatus.OPEN.name -> {
             ActionButton(
                 onSecondButtonClick = {
                     showAcceptSummary()
@@ -95,10 +95,10 @@ fun viewersActionMessage(
 ): String{
 
         return when (challenge.status) {
-            BetStatus.OPEN.name -> {
+            ChallengeStatus.OPEN.name -> {
                 "No challengers yet. Send your request to get the ball rolling!"
             }
-            BetStatus.PENDING.name -> {
+            ChallengeStatus.PENDING.name -> {
 
                 "Another player has already requested to join this bet." +
                         " Click the bell Icon to stay up to date on the status of this wager."

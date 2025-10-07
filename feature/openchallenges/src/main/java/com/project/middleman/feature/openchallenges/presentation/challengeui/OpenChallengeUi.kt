@@ -22,7 +22,9 @@ fun OpenChallengeUi(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        items(challenges.filter { challenge -> challenge.status == "OPEN"  || challenge.status == "PENDING"}) { challenge ->
+        items(challenges.filter { challenge -> challenge.status == "OPEN" ||
+                challenge.status == "PENDING"
+        }) { challenge ->
             ChallengeCardItem(
                 challenge = challenge,
                 onChallengeClick = {

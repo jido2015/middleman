@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.compiler)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
+    implementation(libs.androidx.work.runtime.ktx)
     platform(libs.firebase.bom)
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)

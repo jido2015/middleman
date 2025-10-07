@@ -21,7 +21,7 @@ import com.project.middleman.challengedetails.uistate_handler.DeleteParticipantW
 import com.project.middleman.challengedetails.uistate_handler.FetchParticipantWrapper
 import com.project.middleman.challengedetails.uistate_handler.GetChallengeDetailsWrapper
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 
@@ -31,24 +31,18 @@ fun ChallengeDetailsScreen(
     onBackClicked: () -> Unit,
     challengeDetailsViewModel: ChallengeDetailsViewModel = hiltViewModel(),
     challengeDetails: Challenge = Challenge()
-
 ) {
 
     var participants by remember { mutableStateOf(emptyList<Participant>()) }
-
     var challenge by remember { mutableStateOf(challengeDetails) }
-
     var actionMessage by remember { mutableStateOf("") }
     var winMessage by remember { mutableStateOf("") }
-
-
-
 
     val creator =  challenge.participant.entries.find { it.value.status == "Creator" }?.value
 
     val participant = challenge.participant.entries.find { it.value.status == "Participant" }?.value
 
-    val currentUser = challengeDetailsViewModel.getCurrentUser()
+    val currentUser = challengeDetailsViewModel.localUser
 
     actionMessage = when (currentUser?.uid) {
         participant?.userId -> {
@@ -79,7 +73,7 @@ fun ChallengeDetailsScreen(
         challengeDetailsViewModel, participants,
         actionMessage, winMessage,
         creator, participant,
-        currentUser, onBackClicked)
+        onBackClicked)
 
     LaunchedEffect(key1 = challengeDetails.id) {
         challengeDetailsViewModel.getChallengeDetails(challengeDetails)
@@ -93,6 +87,7 @@ fun ChallengeDetailsScreen(
         },
         onSuccess = {
             challenge = it
+            challengeDetailsViewModel.getLatestChallenge(it)
             Log.d("GetChallengeDetailsWrapper", "Success")
         }
     )
@@ -104,7 +99,7 @@ fun ChallengeDetailsScreen(
 
         },
         onSuccessMessage = {
-           challenge = challenge.copy(status = BetStatus.ACTIVE.name)
+           challenge = challenge.copy(status = ChallengeStatus.ACTIVE.name)
             Log.d("AcceptParticipantWrapper", "Success")
         }
     )
@@ -125,7 +120,7 @@ fun ChallengeDetailsScreen(
     // Delete participant
     DeleteParticipantWrapper(
         onSuccess = {
-            challenge = challenge.copy(status = BetStatus.OPEN.name,
+            challenge = challenge.copy(status = ChallengeStatus.OPEN.name,
                 participant = challenge.participant
                     .filterValues { it.status != "Participant" }
             )

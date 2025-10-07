@@ -33,7 +33,7 @@ fun MainNavigationTopBar(
     modifier: Modifier = Modifier,
 ) {
         Column(
-            modifier = modifier.padding( start = 12.dp, end = 12.dp)
+            modifier = modifier.padding( start = 12.dp, end = 12.dp, top = 12.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally

@@ -104,6 +104,7 @@ dependencies {
     coreLibraryDesugaring(libs.core.library8)
     implementation(project(":core:injection"))
     implementation(project(":core:source"))
+    implementation(project(":core:common"))
     implementation(project(":feature:authentication"))
     implementation(project(":navigation"))
     implementation(project(":composables"))

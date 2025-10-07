@@ -24,14 +24,16 @@ fun ActiveChallengeUi(
     ) {
         items(challenges.filter { challenge ->
             challenge.status == "ACTIVE" || challenge.status == "PARTICIPANT_WINS"
-                || challenge.status == "CREATOR_WINS"   }) { challenge ->
+                || challenge.status == "CREATOR_WINS"||
+                    challenge.status == "PARTICIPANT_DISPUTE" ||
+                    challenge.status == "CREATOR_DISPUTE"}) { challenge ->
             ChallengeCardItem(
                 challenge = challenge,
                 onChallengeClick = {
 
                     onCardChallengeClick(challenge)
                 })
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 

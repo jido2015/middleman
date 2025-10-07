@@ -4,7 +4,7 @@ package com.project.middleman.challengedetails.component.action
 import android.util.Log
 import androidx.compose.runtime.Composable
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorBlack
@@ -23,11 +23,11 @@ fun CreatorActionButton(
 
     when (challenge.status) {
 
-        BetStatus.ACTIVE.name -> {
+        ChallengeStatus.ACTIVE.name -> {
             ActionButton(
                 secondButtonVisibility = true,
                 onSecondButtonClick = { challengeDetailsViewModel.concludeChallenge(challenge,
-                    BetStatus.CREATOR_WINS.name) },
+                    ChallengeStatus.CREATOR_WINS.name) },
                 btn2Text = "Claim win \uD83C\uDF89 \uD83D\uDCB0",
                 button2Color = deepColorAccent,
                 enableBtn2 = true,
@@ -41,20 +41,20 @@ fun CreatorActionButton(
             )
         }
 
-        BetStatus.CREATOR_WINS.name -> {
+        ChallengeStatus.CREATOR_WINS.name -> {
             Log.d("BetStatus", "CREATOR_WINS")
 
             ActionButton(
                 onSecondButtonClick = {
                     challengeDetailsViewModel.concludeChallenge(challenge,
-                        BetStatus.ACTIVE.name)
+                        ChallengeStatus.ACTIVE.name)
                 },
                 btn2Text = "Revert Claim",
                 button2Color = red,
                 enableBtn2 = true
             )
         }
-        BetStatus.PARTICIPANT_WINS.name -> {
+        ChallengeStatus.PARTICIPANT_WINS.name -> {
             Log.d("BetStatus", "PARTICIPANT_WINS")
 
             // Reject or accept challenge
@@ -62,23 +62,25 @@ fun CreatorActionButton(
 
             RejectOrAcceptButton(
                 onRejectButtonClick = {
-                    challengeDetailsViewModel.openDisputeDialog()
+                    challengeDetailsViewModel.openDisputeDialog(ChallengeStatus.CREATOR_DISPUTE)
                     // Dispute
                   //  Toast.makeText(@this, "Dispute", Toast.LENGTH_SHORT).show()
                 },
                 onAcceptButtonClick = { challengeDetailsViewModel.concludeFinalChallenge(
                     winnerDisplayName = participant?.displayName,
                     challenge = challenge,
-                    status = BetStatus.CLOSED.name
+                    status = ChallengeStatus.CLOSED.name
                 ) }
             )
         }
-        BetStatus.CLOSED.name -> {
+        ChallengeStatus.CLOSED.name -> {
+            Log.d("IsBetStatus", "CLOSED")
+
             ActionButton(
                 onSecondButtonClick = { /* Add logic to conclude wager */ },
                 btn2Text = "Challenge Closed",
                 button2Color = borderGrey,
-                enableBtn2 = false
+                enableBtn2 = true
             )
         }
 
@@ -97,12 +99,12 @@ fun creatorActionWin(
 ): String {
 
     return when (challenge.status) {
-        BetStatus.PARTICIPANT_WINS.name -> {
+        ChallengeStatus.PARTICIPANT_WINS.name -> {
 
             "Your opponent has claimed this win. Please confirm the result within " +
                     "23 hours 58 minutes, or dispute if you disagree."
         }
-        BetStatus.CREATOR_WINS.name -> {
+        ChallengeStatus.CREATOR_WINS.name -> {
             "Your claim will be confirmed once your opponent confirms it within 23 hours 58 minutes."
         }
         else -> {

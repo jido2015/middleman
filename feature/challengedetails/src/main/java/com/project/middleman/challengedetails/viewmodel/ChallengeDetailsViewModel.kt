@@ -1,14 +1,15 @@
 package com.project.middleman.challengedetails.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Challenge
@@ -23,16 +24,17 @@ import com.project.middleman.core.source.domain.challenge.usecase.AcceptChalleng
 import com.project.middleman.core.source.domain.challenge.usecase.ConcludeChallengeUseCase
 import com.project.middleman.core.source.domain.challenge.usecase.GetChallengeDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class ChallengeDetailsViewModel @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
     private val acceptChallengeUseCase: AcceptChallengeUseCase,
     private val deleteParticipantUseCase: RemoveParticipantUseCase,
     private val acceptParticipantUseCase: AcceptParticipantUseCase,
@@ -47,6 +49,12 @@ class ChallengeDetailsViewModel @Inject constructor(
 
     private val _showDisputeDialog = MutableStateFlow(false)
     val showDisputeDialog: StateFlow<Boolean> = _showDisputeDialog
+
+    var challengeStatus: String by mutableStateOf("")
+
+    private val _latestChallenge = MutableStateFlow(Challenge())
+    val latestChallenge: StateFlow<Challenge> = _latestChallenge
+
 
     private val _showDisputeModalSheet = MutableStateFlow(false)
     val showDisputeModalSheet: StateFlow<Boolean> = _showDisputeModalSheet
@@ -77,12 +85,6 @@ class ChallengeDetailsViewModel @Inject constructor(
         loadingState.value = loading
     }
 
-    fun getCurrentUser(): FirebaseUser? {
-        val user = firebaseAuth.currentUser
-        return user
-    }
-
-
     init {
         viewModelScope.launch {
             local.observeCurrentUser()
@@ -105,7 +107,7 @@ class ChallengeDetailsViewModel @Inject constructor(
         }
 
 
-        val updatedChallenge = challenge.copy( status = BetStatus.PENDING.name)
+        val updatedChallenge = challenge.copy( status = ChallengeStatus.PENDING.name)
 
         val participant = Participant(
             status = "Participant",
@@ -144,7 +146,7 @@ class ChallengeDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _deleteParticipantState.value = RequestState.Loading
             val result =
-                deleteParticipantUseCase(BetStatus.OPEN.name, challengeId, participantId)
+                deleteParticipantUseCase(ChallengeStatus.OPEN.name, challengeId, participantId)
             _deleteParticipantState.value = result
         }
     }
@@ -171,7 +173,6 @@ class ChallengeDetailsViewModel @Inject constructor(
     }
 
 
-
     fun getUpdatedChallengeDetails(challengeId: String){
         viewModelScope.launch {
             _getChallengeState.value = RequestState.Loading
@@ -185,7 +186,7 @@ class ChallengeDetailsViewModel @Inject constructor(
     fun acceptParticipantRequest(challengeId: String, participantId: String) {
         viewModelScope.launch {
             _acceptParticipantState.value = RequestState.Loading
-            val result = acceptParticipantUseCase(BetStatus.ACTIVE.name, challengeId, participantId)
+            val result = acceptParticipantUseCase(ChallengeStatus.ACTIVE.name, challengeId, participantId)
             _acceptParticipantState.value = result
         }
     }
@@ -201,7 +202,9 @@ class ChallengeDetailsViewModel @Inject constructor(
     fun closeSummarySheet() {
         _showSummarySheet.value = false
     }
-    fun openDisputeDialog() {
+    fun openDisputeDialog(type: ChallengeStatus) {
+        // Set the type of dispute - Participant or Creator
+        challengeStatus = type.name
         _showDisputeDialog.value = true
     }
     fun closeDisputeDialog() {
@@ -215,4 +218,7 @@ class ChallengeDetailsViewModel @Inject constructor(
         _showDisputeModalSheet.value = false
     }
 
+    fun getLatestChallenge(challenge: Challenge) {
+        _latestChallenge.value = challenge
+    }
 }

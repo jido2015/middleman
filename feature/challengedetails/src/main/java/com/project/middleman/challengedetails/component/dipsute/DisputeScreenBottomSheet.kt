@@ -1,5 +1,7 @@
 package com.project.middleman.challengedetails.component.dipsute
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,16 +15,19 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.middleman.composables.button.CustomButton
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
+import com.project.middleman.core.common.upload.worker.enqueueMultipleEvidenceUploads
 import kotlinx.coroutines.launch
 
 
@@ -33,42 +38,60 @@ fun DisputeScreenBottomSheet(
     viewModel: ChallengeDetailsViewModel? = null, // nullable
 ) {
     val scope = rememberCoroutineScope()
-    val disputeDescription = remember { mutableStateOf("") }
+    val disputeNote = remember { mutableStateOf("") }
+    val selectedMedia = remember { mutableStateListOf<Uri>() }
 
-
-    if (viewModel?.showDisputeModalSheet?.collectAsState()?.value  == true) {
-    ModalBottomSheet(
-        containerColor = White,
-        onDismissRequest = { viewModel.closeDisputeModalSheet() },
-        sheetState = sheetState
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize()
-                .imePadding(), // ✅ makes room when keyboard shows
-            horizontalAlignment = Alignment.CenterHorizontally
+    val context = LocalContext.current
+    val latestChallenge = viewModel?.latestChallenge?.collectAsState()
+    if (viewModel?.showDisputeModalSheet?.collectAsState()?.value == true) {
+        ModalBottomSheet(
+            containerColor = White,
+            onDismissRequest = { viewModel.closeDisputeModalSheet() },
+            sheetState = sheetState
         ) {
-            PickDisputeFiles(disputeDescription)
-
-            Spacer(modifier = Modifier.weight(1f)) // pushes button down
-
-            CustomButton(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = {
-                    scope.launch {
-                        sheetState.hide()
-                        viewModel.closeDisputeModalSheet()
-                    }
-                },
-                text = "Submit dispute"
-            )
+                    .padding(16.dp)
+                    .fillMaxSize()
+                    .imePadding(), // ✅ makes room when keyboard shows
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                PickDisputeFiles(
+                    selectedMedia = selectedMedia,
+                    disputeDescription = disputeNote
+                )
+
+                Spacer(modifier = Modifier.weight(1f)) // pushes button down
+
+                CustomButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        if (selectedMedia.isNotEmpty()){
+                            Log.d("DisputeUserId", "${viewModel.localUser?.uid}")
+                            Log.d("DisputeChallengeId", "${latestChallenge?.value?.id}")
+                            enqueueMultipleEvidenceUploads(
+                                context, challengeId = latestChallenge?.value?.id.toString(),
+                                userId = viewModel.localUser?.uid!!,
+                                uris = selectedMedia.toList(),
+                                disputeNote = disputeNote.toString(),
+                                challengeStatus = viewModel.challengeStatus,
+                            )
+                        }
+
+                        scope.launch {
+
+                            sheetState.hide()
+                            viewModel.closeDisputeModalSheet()
+                        }
+                    },
+                    text = "Submit dispute"
+                )
+            }
+
+
         }
-
-
     }
-      }
 }
 
 

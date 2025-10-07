@@ -41,7 +41,7 @@ import com.middleman.composables.button.ProceedButton
 import com.middleman.composables.common.getChallengeColor
 import com.middleman.composables.dot.Options
 import com.middleman.composables.profile.VSProfileUiView
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.common.getChallengeStatusName
 import com.project.middleman.core.common.toTimeAgo
 import com.project.middleman.core.source.data.model.Challenge
@@ -239,10 +239,10 @@ fun ChallengeCard(
                 winnerDisplayName = challenge.winnerDisplayName,
                 creatorName = creator?.displayName,
                 participantName = participant?.displayName
-                    .takeIf { challenge.status.isNotEmpty() && challenge.status != BetStatus.PENDING.name }
+                    .takeIf { challenge.status.isNotEmpty() && challenge.status != ChallengeStatus.PENDING.name }
                 ,
                 participantPhoto = participant?.photoUrl
-                    .takeIf { challenge.status.isNotEmpty() && challenge.status != BetStatus.PENDING.name }
+                    .takeIf { challenge.status.isNotEmpty() && challenge.status != ChallengeStatus.PENDING.name }
                 ,
                 creatorPhoto = creator?.photoUrl,
             )

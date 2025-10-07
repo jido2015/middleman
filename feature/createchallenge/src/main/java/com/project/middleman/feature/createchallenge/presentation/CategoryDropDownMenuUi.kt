@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.borderGrey
 import com.project.middleman.designsystem.themes.colorAccent
+import com.project.middleman.designsystem.themes.colorBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +48,7 @@ fun CustomDropdownMenu(
             modifier = Modifier
                 .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
                 .fillMaxWidth(),
-            textStyle =  Typography.bodyMedium.copy(fontSize = 16.sp),
+            textStyle =  Typography.bodyMedium.copy(fontSize = 16.sp, color = colorBlack),
             value = selectedOption,
             onValueChange = {},
             readOnly = true,
@@ -75,7 +76,7 @@ fun CustomDropdownMenu(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(text = option, fontSize = 14.sp) },
+                    text = { Text(text = option, fontSize = 14.sp, color = colorBlack) },
                     onClick = {
                         onOptionSelected(option)
                         expanded = false

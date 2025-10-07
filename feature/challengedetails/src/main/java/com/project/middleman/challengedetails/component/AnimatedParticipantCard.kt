@@ -27,8 +27,7 @@ fun AnimatedParticipantCard(
     challengeDetailsViewModel: ChallengeDetailsViewModel,
     singleParticipant: Participant,
     challenge: Challenge,
-    creator: Participant?,
-    currentUser: FirebaseUser?
+    creator: Participant?
 ) {
     val density = LocalDensity.current
 
@@ -50,8 +49,7 @@ fun AnimatedParticipantCard(
             challengeDetailsViewModel,
             singleParticipant,
             challenge,
-            creator = creator,
-            currentUser = currentUser
+            creator = creator
         )
     }
 }

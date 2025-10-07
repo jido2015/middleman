@@ -34,11 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.firebase.auth.FirebaseUser
 import com.middleman.composables.R
 import com.middleman.composables.profile.ProfileImage
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.common.toTimeAgo
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
@@ -48,16 +47,15 @@ import com.project.middleman.designsystem.themes.white
 
 @Composable
 fun InvitationComposeCard(
-    challengeDetailsViewModel: ChallengeDetailsViewModel? = null,
+    viewModel: ChallengeDetailsViewModel? = null,
     participant: Participant? = null,
     challenge: Challenge? = null,
-    currentUser: FirebaseUser? = null,
     creator: Participant? = null,
 ) {
 
     var columnVisibility by remember { mutableStateOf(false) }
 
-    columnVisibility = challenge?.status == BetStatus.PENDING.name
+    columnVisibility = challenge?.status == ChallengeStatus.PENDING.name
 
     if (columnVisibility) {
 
@@ -115,8 +113,8 @@ fun InvitationComposeCard(
 
                         when (challenge?.status) {
 
-                            BetStatus.PENDING.name ->
-                                when (currentUser?.uid) {
+                            ChallengeStatus.PENDING.name ->
+                                when (viewModel?.localUser?.uid) {
                                     participant?.userId -> {
                                         append(" Your request to join is pending.")
 
@@ -124,6 +122,9 @@ fun InvitationComposeCard(
 
                                     creator?.userId -> {
                                         append(" You have a new request waiting for your approval.")
+                                    }
+                                    else -> {
+                                        append(" A new request is pending approval")
                                     }
                                 }
 
@@ -144,8 +145,8 @@ fun InvitationComposeCard(
                     }
                 ) {
 
-                    if (currentUser?.uid == creator?.userId
-                        && challenge?.status == BetStatus.PENDING.name
+                    if (viewModel?.localUser?.uid == creator?.userId
+                        && challenge?.status == ChallengeStatus.PENDING.name
                     ) {
 
 
@@ -153,7 +154,7 @@ fun InvitationComposeCard(
                         Box(
                             modifier = Modifier
                                 .clickable(onClick = {
-                                    challengeDetailsViewModel
+                                    viewModel
                                         ?.removeParticipant(
                                             challenge.id,
                                             participant?.userId ?: ""
@@ -179,7 +180,7 @@ fun InvitationComposeCard(
                         Box(
                             modifier = Modifier
                                 .clickable(onClick = {
-                                    challengeDetailsViewModel
+                                    viewModel
                                         ?.acceptParticipantRequest(
                                             challenge.id,
                                             participant?.userId ?: ""

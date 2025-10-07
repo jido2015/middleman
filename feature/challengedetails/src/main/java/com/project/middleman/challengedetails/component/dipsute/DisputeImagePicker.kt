@@ -24,9 +24,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -49,32 +49,38 @@ import com.skydoves.landscapist.InternalLandscapistApi
 
 @OptIn(InternalLandscapistApi::class)
 @Composable
-fun PickDisputeFiles(disputeDescription: MutableState<String>) {
+fun PickDisputeFiles(
+    disputeDescription: MutableState<String>,
+    selectedMedia: MutableList<Uri> = remember { mutableListOf() },
+) {
 
     val focusRequester = remember { FocusRequester() }
-    val selectedMedia = remember { mutableStateListOf<Uri>() }
-
     // Registers a photo picker activity launcher in single-select mode.
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(5)
-    ) { uri ->
-        selectedMedia.addAll(uri)
-
-        // Callback is invoked after the user selects a media item or closes the
-        // photo picker.
-        Log.d("PhotoPicker", "Selected URI: $uri")
+    ) { uris ->
+        // Callback is invoked after the user selects a media item or closes the photo picker.
+        if (uris.isNotEmpty()) {
+            selectedMedia.addAll(uris)
+            Log.d("PhotoPicker", "Selected URI: $uris")
+        }
     }
 
     Column {
-        Text(modifier= Modifier.fillMaxWidth(),text = "Upload proof of claim",
-            style = Typography.titleMedium.copy(fontSize = 14.sp,
-                color = colorBlack, textAlign = TextAlign.Center))
+        Text(
+            modifier = Modifier.fillMaxWidth(), text = "Upload proof of claim",
+            style = Typography.titleMedium.copy(
+                fontSize = 14.sp,
+                color = colorBlack, textAlign = TextAlign.Center
+            )
+        )
         Spacer(modifier = Modifier.size(16.dp))
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(true, onClick = {
+                    selectedMedia.clear()
                     pickMedia.launch(
                         PickVisualMediaRequest(
                             ActivityResultContracts.PickVisualMedia.ImageAndVideo
@@ -155,4 +161,5 @@ fun PickDisputeFiles(disputeDescription: MutableState<String>) {
 @Composable
 fun PreviewPickDisputeFiles() {
     PickDisputeFiles(disputeDescription = remember { mutableStateOf("") })
+
 }

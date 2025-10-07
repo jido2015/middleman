@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.google.firebase.auth.FirebaseUser
 import com.middleman.composables.animation.ConfettiAnimated
 import com.middleman.composables.animation.WinnerCupAnimated
 import com.middleman.composables.progressbar.CircularProgressBar
@@ -33,7 +32,8 @@ import com.project.middleman.challengedetails.component.AnimatedParticipantCard
 import com.project.middleman.challengedetails.component.action.ChallengeActionButtons
 import com.project.middleman.challengedetails.component.SummaryRequestInfo
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
+import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.Typography
@@ -50,7 +50,6 @@ fun ChallengeDetailUi(
     winMessage: String,
     creator: Participant?,
     participant: Participant?,
-    currentUser: FirebaseUser?,
     onBackClicked: () -> Unit
 ){
 
@@ -93,7 +92,7 @@ fun ChallengeDetailUi(
                         challenge = challenge,
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp)) // Space before "Invitations"
+                    Spacer(modifier = Modifier.height(40.dp)) // Space before "Invitations"
                 }
 
                 // Invitations list
@@ -104,7 +103,6 @@ fun ChallengeDetailUi(
                         singleParticipant,
                         challenge,
                         creator = creator,
-                        currentUser = currentUser
                     )
                     Spacer(modifier = Modifier.height(40.dp)) // Space before "Invitations"
                 }
@@ -131,8 +129,8 @@ fun ChallengeDetailUi(
                 item {
                     CircularProgressBar(
                         currentStake = challenge.payoutAmount,
-                        totalStake = if(challenge.status == BetStatus.OPEN.name ||
-                            challenge.status == BetStatus.PENDING.name) challenge.payoutAmount *2
+                        totalStake = if(challenge.status == ChallengeStatus.OPEN.name ||
+                            challenge.status == ChallengeStatus.PENDING.name) challenge.payoutAmount *2
                         else challenge.payoutAmount,
                     )
                     Spacer(modifier = Modifier.height(500.dp)) // Space before "Invitations"

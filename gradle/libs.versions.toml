@@ -10,22 +10,22 @@ kotlinGradlePlugin = "8.12.3"       # Android Gradle Plugin
 lifecycle-runtime-ktx = "2.9.4"
 activity-compose = "1.11.0"
 compose-bom = "2025.08.00"
-navigation = "2.9.4"
-dagger-hilt = "2.57.1"
+navigation = "2.9.5"
+dagger-hilt = "2.57.2"
 hilt-navigation = "1.3.0"
 google-services = "4.4.3"
 core-library8 = "2.1.5"
 firebase-bom = "34.3.0"
-room = "2.8.0"
+room = "2.8.1"
 compiler = "1.5.15"
 splash-screen = "1.0.1"
 coroutines-core = "1.10.2"
 coil-image = "2.7.0"
-airbnb-lottie = "6.6.9"
-glideVersion = "2.6.0"
+airbnb-lottie = "6.6.10"
+glideVersion = "2.6.1"
 constraintLayout = "1.1.1"
 accompanist-pager = "0.36.0"
-material3 = "1.3.2"
+material3 = "1.4.0"
 cred-manager = "1.5.0"
 google-id = "1.1.1"
 appcompat = "1.7.1"
@@ -43,6 +43,8 @@ core = "1.7.0"
 playServicesWallet = "19.4.0"
 gson = "2.13.2"
 googleFirebaseCrashlytics = "3.0.6"
+workRuntimeKtx = "2.10.5"
+hiltCommon = "1.3.0"
 
 
 [libraries]
@@ -119,6 +121,9 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "playServicesWallet" }
+#  Kotlin + coroutines
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "kotlinGradlePlugin" }

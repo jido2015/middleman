@@ -3,6 +3,7 @@ package com.project.middleman.challengedetails.component.action
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,10 +17,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,9 +33,10 @@ import com.middleman.composables.R
 import com.middleman.composables.quickations.MultiActionButton
 import com.project.middleman.challengedetails.component.AddParticipantView
 import com.project.middleman.challengedetails.component.dipsute.DisputeDialog
+import com.project.middleman.challengedetails.component.dipsute.DisputeNotice
 import com.project.middleman.challengedetails.component.dipsute.DisputeScreenBottomSheet
 import com.project.middleman.challengedetails.viewmodel.ChallengeDetailsViewModel
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.model.Challenge
 import com.project.middleman.core.source.data.model.Participant
 import com.project.middleman.designsystem.themes.Typography
@@ -52,6 +57,16 @@ fun ChallengeActionButtons(
     challenge: Challenge,
     participant: Participant?,
 ) {
+    // For dispute check
+    val isDispute = challenge.status in listOf(
+        ChallengeStatus.PARTICIPANT_DISPUTE.name,
+        ChallengeStatus.CREATOR_DISPUTE.name
+    )
+    val disputeById = when (challenge.status) {
+        ChallengeStatus.PARTICIPANT_DISPUTE.name -> participant?.userId
+        ChallengeStatus.CREATOR_DISPUTE.name -> creatorId
+        else -> null
+    }
 
     val disputeSheetState = rememberModalBottomSheetState()
 
@@ -90,8 +105,8 @@ fun ChallengeActionButtons(
 
         if (challengeDetailsViewModel.localUser?.uid == creatorId ||
             challengeDetailsViewModel.localUser?.uid == participant?.userId){
-            if( challenge.status == BetStatus.PARTICIPANT_WINS.name ||
-                challenge.status == BetStatus.CREATOR_WINS.name){
+            if( challenge.status == ChallengeStatus.PARTICIPANT_WINS.name ||
+                challenge.status == ChallengeStatus.CREATOR_WINS.name){
                 Row(
                     modifier = Modifier
                         .padding(12.dp)
@@ -118,13 +133,23 @@ fun ChallengeActionButtons(
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
-
             }
+        }
+
+        if (isDispute) {
+            // Dispute Notice UI
+            DisputeNotice(
+                localUserId = challengeDetailsViewModel.localUser?.uid,
+                creatorId = creatorId,
+                participantId = participant?.userId,
+                disputeById = disputeById
+            )
 
         }
 
+
         // Creator Actions
-        when (challengeDetailsViewModel.getCurrentUser()?.uid) {
+        when (challengeDetailsViewModel.localUser?.uid) {
             creatorId-> {
                 // Creator Actions
                 Log.d("Whois", "Creator Message Reached")
@@ -165,7 +190,7 @@ fun ChallengeActionButtons(
             challengeDetailsViewModel.closeDisputeDialog()
             challengeDetailsViewModel.openDisputeModalSheet()
 
-            // Navigate to view wager screen or perform action
+            // Navigate to disputeScreen to upload
         },
         viewModel = challengeDetailsViewModel,
 

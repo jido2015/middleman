@@ -126,7 +126,7 @@ fun CreateChallengeDescription(
 
             // Access details title
             Text(
-                "Access Details",
+                "Access Details - Shared privately with your participant (e.g., code or link)",
                 style = Typography.labelSmall.copy(fontSize = 16.sp, color = colorBlack),
                 modifier = Modifier.constrainAs(tittleUseful) {
                     top.linkTo(charCount.bottom, margin = 40.dp)
@@ -139,7 +139,7 @@ fun CreateChallengeDescription(
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(usefulInfo) {
-                        top.linkTo(tittleUseful.bottom, margin = 10.dp)
+                        top.linkTo(tittleUseful.bottom, margin = 20.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
@@ -148,10 +148,10 @@ fun CreateChallengeDescription(
                 onValueChange = { newText ->
                     if (newText.length <= maxCharacters) usefulMessage = newText
                 },
-                placeholder = "Shared privately with your participant (e.g., code or link)",
+                placeholder = "PSN...",
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
                 singleLine = false,
-                maxLines = 3
+                maxLines = 1
             )
 
             // Continue button

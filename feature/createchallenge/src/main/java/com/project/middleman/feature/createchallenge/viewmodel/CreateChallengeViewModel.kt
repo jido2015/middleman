@@ -7,13 +7,11 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.project.middleman.core.source.data.sealedclass.RequestState
 import com.project.middleman.core.source.data.model.Challenge
-import com.project.middleman.core.source.domain.challenge.repository.CreateChallengeResponse
 import com.project.middleman.core.source.domain.challenge.usecase.CreateChallengeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.middleman.core.common.BetStatus
+import com.project.middleman.core.common.ChallengeStatus
 import com.project.middleman.core.source.data.local.UserLocalDataSource
 import com.project.middleman.core.source.data.local.entity.UserEntity
 import com.project.middleman.core.source.data.model.Participant
@@ -85,7 +83,7 @@ class CreateChallengeViewModel @Inject constructor(
             title = title,
             participant = mapOf(localUser?.uid!! to creator),
             category = category,
-            status = BetStatus.OPEN.name,
+            status = ChallengeStatus.OPEN.name,
             visibility = visibility,
             createdAt = System.currentTimeMillis(),
             startDate = selectedTimeInMillis,

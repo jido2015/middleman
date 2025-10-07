@@ -1,7 +1,6 @@
 package com.project.middleman.core.source.data.model
 
 
-import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue

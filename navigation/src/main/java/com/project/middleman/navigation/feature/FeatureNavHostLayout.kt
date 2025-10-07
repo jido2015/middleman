@@ -88,7 +88,7 @@ fun FeatureContentLayout(
 
     //
     Box(modifier = Modifier.fillMaxSize().background(if (showNotificationBarSheet){
-        Color.Black } else { Color.Transparent })) {
+        Color.Transparent} else { white })) {
 
         Column(modifier = Modifier.fillMaxSize()
         ) {
@@ -118,7 +118,7 @@ fun FeatureContentLayout(
                         title = navigationTitle,
                         progress = navigationCurrentProgress/5f,
                         showNavigationTopBarSheet = showNavigationTopBarSheet,
-                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 16.dp))
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp))
 
                     // ✅ Pass real scroll callbacks
 

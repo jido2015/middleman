@@ -50,9 +50,8 @@ import com.project.middleman.designsystem.themes.Typography
 import com.project.middleman.designsystem.themes.colorAccent
 import com.project.middleman.designsystem.themes.deepColorAccent
 import com.middleman.composables.R
-import com.project.middleman.designsystem.themes.SetStatusBarStyle
-import com.project.middleman.designsystem.themes.colorBlack
-import com.project.middleman.designsystem.themes.white
+import com.project.middleman.designsystem.themes.notificationColor
+import com.project.middleman.designsystem.themes.systemTextColor
 
 @Composable
 fun AnimatedNotificationBar(
@@ -71,14 +70,13 @@ fun AnimatedNotificationBar(
         label = "Arrow Rotation"
     )
 
-    Column(modifier = modifier.padding(top = 60.dp,  bottom = 12.dp)) {
+    Column(modifier = modifier.padding(bottom = 12.dp)) {
 
         if (isNotificationBarSheet){
-            SetStatusBarStyle(white, useDarkIcons = false)
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black),
+                .background(notificationColor)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -98,7 +96,7 @@ fun AnimatedNotificationBar(
             Text(
                 text = "Derahn invited you to a match and more details about the game",
                 style = Typography.bodySmall,
-                color = Color.White,
+                color = systemTextColor,
                 modifier = Modifier.widthIn(max = 200.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -107,7 +105,7 @@ fun AnimatedNotificationBar(
             Icon(
                 painter = painterResource(id = R.drawable.arrow_up),
                 contentDescription = "Notification",
-                tint = Color.White,
+                tint = systemTextColor,
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(
@@ -141,7 +139,7 @@ fun AnimatedNotificationBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .background(Color.Black)
+                    .background(notificationColor)
             ) {
                 Card(
                     shape = RoundedCornerShape(10.dp),
@@ -217,10 +215,7 @@ fun AnimatedNotificationBar(
                     }
                 }
             }
-        } } else{
-
-            SetStatusBarStyle(colorBlack, useDarkIcons = true)
-        }
+        } }
     }
 }
 

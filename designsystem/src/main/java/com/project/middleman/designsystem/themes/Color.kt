@@ -36,5 +36,8 @@ val proceedArrowColor = colorBlack
 //val verificationColor: Color
 //    @Composable get() = if (isSystemInDarkTheme()) verificationDarkColor else surface
 //
-//val proceedArrowColor: Color
-//    @Composable get() = if (isSystemInDarkTheme()) white else colorBlack
+val systemTextColor: Color
+    @Composable get() = if (isSystemInDarkTheme()) white else colorBlack
+
+val notificationColor: Color
+    @Composable get() = if (isSystemInDarkTheme()) colorBlack else white

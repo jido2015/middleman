@@ -3,6 +3,7 @@ package com.project.middleman.designsystem.themes
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -51,22 +52,33 @@ private val LightColorScheme = lightColorScheme(
     surface = white,
     onSurface = colorBlack,
 )
-
 @Composable
 fun MiddlemanTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    showNotificationBarSheet: Boolean = false, // from ViewModel
     content: @Composable () -> Unit
 ) {
-    //val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-    val colorScheme = LightColorScheme
-
-
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     val view = LocalView.current
+
+
     SideEffect {
         if (!view.isInEditMode) {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+            val insetsController = WindowCompat.getInsetsController(window, view)
+
+            if (showNotificationBarSheet) {
+                // ✅ Notification sheet showing →
+                //use theme background + default icons
+                window.statusBarColor = colorScheme.background.toArgb()
+                insetsController.isAppearanceLightStatusBars = !darkTheme
+            } else {
+
+                window.statusBarColor = colorBlack.toArgb()
+                WindowCompat.getInsetsController(window, view)
+                    .isAppearanceLightStatusBars = true
+
+            }
         }
     }
 
@@ -75,23 +87,5 @@ fun MiddlemanTheme(
         typography = Typography,
         content = content
     )
-}
-
-
-@Composable
-fun SetStatusBarStyle(
-    backgroundColor: Color,
-    useDarkIcons: Boolean
-) {
-    val view = LocalView.current
-
-    SideEffect {
-        if (!view.isInEditMode) {
-            val window = (view.context as Activity).window
-            window.statusBarColor = backgroundColor.toArgb()
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = useDarkIcons
-        }
-    }
 }
 

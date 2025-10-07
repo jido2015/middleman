@@ -2,6 +2,7 @@ package com.project.middleman.challengedetails.component.dipsute
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -83,6 +84,7 @@ fun MediaGrid(uris: List<Uri>) {
 
 fun isVideoUri(context: Context, uri: Uri): Boolean {
     val type = context.contentResolver.getType(uri)
+    Log.d("MediaGrid", "isVideoUri: $type")
     return type?.startsWith("video") == true
 }
 

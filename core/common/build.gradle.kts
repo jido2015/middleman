@@ -35,10 +35,11 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -48,6 +49,9 @@ dependencies {
     implementation(libs.kotlin.coroutine)
     implementation(libs.material3)
     ksp(libs.hilt.ksp)
+    implementation(libs.gson)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.firestore)
 }

@@ -28,83 +28,85 @@ import kotlin.system.exitProcess
 
 @Composable
 fun NavigationTopBarWithProgressBar(
-    handleBackPressed : () -> Unit,
+    handleBackPressed: () -> Unit,
     progress: Float,
     modifier: Modifier = Modifier,
     showNavigationTopBarSheet: Boolean = false,
     title: String = "Create Wager"
 ) {
 
-
     if (showNavigationTopBarSheet) {
 
-    Column(
-        modifier = modifier.padding(bottom = 20.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-
+        Column(
+            modifier = modifier
+                .padding(bottom = 20.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
 
-            IconButton(
-                onClick ={handleBackPressed()},
+            ) {
+
+                IconButton(
+                    onClick = { handleBackPressed() },
 //                    {if (progress == 0.2f) {
 //                    exitProcess(0)
 //                } else handleBackPressed()}
-                modifier = Modifier
-                    .background(color = surface, shape = RoundedCornerShape(15.dp))
-                    .size(36.dp) // Size of the entire circle
-            ) {
-                Icon(
-                    painter = painterResource(
-                        when(progress == 0.2f) {
-                            true -> R.drawable.cancel
-                            false -> R.drawable.arrow_left
-                        }
-                    ),
-                    contentDescription = "Close",
-                    tint = colorBlack,
-                    modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
+                    modifier = Modifier
+                        .background(color = surface, shape = RoundedCornerShape(15.dp))
+                        .size(36.dp) // Size of the entire circle
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            when (progress == 0.2f) {
+                                true -> R.drawable.cancel
+                                false -> R.drawable.arrow_left
+                            }
+                        ),
+                        contentDescription = "Close",
+                        tint = colorBlack,
+                        modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
+                    )
+                }
+
+                Text(
+                    title,
+                    style = Typography.bodyMedium.copy(fontSize = 16.sp, color = colorBlack),
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
                 )
+
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .background(color = surface, shape = RoundedCornerShape(15.dp))
+                        .size(36.dp) // Size of the entire circle
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            R.drawable.help
+                        ),
+                        contentDescription = "Help",
+                        tint = colorBlack,
+                        modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
+                    )
+                }
             }
 
-            Text(
-                title,
-                style = Typography.bodyMedium.copy(fontSize = 16.sp, color = colorBlack),
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
+
+            Log.d("progress", "${progress}")
+            ProgressBarUI(
+                progress,
+                modifier = Modifier
             )
 
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .background(color = surface, shape = RoundedCornerShape(15.dp))
-                    .size(36.dp) // Size of the entire circle
-            ) {
-                Icon(
-                    painter = painterResource(
-                        R.drawable.help
-                        ),
-                    contentDescription = "Help",
-                    tint = colorBlack,
-                    modifier = Modifier.padding(10.dp) // Padding to center the icon nicely
-                )
-            }
         }
-
-
-        Log.d("progress", "${progress}")
-        ProgressBarUI(
-            progress,
-            modifier = Modifier
-        )
-
     }
-}
 }
 
 @Preview(showBackground = true)
