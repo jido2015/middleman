@@ -1,6 +1,6 @@
-# SafeMeet – P2P Escrow for Challenges & Bets
+# Middleman – P2P Escrow for Challenges
 
-SafeMeet is a neutral middleman for bets between friends, gamers, or challengers. Whether you're playing FIFA, racing bikes, or debating politics, SafeMeet holds the money securely until a winner is declared.
+Middleman is a neutral middleman for bets between friends, gamers, or challengers. Whether you're playing FIFA, racing bikes, or debating politics, Middleman holds the money securely until a winner is declared.
 
 ## 🚀 Features
 - Create custom bets with terms and stakes
@@ -16,10 +16,15 @@ SafeMeet is a neutral middleman for bets between friends, gamers, or challengers
 - Private wagers between peers
 
 ## 🛠️ Tech Stack
-- Kotlin
+- Language - Kotlin
+- Framework - Jetpack Compose
+- Architecture - KMP, Multi-Module, and MVVM
+- Concurrency - Kotlin Coroutines
+- State Holder - StateFlow, SharedFlow, LiveData
 - Firebase / Node.js backend
 - Payment Integration - PayPal
 - Secure escrow logic & dispute handling
+  
 
 ## 📦 Getting Started
 Coming soon...
