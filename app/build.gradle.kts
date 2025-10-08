@@ -109,5 +109,6 @@ dependencies {
     implementation(project(":navigation"))
     implementation(project(":composables"))
     implementation(project(":designsystem"))
+    implementation(project(":shared"))
 
 }

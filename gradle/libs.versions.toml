@@ -136,6 +136,7 @@ android-library = { id = "com.android.library", version.ref = "kotlinGradlePlugi
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "kotlinGradlePlugin" }
+android-lint = { id = "com.android.lint", version.ref = "kotlinGradlePlugin" }
 
 [bundles]
 

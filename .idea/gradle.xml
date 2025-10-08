@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/feature/notification" />
             <option value="$PROJECT_DIR$/feature/openchallenges" />
             <option value="$PROJECT_DIR$/navigation" />
+            <option value="$PROJECT_DIR$/shared" />
           </set>
         </option>
       </GradleProjectSettings>
