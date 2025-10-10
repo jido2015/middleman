@@ -77,8 +77,8 @@ fun CircularProgressBar(
             progress = { animatedProgress.value },
             color = colorAccent,
             trackColor = borderGrey,
-            strokeWidth = 6.dp,
-            modifier = Modifier.fillMaxSize()
+            strokeWidth = 12.dp,
+            modifier = Modifier.fillMaxSize().size(120.dp)
         )
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

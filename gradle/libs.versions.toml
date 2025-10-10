@@ -5,8 +5,8 @@ androidx-test-ext-junit = "1.3.0"
 espresso-core = "3.7.0"
 
 kotlin = "2.2.20"         # latest stable for which KSP exists
-devtools-ksp = "2.2.10-2.0.2"
-kotlinGradlePlugin = "8.12.3"       # Android Gradle Plugin
+devtools-ksp = "2.2.20-2.0.4"
+kotlinGradlePlugin = "8.13.0"       # Android Gradle Plugin
 lifecycle-runtime-ktx = "2.9.4"
 activity-compose = "1.11.0"
 compose-bom = "2025.08.00"
@@ -15,8 +15,8 @@ dagger-hilt = "2.57.2"
 hilt-navigation = "1.3.0"
 google-services = "4.4.3"
 core-library8 = "2.1.5"
-firebase-bom = "34.3.0"
-room = "2.8.1"
+firebase-bom = "34.4.0"
+room = "2.8.2"
 compiler = "1.5.15"
 splash-screen = "1.0.1"
 coroutines-core = "1.10.2"
@@ -40,11 +40,13 @@ kotlinStdlib = "2.2.10"
 kotlinTest = "2.2.0"
 runner = "1.7.0"
 core = "1.7.0"
-playServicesWallet = "19.4.0"
+playServicesWallet = "19.5.0"
 gson = "2.13.2"
 googleFirebaseCrashlytics = "3.0.6"
 workRuntimeKtx = "2.10.5"
 hiltCommon = "1.3.0"
+gitLive = "2.3.0"
+koin = "4.1.1"
 
 
 [libraries]
@@ -125,9 +127,21 @@ play-services-wallet = { group = "com.google.android.gms", name = "play-services
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 
+
+# KMP Sake - Setting up GitLive for Kotlin Firebase
+gitLive-firebase-app = { group = "dev.gitlive", name = "firebase-app", version.ref = "gitLive" }
+gitLive-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitLive" }
+gitLive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitLive" }
+gitLive-firebase-storage = { group = "dev.gitlive", name = "firebase-storage", version.ref = "gitLive" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "kotlinGradlePlugin" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtools-ksp" }
@@ -137,6 +151,7 @@ google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "kotlinGradlePlugin" }
 android-lint = { id = "com.android.lint", version.ref = "kotlinGradlePlugin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 
 [bundles]
 
